@@ -2,6 +2,9 @@ package com.lizin5ths.indypets;
 
 import net.fabricmc.loader.api.FabricLoader;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -22,20 +25,19 @@ public class IndyPetsConfig {
     private static boolean silentMode;
 
     public static void load() {
-        if (Files.isRegularFile(PROPERTIES_PATH)) {
-            // load indypets.properties
-            try {
-                config.load(Files.newBufferedReader(PROPERTIES_PATH));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else { // if no indypets.properties, load default values
-            // define default properties
-            setDisableCatFollow(true);
-            setDisableParrotFollow(true);
-            setDisableWolfFollow(true);
-            setSelectiveFollowing(true);
-            setSilentMode(false);
+        // define default properties
+        setDisableCatFollow(true);
+        setDisableParrotFollow(true);
+        setDisableWolfFollow(true);
+        setSelectiveFollowing(true);
+        setSilentMode(false);
+
+        // load indypets.properties
+        try (BufferedReader reader = Files.newBufferedReader(PROPERTIES_PATH)) {
+            config.load(reader);
+        } catch (FileNotFoundException ignored) {
+        } catch (IOException e) {
+            IndyPets.LOGGER.error("Failed to load config!", e);
         }
 
         try {
@@ -54,10 +56,10 @@ public class IndyPetsConfig {
     }
 
     public static void save() {
-        try {
-            config.store(Files.newBufferedWriter(IndyPetsConfig.PROPERTIES_PATH), null);
+        try (BufferedWriter writer = Files.newBufferedWriter(PROPERTIES_PATH)) {
+            config.store(writer, null);
         } catch (IOException e) {
-            e.printStackTrace();
+            IndyPets.LOGGER.error("Failed to save config!", e);
         }
     }
 

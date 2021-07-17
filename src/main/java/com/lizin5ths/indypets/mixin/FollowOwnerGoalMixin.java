@@ -8,6 +8,7 @@ import net.minecraft.entity.passive.CatEntity;
 import net.minecraft.entity.passive.ParrotEntity;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.passive.WolfEntity;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -16,8 +17,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(FollowOwnerGoal.class)
 public abstract class FollowOwnerGoalMixin extends Goal {
-    @Shadow TameableEntity tameable;
-    @Shadow int updateCountdownTicks;
+    @Shadow @Final private TameableEntity tameable;
+    @Shadow private int updateCountdownTicks;
 
     public boolean hasToggles(TameableEntity pet) {
         return pet instanceof CatEntity || pet instanceof ParrotEntity || pet instanceof WolfEntity;
