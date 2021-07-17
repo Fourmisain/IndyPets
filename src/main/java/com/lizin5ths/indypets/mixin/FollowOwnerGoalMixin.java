@@ -1,6 +1,6 @@
 package com.lizin5ths.indypets.mixin;
 
-import com.lizin5ths.indypets.AllowedToFollowAccessor;
+import com.lizin5ths.indypets.Follower;
 import com.lizin5ths.indypets.IndyPetsConfig;
 import net.minecraft.entity.ai.goal.FollowOwnerGoal;
 import net.minecraft.entity.ai.goal.Goal;
@@ -33,9 +33,11 @@ public abstract class FollowOwnerGoalMixin extends Goal {
 
     @Inject(method = "tick", at = @At("HEAD"))
     public void delayTick(CallbackInfo ci) {
+        Follower follower = (Follower) tameable;
+
         if (IndyPetsConfig.getSelectiveFollowing()) {
             // Selective Following on. If not allowed to follow+teleport, delay tick.
-            if (!((AllowedToFollowAccessor) tameable).getAllowedToFollow()) {
+            if (!follower.isFollowing()) {
                 updateCountdownTicks = 10;
             }
         } else if (!hasToggles(tameable) || hasTogglesAndForbidsFollowing(tameable)) {
