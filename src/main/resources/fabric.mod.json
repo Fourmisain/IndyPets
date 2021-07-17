@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "id": "indypets",
+  "version": "${version}",
+
+  "name": "Independent Pets",
+  "description": "Disables pet teleportation/following.",
+  "authors": [
+    "lizin5ths"
+  ],
+  "contact": {
+    "homepage": "",
+    "sources": ""
+  },
+
+  "license": "cc-by-nc-sa-4.0",
+  "icon": "assets/indypets/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.lizin5ths.indypets.IndyPets"
+    ]
+  },
+  "mixins": [
+    "indypets.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.7.4",
+    "minecraft": "1.16.x"
+  },
+  "suggests": {
+    "another-mod": "*"
+  }
+}
