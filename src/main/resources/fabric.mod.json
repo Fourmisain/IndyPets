@@ -3,10 +3,11 @@
   "id": "indypets",
   "version": "${version}",
 
-  "name": "Independent Pets",
+  "name": "Independent Pets (Fork)",
   "description": "Disables pet teleportation/following.",
   "authors": [
-    "lizin5ths"
+    "lizin5ths",
+    "Fourmisain"
   ],
   "contact": {
     "homepage": "",
@@ -27,10 +28,7 @@
   ],
 
   "depends": {
-    "fabricloader": ">=0.7.4",
+    "fabricloader": "*",
     "minecraft": "1.16.x"
-  },
-  "suggests": {
-    "another-mod": "*"
   }
 }
