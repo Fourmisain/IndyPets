@@ -1,4 +1,4 @@
 {
-  "text.indypets.following": "Dein Haustier folgt dir",
-  "text.indypets.independent": "Dein Haustier ist unabhängig"
+  "text.indypets.following": "Dein Haustier \"%s\" folgt dir",
+  "text.indypets.independent": "Dein Haustier \"%s\" ist unabhängig"
 }
