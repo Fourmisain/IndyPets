@@ -11,6 +11,7 @@ import net.minecraft.entity.passive.WolfEntity;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -20,24 +21,26 @@ public abstract class FollowOwnerGoalMixin extends Goal {
     @Shadow @Final private TameableEntity tameable;
     @Shadow private int updateCountdownTicks;
 
-    public boolean hasToggles(TameableEntity pet) {
+    @Unique
+    private static boolean hasToggles(TameableEntity pet) {
         return pet instanceof CatEntity || pet instanceof ParrotEntity || pet instanceof WolfEntity;
     }
 
-    public boolean hasTogglesAndForbidsFollowing(TameableEntity pet) {
+    @Unique
+    private static boolean hasTogglesAndForbidsFollowing(TameableEntity pet) {
         return (pet instanceof CatEntity && IndyPetsConfig.getDisableCatFollow()) || (pet instanceof ParrotEntity && IndyPetsConfig.getDisableParrotFollow()) || (pet instanceof WolfEntity && IndyPetsConfig.getDisableWolfFollow());
     }
 
-    @Inject(at = @At("HEAD"), method = "tick")
-    public void delayTick(CallbackInfo ci){
+    @Inject(method = "tick", at = @At("HEAD"))
+    public void delayTick(CallbackInfo ci) {
         if (IndyPetsConfig.getSelectiveFollowing()) {
             // Selective Following on. If not allowed to follow+teleport, delay tick.
-            if (!((AllowedToFollowAccessor) this.tameable).getAllowedToFollow()) {
-                this.updateCountdownTicks = 10;
+            if (!((AllowedToFollowAccessor) tameable).getAllowedToFollow()) {
+                updateCountdownTicks = 10;
             }
-        } else if (!hasToggles(this.tameable) || hasTogglesAndForbidsFollowing(this.tameable)) {
+        } else if (!hasToggles(tameable) || hasTogglesAndForbidsFollowing(tameable)) {
             // Selective Following off, delay tick unless a supported pet type allows follow+teleport.
-            this.updateCountdownTicks = 10;
+            updateCountdownTicks = 10;
         }
     }
 }
