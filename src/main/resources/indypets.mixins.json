@@ -4,11 +4,9 @@
 	"package": "com.lizin5ths.indypets.mixin",
 	"compatibilityLevel": "JAVA_8",
 	"mixins": [
-		"CatEntityMixin",
 		"FollowOwnerGoalMixin",
-		"ParrotEntityMixin",
-		"TameableEntityMixin",
-		"WolfEntityMixin"
+		"MobEntityMixin",
+		"TameableEntityMixin"
 	],
 	"client": [],
 	"injectors": {

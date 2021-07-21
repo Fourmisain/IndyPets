@@ -16,7 +16,7 @@ public class IndyPets implements ModInitializer {
 	public static boolean changeFollowing(PlayerEntity player, TameableEntity tameable) {
 		Follower follower = (Follower) tameable;
 
-		if (IndyPetsConfig.getSelectiveFollowing() && tameable.isOwner(player) && player.isSneaking()) {
+		if (IndyPetsConfig.getSelectiveFollowing() && tameable.isOwner(player)) {
 			follower.setFollowing(!follower.isFollowing());
 
 			if (!IndyPetsConfig.getSilentMode()) {
