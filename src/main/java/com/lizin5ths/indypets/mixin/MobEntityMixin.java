@@ -33,7 +33,10 @@ public abstract class MobEntityMixin extends LivingEntity {
 
 			if (hand == Hand.MAIN_HAND) {
 				if (player.isSneaking()) {
-					IndyPets.changeFollowing(player, self);
+					if (IndyPets.changeFollowing(player, self)) {
+						// Note: This blocks interactMob() so it might conflict with other mods using sneak right click
+						cir.setReturnValue(ActionResult.success(true));
+					}
 				}
 			}
 		}
