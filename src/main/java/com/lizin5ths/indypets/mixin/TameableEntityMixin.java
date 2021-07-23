@@ -32,7 +32,7 @@ public abstract class TameableEntityMixin extends AnimalEntity implements Follow
 	}
 
 	// These four injects just add similar code for tracking selective following.
-	@Inject(at = @At("TAIL"), method = "<clinit>")
+	@Inject(method = "<clinit>", at = @At("TAIL"))
 	private static void injectStatic(CallbackInfo callbackInfo) {
 		ALLOWED_TO_FOLLOW = DataTracker.registerData(TameableEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 	}
