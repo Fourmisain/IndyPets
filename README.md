@@ -3,6 +3,7 @@
 This is a continuation of lizin5ths's [Independent Pets v0.4.1 on CurseForge](https://www.curseforge.com/minecraft/mc-mods/indypets), licensed under [CC0](https://creativecommons.org/publicdomain/zero/1.0/legalcode.txt).  
 The original source code can be found [here](https://pastebin.com/Q7WX2tUX) and it was specified to be CC0 [here](https://www.curseforge.com/minecraft/mc-mods/indypets?comment=98).
 
+- requires [Cloth Config](https://www.curseforge.com/minecraft/mc-mods/cloth-config)
 - works on Minecraft 1.16 and 1.17
 - works server-only
 - works on singleplayer if installed on the client
