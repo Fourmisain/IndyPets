@@ -1,4 +1,15 @@
 {
   "text.indypets.following": "Your pet \"%s\" is following you",
-  "text.indypets.independent": "Your pet \"%s\" is independent"
+  "text.indypets.independent": "Your pet \"%s\" is independent",
+  "text.autoconfig.indypets.option.selectiveFollowing": "Selective Following",
+  "text.autoconfig.indypets.option.selectiveFollowing.@Tooltip[0]": "If true, follow mode is handled per pet via sneak-interact,",
+  "text.autoconfig.indypets.option.selectiveFollowing.@Tooltip[1]": "otherwise pets are independent except when changed below",
+  "text.autoconfig.indypets.option.silentMode": "Disable text messages when toggling follow mode (not recommended)",
+  "text.autoconfig.indypets.option.silentMode.@Tooltip": "There is no other indicator whether a pet is following / teleporting to you.",
+  "text.autoconfig.indypets.option.disableCatFollow": "Cats are independent",
+  "text.autoconfig.indypets.option.disableParrotFollow": "Parotts are independent",
+  "text.autoconfig.indypets.option.disableWolfFollow": "Wolves are independent",
+  "text.autoconfig.indypets.option.disableCatFollow.@Tooltip": "Only applies when Selective Following is disabled",
+  "text.autoconfig.indypets.option.disableParrotFollow.@Tooltip": "Only applies when Selective Following is disabled",
+  "text.autoconfig.indypets.option.disableWolfFollow.@Tooltip": "Only applies when Selective Following is disabled"
 }
