@@ -18,6 +18,9 @@
 	"entrypoints": {
 		"main": [
 			"com.lizin5ths.indypets.IndyPets"
+		],
+		"modmenu": [
+			"com.lizin5ths.indypets.IndyPetsMenu"
 		]
 	},
 	"mixins": [
