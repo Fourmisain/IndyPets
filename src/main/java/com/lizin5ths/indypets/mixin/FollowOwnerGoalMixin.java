@@ -42,7 +42,7 @@ public abstract class FollowOwnerGoalMixin extends Goal {
 			}
 		} else if (!hasToggles(tameable) || hasTogglesAndForbidsFollowing(tameable)) {
 			// Without selective following mode, don't follow / teleport to the owner
-			// unless the corresponding switch "disable...follow" switch is turned off
+			// unless the corresponding "disable...follow" switch is turned off
 			updateCountdownTicks = 10;
 		}
 	}

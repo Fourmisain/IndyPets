@@ -10,8 +10,8 @@
 	],
 	"contact": {
 		"homepage": "https://www.curseforge.com/minecraft/mc-mods/indypets",
-		"sources": "https://pastebin.com/Q7WX2tUX",
-		"issues": "https://www.curseforge.com/minecraft/mc-mods/indypets"
+		"sources": "https://github.com/Fourmisain/IndyPets",
+		"issues": "https://github.com/Fourmisain/IndyPets/issues"
 	},
 	"license": "CC0",
 	"icon": "assets/indypets/icon.png",
