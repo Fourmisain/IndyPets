@@ -9,7 +9,7 @@ import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -35,12 +35,12 @@ public abstract class TameableEntityMixin extends AnimalEntity implements Allowe
         TameableEntity self = (TameableEntity)(Object)this;
         self.getDataTracker().startTracking(ALLOWED_TO_FOLLOW, false);
     }
-    @Inject(at = @At("TAIL"), method = "writeCustomDataToTag")
-    private void injectFollowDataToTag(CompoundTag tag, CallbackInfo callbackInfo) {
+    @Inject(at = @At("TAIL"), method = "writeCustomDataToNbt")
+    private void injectFollowDataToTag(NbtCompound tag, CallbackInfo callbackInfo) {
         tag.putBoolean("AllowedToFollow", this.getAllowedToFollow());
     }
-    @Inject(at = @At("TAIL"), method = "readCustomDataFromTag")
-    private void injectFollowDataFromTag(CompoundTag tag, CallbackInfo callbackInfo) {
+    @Inject(at = @At("TAIL"), method = "readCustomDataFromNbt")
+    private void injectFollowDataFromTag(NbtCompound tag, CallbackInfo callbackInfo) {
         this.setAllowedToFollow(tag.getBoolean("AllowedToFollow"));
     }
 
