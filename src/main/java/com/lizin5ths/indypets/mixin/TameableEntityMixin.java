@@ -1,6 +1,7 @@
 package com.lizin5ths.indypets.mixin;
 
 import com.lizin5ths.indypets.Follower;
+import com.lizin5ths.indypets.IndyPets;
 import com.lizin5ths.indypets.IndyPetsConfig;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.data.DataTracker;
@@ -71,21 +72,8 @@ public abstract class TameableEntityMixin extends AnimalEntity implements Follow
 	public ActionResult interactMob(PlayerEntity player, Hand hand) {
 		TameableEntity self = (TameableEntity) (Object) this;
 
-		if (IndyPetsConfig.getSelectiveFollowing() && self.isOwner(player) && player.isSneaking()) {
-			// Selective Following on, allow toggling behavior while sneaking for owned pets.
-			if (isFollowing()) {
-				// Forbid follow+teleport for target.
-				setFollowing(false);
-				if (!IndyPetsConfig.getSilentMode()) {
-					player.sendSystemMessage(new LiteralText("(IndyPets) Follow+teleport now forbidden for target."), Util.NIL_UUID);
-				}
-			} else {
-				// Allow follow+teleport for target.
-				setFollowing(true);
-				if (!IndyPetsConfig.getSilentMode()) {
-					player.sendSystemMessage(new LiteralText("(IndyPets) Follow+teleport now allowed for target."), Util.NIL_UUID);
-				}
-			}
+		if (player.isSneaking()) {
+			IndyPets.changeFollowing(player, self);
 		}
 
 		return super.interactMob(player, hand);
