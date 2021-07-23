@@ -67,15 +67,4 @@ public abstract class TameableEntityMixin extends AnimalEntity implements Follow
 		TameableEntity self = (TameableEntity) (Object) this;
 		self.getDataTracker().set(ALLOWED_TO_FOLLOW, value);
 	}
-
-	@Override
-	public ActionResult interactMob(PlayerEntity player, Hand hand) {
-		TameableEntity self = (TameableEntity) (Object) this;
-
-		if (player.isSneaking()) {
-			IndyPets.changeFollowing(player, self);
-		}
-
-		return super.interactMob(player, hand);
-	}
 }
