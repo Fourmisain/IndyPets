@@ -23,71 +23,71 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(TameableEntity.class)
 public abstract class TameableEntityMixin extends AnimalEntity implements Follower {
-    @Unique
-    private static TrackedData<Boolean> ALLOWED_TO_FOLLOW;
+	@Unique
+	private static TrackedData<Boolean> ALLOWED_TO_FOLLOW;
 
-    protected TameableEntityMixin(EntityType<? extends AnimalEntity> entityType, World world) {
-        super(entityType, world);
-    }
+	protected TameableEntityMixin(EntityType<? extends AnimalEntity> entityType, World world) {
+		super(entityType, world);
+	}
 
-    // These four injects just add similar code for tracking selective following.
-    @Inject(at = @At("TAIL"), method = "<clinit>")
-    private static void injectStatic(CallbackInfo callbackInfo) {
-        ALLOWED_TO_FOLLOW = DataTracker.registerData(TameableEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
-    }
+	// These four injects just add similar code for tracking selective following.
+	@Inject(at = @At("TAIL"), method = "<clinit>")
+	private static void injectStatic(CallbackInfo callbackInfo) {
+		ALLOWED_TO_FOLLOW = DataTracker.registerData(TameableEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+	}
 
-    @Inject(method = "initDataTracker", at = @At("TAIL"))
-    private void initFollowData(CallbackInfo callbackInfo) {
-        TameableEntity self = (TameableEntity) (Object) this;
-        self.getDataTracker().startTracking(ALLOWED_TO_FOLLOW, false);
-    }
+	@Inject(method = "initDataTracker", at = @At("TAIL"))
+	private void initFollowData(CallbackInfo callbackInfo) {
+		TameableEntity self = (TameableEntity) (Object) this;
+		self.getDataTracker().startTracking(ALLOWED_TO_FOLLOW, false);
+	}
 
-    @Inject(method = "writeCustomDataToNbt", at = @At("TAIL"))
-    private void writeFollowDataToNbt(NbtCompound nbt, CallbackInfo callbackInfo) {
-        nbt.putBoolean("AllowedToFollow", isFollowing());
-    }
+	@Inject(method = "writeCustomDataToNbt", at = @At("TAIL"))
+	private void writeFollowDataToNbt(NbtCompound nbt, CallbackInfo callbackInfo) {
+		nbt.putBoolean("AllowedToFollow", isFollowing());
+	}
 
-    @Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
-    private void readFollowDataFromNbt(NbtCompound nbt, CallbackInfo callbackInfo) {
-        setFollowing(nbt.getBoolean("AllowedToFollow"));
-    }
+	@Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
+	private void readFollowDataFromNbt(NbtCompound nbt, CallbackInfo callbackInfo) {
+		setFollowing(nbt.getBoolean("AllowedToFollow"));
+	}
 
-    // Using AllowedToFollowAccessor to pass this function to FollowOwnerGoalMixin.
-    @Unique
-    @Override
-    public boolean isFollowing() {
-        TameableEntity self = (TameableEntity) (Object) this;
-        return self.getDataTracker().get(ALLOWED_TO_FOLLOW);
-    }
+	// Using AllowedToFollowAccessor to pass this function to FollowOwnerGoalMixin.
+	@Unique
+	@Override
+	public boolean isFollowing() {
+		TameableEntity self = (TameableEntity) (Object) this;
+		return self.getDataTracker().get(ALLOWED_TO_FOLLOW);
+	}
 
-    @Unique
-    @Override
-    public void setFollowing(boolean value) {
-        TameableEntity self = (TameableEntity) (Object) this;
-        self.getDataTracker().set(ALLOWED_TO_FOLLOW, value);
-    }
+	@Unique
+	@Override
+	public void setFollowing(boolean value) {
+		TameableEntity self = (TameableEntity) (Object) this;
+		self.getDataTracker().set(ALLOWED_TO_FOLLOW, value);
+	}
 
-    @Override
-    public ActionResult interactMob(PlayerEntity player, Hand hand) {
-        TameableEntity self = (TameableEntity) (Object) this;
+	@Override
+	public ActionResult interactMob(PlayerEntity player, Hand hand) {
+		TameableEntity self = (TameableEntity) (Object) this;
 
-        if (IndyPetsConfig.getSelectiveFollowing() && self.isOwner(player) && player.isSneaking()) {
-            // Selective Following on, allow toggling behavior while sneaking for owned pets.
-            if (isFollowing()) {
-                // Forbid follow+teleport for target.
-                setFollowing(false);
-                if (!IndyPetsConfig.getSilentMode()) {
-                    player.sendSystemMessage(new LiteralText("(IndyPets) Follow+teleport now forbidden for target."), Util.NIL_UUID);
-                }
-            } else {
-                // Allow follow+teleport for target.
-                setFollowing(true);
-                if (!IndyPetsConfig.getSilentMode()) {
-                    player.sendSystemMessage(new LiteralText("(IndyPets) Follow+teleport now allowed for target."), Util.NIL_UUID);
-                }
-            }
-        }
+		if (IndyPetsConfig.getSelectiveFollowing() && self.isOwner(player) && player.isSneaking()) {
+			// Selective Following on, allow toggling behavior while sneaking for owned pets.
+			if (isFollowing()) {
+				// Forbid follow+teleport for target.
+				setFollowing(false);
+				if (!IndyPetsConfig.getSilentMode()) {
+					player.sendSystemMessage(new LiteralText("(IndyPets) Follow+teleport now forbidden for target."), Util.NIL_UUID);
+				}
+			} else {
+				// Allow follow+teleport for target.
+				setFollowing(true);
+				if (!IndyPetsConfig.getSilentMode()) {
+					player.sendSystemMessage(new LiteralText("(IndyPets) Follow+teleport now allowed for target."), Util.NIL_UUID);
+				}
+			}
+		}
 
-        return super.interactMob(player, hand);
-    }
+		return super.interactMob(player, hand);
+	}
 }
