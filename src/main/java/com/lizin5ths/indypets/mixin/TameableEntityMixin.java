@@ -26,24 +26,30 @@ public abstract class TameableEntityMixin extends AnimalEntity implements Follow
     @Unique
     private static TrackedData<Boolean> ALLOWED_TO_FOLLOW;
 
-    // Required to compile:
     protected TameableEntityMixin(EntityType<? extends AnimalEntity> entityType, World world) {
         super(entityType, world);
     }
 
-    // These three injects just add similar code for tracking selective following.
+    // These four injects just add similar code for tracking selective following.
+    @Inject(at = @At("TAIL"), method = "<clinit>")
+    private static void injectStatic(CallbackInfo callbackInfo) {
+        ALLOWED_TO_FOLLOW = DataTracker.registerData(TameableEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+    }
+
     @Inject(method = "initDataTracker", at = @At("TAIL"))
     private void initFollowData(CallbackInfo callbackInfo) {
         TameableEntity self = (TameableEntity) (Object) this;
         self.getDataTracker().startTracking(ALLOWED_TO_FOLLOW, false);
     }
+
     @Inject(method = "writeCustomDataToNbt", at = @At("TAIL"))
-    private void writeFollowDataToNbt(NbtCompound tag, CallbackInfo callbackInfo) {
-        tag.putBoolean("AllowedToFollow", isFollowing());
+    private void writeFollowDataToNbt(NbtCompound nbt, CallbackInfo callbackInfo) {
+        nbt.putBoolean("AllowedToFollow", isFollowing());
     }
+
     @Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
-    private void readFollowDataFromNbt(NbtCompound tag, CallbackInfo callbackInfo) {
-        setFollowing(tag.getBoolean("AllowedToFollow"));
+    private void readFollowDataFromNbt(NbtCompound nbt, CallbackInfo callbackInfo) {
+        setFollowing(nbt.getBoolean("AllowedToFollow"));
     }
 
     // Using AllowedToFollowAccessor to pass this function to FollowOwnerGoalMixin.
@@ -83,11 +89,5 @@ public abstract class TameableEntityMixin extends AnimalEntity implements Follow
         }
 
         return super.interactMob(player, hand);
-    }
-
-    // Add to the static block at the end of TameableEntity.
-    @Inject(at = @At("TAIL"), method = "<clinit>")
-    static private void injectStatic(CallbackInfo callbackInfo) {
-        ALLOWED_TO_FOLLOW = DataTracker.registerData(TameableEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     }
 }
