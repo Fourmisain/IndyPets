@@ -1,6 +1,7 @@
 package com.lizin5ths.indypets.mixin;
 
 import com.lizin5ths.indypets.Follower;
+import com.lizin5ths.indypets.IndyPets;
 import com.lizin5ths.indypets.IndyPetsConfig;
 import net.minecraft.entity.ai.goal.FollowOwnerGoal;
 import net.minecraft.entity.ai.goal.Goal;
@@ -28,14 +29,14 @@ public abstract class FollowOwnerGoalMixin extends Goal {
 
 	@Unique
 	private static boolean hasTogglesAndForbidsFollowing(TameableEntity pet) {
-		return (pet instanceof CatEntity && IndyPetsConfig.getDisableCatFollow()) || (pet instanceof ParrotEntity && IndyPetsConfig.getDisableParrotFollow()) || (pet instanceof WolfEntity && IndyPetsConfig.getDisableWolfFollow());
+		return (pet instanceof CatEntity && IndyPets.CONFIG.disableCatFollow) || (pet instanceof ParrotEntity && IndyPets.CONFIG.disableParrotFollow) || (pet instanceof WolfEntity && IndyPets.CONFIG.disableWolfFollow);
 	}
 
 	@Inject(method = "tick", at = @At("HEAD"))
 	public void delayTick(CallbackInfo ci) {
 		Follower follower = (Follower) tameable;
 
-		if (IndyPetsConfig.getSelectiveFollowing()) {
+		if (IndyPets.CONFIG.selectiveFollowing) {
 			// Selective Following on. If not allowed to follow+teleport, delay tick.
             if (!follower.isFollowing()) {
 				updateCountdownTicks = 10;

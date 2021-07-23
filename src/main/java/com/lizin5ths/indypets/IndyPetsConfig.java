@@ -1,27 +1,16 @@
 package com.lizin5ths.indypets;
 
-public class IndyPetsConfig {
-	public static void load() {
 
-	}
+import me.shedaniel.autoconfig.ConfigData;
+import me.shedaniel.autoconfig.annotation.Config;
 
-	public static boolean getSelectiveFollowing() {
-		return true;
-	}
+//@SuppressWarnings({"FieldMayBeFinal", "CanBeFinal"})
+@Config(name = IndyPets.MOD_ID)
+public class IndyPetsConfig implements ConfigData {
+	public boolean selectiveFollowing = true;
+	public boolean silentMode = false;
 
-	public static boolean getSilentMode() {
-		return false;
-	}
-
-	public static boolean getDisableCatFollow() {
-		return false;
-	}
-
-	public static boolean getDisableParrotFollow() {
-		return false;
-	}
-
-	public static boolean getDisableWolfFollow() {
-		return false;
-	}
+	public boolean disableCatFollow = true;
+	public boolean disableParrotFollow = true;
+	public boolean disableWolfFollow = true;
 }
