@@ -1,20 +1,13 @@
 package com.lizin5ths.indypets.mixin;
 
 import com.lizin5ths.indypets.Follower;
-import com.lizin5ths.indypets.IndyPets;
-import com.lizin5ths.indypets.IndyPetsConfig;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.TameableEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.text.LiteralText;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.Util;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -25,22 +18,21 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(TameableEntity.class)
 public abstract class TameableEntityMixin extends AnimalEntity implements Follower {
 	@Unique
-	private static TrackedData<Boolean> ALLOWED_TO_FOLLOW;
+	private static TrackedData<Boolean> IS_FOLLOWING;
 
 	protected TameableEntityMixin(EntityType<? extends AnimalEntity> entityType, World world) {
 		super(entityType, world);
 	}
 
-	// These four injects just add similar code for tracking selective following.
 	@Inject(method = "<clinit>", at = @At("TAIL"))
 	private static void injectStatic(CallbackInfo callbackInfo) {
-		ALLOWED_TO_FOLLOW = DataTracker.registerData(TameableEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+		IS_FOLLOWING = DataTracker.registerData(TameableEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 	}
 
 	@Inject(method = "initDataTracker", at = @At("TAIL"))
 	private void initFollowData(CallbackInfo callbackInfo) {
 		TameableEntity self = (TameableEntity) (Object) this;
-		self.getDataTracker().startTracking(ALLOWED_TO_FOLLOW, false);
+		self.getDataTracker().startTracking(IS_FOLLOWING, false);
 	}
 
 	@Inject(method = "writeCustomDataToNbt", at = @At("TAIL"))
@@ -53,18 +45,17 @@ public abstract class TameableEntityMixin extends AnimalEntity implements Follow
 		setFollowing(nbt.getBoolean("AllowedToFollow"));
 	}
 
-	// Using AllowedToFollowAccessor to pass this function to FollowOwnerGoalMixin.
 	@Unique
 	@Override
 	public boolean isFollowing() {
 		TameableEntity self = (TameableEntity) (Object) this;
-		return self.getDataTracker().get(ALLOWED_TO_FOLLOW);
+		return self.getDataTracker().get(IS_FOLLOWING);
 	}
 
 	@Unique
 	@Override
 	public void setFollowing(boolean value) {
 		TameableEntity self = (TameableEntity) (Object) this;
-		self.getDataTracker().set(ALLOWED_TO_FOLLOW, value);
+		self.getDataTracker().set(IS_FOLLOWING, value);
 	}
 }

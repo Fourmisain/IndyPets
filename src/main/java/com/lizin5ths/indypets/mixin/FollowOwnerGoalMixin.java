@@ -2,7 +2,6 @@ package com.lizin5ths.indypets.mixin;
 
 import com.lizin5ths.indypets.Follower;
 import com.lizin5ths.indypets.IndyPets;
-import com.lizin5ths.indypets.IndyPetsConfig;
 import net.minecraft.entity.ai.goal.FollowOwnerGoal;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.passive.CatEntity;
@@ -37,12 +36,13 @@ public abstract class FollowOwnerGoalMixin extends Goal {
 		Follower follower = (Follower) tameable;
 
 		if (IndyPets.CONFIG.selectiveFollowing) {
-			// Selective Following on. If not allowed to follow+teleport, delay tick.
-            if (!follower.isFollowing()) {
-				updateCountdownTicks = 10;
+			// In selective following mode, handle each pet separately
+			if (!follower.isFollowing()) {
+				updateCountdownTicks = 10; // don't follow / teleport to the owner
 			}
 		} else if (!hasToggles(tameable) || hasTogglesAndForbidsFollowing(tameable)) {
-			// Selective Following off, delay tick unless a supported pet type allows follow+teleport.
+			// Without selective following mode, don't follow / teleport to the owner
+			// unless the corresponding switch "disable...follow" switch is turned off
 			updateCountdownTicks = 10;
 		}
 	}

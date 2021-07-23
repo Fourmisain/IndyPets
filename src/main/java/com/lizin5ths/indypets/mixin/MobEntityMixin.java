@@ -20,6 +20,7 @@ public abstract class MobEntityMixin extends LivingEntity {
 		super(entityType, world);
 	}
 
+	@SuppressWarnings("ConstantConditions")
 	@Inject(method = "interact",
 		at = @At(value = "INVOKE",
 			target = "Lnet/minecraft/entity/mob/MobEntity;interactMob(Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/util/Hand;)Lnet/minecraft/util/ActionResult;"),
