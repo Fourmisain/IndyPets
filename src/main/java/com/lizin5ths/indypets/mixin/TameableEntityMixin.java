@@ -1,6 +1,6 @@
 package com.lizin5ths.indypets.mixin;
 
-import com.lizin5ths.indypets.AllowedToFollowAccessor;
+import com.lizin5ths.indypets.Follower;
 import com.lizin5ths.indypets.IndyPetsConfig;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.data.DataTracker;
@@ -22,7 +22,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(TameableEntity.class)
-public abstract class TameableEntityMixin extends AnimalEntity implements AllowedToFollowAccessor {
+public abstract class TameableEntityMixin extends AnimalEntity implements Follower {
     @Unique
     private static TrackedData<Boolean> ALLOWED_TO_FOLLOW;
 
@@ -39,23 +39,24 @@ public abstract class TameableEntityMixin extends AnimalEntity implements Allowe
     }
     @Inject(method = "writeCustomDataToNbt", at = @At("TAIL"))
     private void writeFollowDataToNbt(NbtCompound tag, CallbackInfo callbackInfo) {
-        tag.putBoolean("AllowedToFollow", getAllowedToFollow());
+        tag.putBoolean("AllowedToFollow", isFollowing());
     }
     @Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
     private void readFollowDataFromNbt(NbtCompound tag, CallbackInfo callbackInfo) {
-        setAllowedToFollow(tag.getBoolean("AllowedToFollow"));
+        setFollowing(tag.getBoolean("AllowedToFollow"));
     }
 
     // Using AllowedToFollowAccessor to pass this function to FollowOwnerGoalMixin.
     @Unique
     @Override
-    public boolean getAllowedToFollow() {
+    public boolean isFollowing() {
         TameableEntity self = (TameableEntity) (Object) this;
         return self.getDataTracker().get(ALLOWED_TO_FOLLOW);
     }
 
     @Unique
-    public void setAllowedToFollow(boolean value) {
+    @Override
+    public void setFollowing(boolean value) {
         TameableEntity self = (TameableEntity) (Object) this;
         self.getDataTracker().set(ALLOWED_TO_FOLLOW, value);
     }
@@ -66,15 +67,15 @@ public abstract class TameableEntityMixin extends AnimalEntity implements Allowe
 
         if (IndyPetsConfig.getSelectiveFollowing() && self.isOwner(player) && player.isSneaking()) {
             // Selective Following on, allow toggling behavior while sneaking for owned pets.
-            if (getAllowedToFollow()) {
+            if (isFollowing()) {
                 // Forbid follow+teleport for target.
-                setAllowedToFollow(false);
+                setFollowing(false);
                 if (!IndyPetsConfig.getSilentMode()) {
                     player.sendSystemMessage(new LiteralText("(IndyPets) Follow+teleport now forbidden for target."), Util.NIL_UUID);
                 }
             } else {
                 // Allow follow+teleport for target.
-                setAllowedToFollow(true);
+                setFollowing(true);
                 if (!IndyPetsConfig.getSilentMode()) {
                     player.sendSystemMessage(new LiteralText("(IndyPets) Follow+teleport now allowed for target."), Util.NIL_UUID);
                 }
