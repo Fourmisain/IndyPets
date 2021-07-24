@@ -6,7 +6,6 @@ import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Util;
 
@@ -23,7 +22,14 @@ public class IndyPets implements ModInitializer {
 
 			if (!IndyPets.CONFIG.silentMode) {
 				String key = follower.isFollowing() ? "text.indypets.following" : "text.indypets.independent";
-				Text text = new TranslatableText(key, tameable.getName().getString());
+				if (tameable.hasCustomName()) {
+					key += "_named";
+				}
+
+				// This is a workaround for not being able to nest TranslatableText (the name especially)
+				TranslatableText text = new TranslatableText(key + "_prefix");
+				text.append(tameable.getName());
+				text.append(new TranslatableText(key + "_suffix"));
 				player.sendSystemMessage(text, Util.NIL_UUID);
 			}
 
