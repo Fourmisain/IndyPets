@@ -23,12 +23,16 @@ public abstract class FollowOwnerGoalMixin extends Goal {
 
 	@Unique
 	private static boolean hasToggles(TameableEntity pet) {
-		return pet instanceof CatEntity || pet instanceof ParrotEntity || pet instanceof WolfEntity;
+		return pet instanceof CatEntity
+			|| pet instanceof ParrotEntity
+			|| pet instanceof WolfEntity;
 	}
 
 	@Unique
-	private static boolean hasTogglesAndForbidsFollowing(TameableEntity pet) {
-		return (pet instanceof CatEntity && IndyPets.CONFIG.disableCatFollow) || (pet instanceof ParrotEntity && IndyPets.CONFIG.disableParrotFollow) || (pet instanceof WolfEntity && IndyPets.CONFIG.disableWolfFollow);
+	private static boolean hasTogglesAndIsIndependent(TameableEntity pet) {
+		return (pet instanceof CatEntity && IndyPets.CONFIG.independentCats)
+			|| (pet instanceof ParrotEntity && IndyPets.CONFIG.independentParrots)
+			|| (pet instanceof WolfEntity && IndyPets.CONFIG.independentWolves);
 	}
 
 	@Inject(method = "tick", at = @At("HEAD"))
@@ -40,9 +44,9 @@ public abstract class FollowOwnerGoalMixin extends Goal {
 			if (!follower.isFollowing()) {
 				updateCountdownTicks = 10; // don't follow / teleport to the owner
 			}
-		} else if (!hasToggles(tameable) || hasTogglesAndForbidsFollowing(tameable)) {
-			// Without selective following mode, don't follow / teleport to the owner
-			// unless the corresponding "disable...follow" switch is turned off
+		} else if (!hasToggles(tameable) || hasTogglesAndIsIndependent(tameable)) {
+			// Without selective following mode, don't follow / teleport to
+			// the owner unless it was disabled for the pet type
 			updateCountdownTicks = 10;
 		}
 	}

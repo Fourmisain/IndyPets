@@ -10,11 +10,11 @@ public class IndyPetsConfig implements ConfigData {
 	@ConfigEntry.Gui.Tooltip(count = 2)
 	public boolean selectiveFollowing = true;
 	@ConfigEntry.Gui.Tooltip
-	public boolean disableCatFollow = true;
+	public boolean independentCats = true;
 	@ConfigEntry.Gui.Tooltip
-	public boolean disableParrotFollow = true;
+	public boolean independentParrots = true;
 	@ConfigEntry.Gui.Tooltip
-	public boolean disableWolfFollow = true;
+	public boolean independentWolves = true;
 
 	@ConfigEntry.Gui.Tooltip
 	public boolean silentMode = false;
