@@ -1,6 +1,7 @@
 package com.lizin5ths.indypets;
 
 import com.google.gson.GsonBuilder;
+import com.lizin5ths.indypets.config.IndyPetsConfig;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.fabricmc.api.ModInitializer;
@@ -30,44 +31,48 @@ public class IndyPets implements ModInitializer {
 			follower.setFollowing(!follower.isFollowing());
 
 			if (!IndyPets.CONFIG.silentMode) {
-				BaseText text;
-
-				if (hasModInstalled.contains(player.getUuid())) {
-					// Send a translatable text
-					String key = follower.isFollowing() ? "text.indypets.following" : "text.indypets.independent";
-					if (tameable.hasCustomName()) {
-						key += "_named";
-					}
-
-					// This is a workaround for not being able to nest TranslatableText (the name especially)
-					text = new TranslatableText(key + "_prefix");
-					text.append(tameable.getName());
-					text.append(new TranslatableText(key + "_suffix"));
-				} else {
-					// Default to sending an English message
-					String name = tameable.getName().getString();
-
-					StringBuilder sb = new StringBuilder();
-					if (tameable.hasCustomName()) {
-						sb.append('\"');
-						sb.append(name);
-						sb.append('\"');
-					} else {
-						sb.append("Your ");
-						sb.append(name);
-					}
-					sb.append(follower.isFollowing() ? " is following you" : " is independent");
-
-					text = new LiteralText(sb.toString());
-				}
-
-				player.sendSystemMessage(text, Util.NIL_UUID);
+				sendPetStatusMessage(player, tameable, follower);
 			}
 
 			return true;
 		}
 
 		return false;
+	}
+
+	public static void sendPetStatusMessage(PlayerEntity player, TameableEntity tameable, Follower follower) {
+		BaseText text;
+
+		if (hasModInstalled.contains(player.getUuid())) {
+			// Send a translatable text
+			String key = follower.isFollowing() ? "text.indypets.following" : "text.indypets.independent";
+			if (tameable.hasCustomName()) {
+				key += "_named";
+			}
+
+			// This is a workaround for not being able to nest TranslatableText (the name especially)
+			text = new TranslatableText(key + "_prefix");
+			text.append(tameable.getName());
+			text.append(new TranslatableText(key + "_suffix"));
+		} else {
+			// Default to sending an English message
+			String name = tameable.getName().getString();
+
+			StringBuilder sb = new StringBuilder();
+			if (tameable.hasCustomName()) {
+				sb.append('\"');
+				sb.append(name);
+				sb.append('\"');
+			} else {
+				sb.append("Your ");
+				sb.append(name);
+			}
+			sb.append(follower.isFollowing() ? " is following you" : " is independent");
+
+			text = new LiteralText(sb.toString());
+		}
+
+		player.sendSystemMessage(text, Util.NIL_UUID);
 	}
 
 	@Override
