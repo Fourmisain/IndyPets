@@ -18,44 +18,31 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(TameableEntity.class)
 public abstract class TameableEntityMixin extends AnimalEntity implements Follower {
 	@Unique
-	private static TrackedData<Boolean> IS_FOLLOWING;
+	boolean isFollowing = false;
 
 	protected TameableEntityMixin(EntityType<? extends AnimalEntity> entityType, World world) {
 		super(entityType, world);
 	}
 
-	@Inject(method = "<clinit>", at = @At("TAIL"))
-	private static void injectStatic(CallbackInfo callbackInfo) {
-		IS_FOLLOWING = DataTracker.registerData(TameableEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
-	}
-
-	@Inject(method = "initDataTracker", at = @At("TAIL"))
-	private void initFollowData(CallbackInfo callbackInfo) {
-		TameableEntity self = (TameableEntity) (Object) this;
-		self.getDataTracker().startTracking(IS_FOLLOWING, false);
-	}
-
 	@Inject(method = "writeCustomDataToNbt", at = @At("TAIL"))
 	private void writeFollowDataToNbt(NbtCompound nbt, CallbackInfo callbackInfo) {
-		nbt.putBoolean("AllowedToFollow", isFollowing());
+		nbt.putBoolean("AllowedToFollow", isFollowing);
 	}
 
 	@Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
 	private void readFollowDataFromNbt(NbtCompound nbt, CallbackInfo callbackInfo) {
-		setFollowing(nbt.getBoolean("AllowedToFollow"));
+		isFollowing = nbt.getBoolean("AllowedToFollow");
 	}
 
 	@Unique
 	@Override
 	public boolean isFollowing() {
-		TameableEntity self = (TameableEntity) (Object) this;
-		return self.getDataTracker().get(IS_FOLLOWING);
+		return isFollowing;
 	}
 
 	@Unique
 	@Override
 	public void setFollowing(boolean value) {
-		TameableEntity self = (TameableEntity) (Object) this;
-		self.getDataTracker().set(IS_FOLLOWING, value);
+		isFollowing = value;
 	}
 }
