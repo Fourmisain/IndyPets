@@ -22,8 +22,8 @@ public abstract class TameableEntityMixin extends AnimalEntity implements Follow
 		super(entityType, world);
 	}
 
-	@Inject(method = "<init>", at = @At(value = "TAIL"))
-	private void initFollowData(EntityType<? extends TameableEntity> entityType, World world, CallbackInfo ci) {
+	@Inject(method = "onTamedChanged", at = @At(value = "HEAD"))
+	protected void initFollowData(CallbackInfo ci) {
 		isFollowing = !IndyPets.getDefaultIndependence((TameableEntity) (Object) this);
 	}
 
