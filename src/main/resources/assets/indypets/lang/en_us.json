@@ -12,10 +12,7 @@
   "text.autoconfig.indypets.option.selectiveFollowing.@Tooltip[1]": "otherwise pets are independent except when disabled below",
   "text.autoconfig.indypets.option.silentMode": "Disable text messages (not recommended)",
   "text.autoconfig.indypets.option.silentMode.@Tooltip": "There is no other indicator whether a pet is following you.",
-  "text.autoconfig.indypets.option.independentCats": "Cats are independent",
-  "text.autoconfig.indypets.option.independentParrots": "Parotts are independent",
-  "text.autoconfig.indypets.option.independentWolves": "Wolves are independent",
-  "text.autoconfig.indypets.option.independentCats.@Tooltip": "Only applies when Selective Following is disabled",
-  "text.autoconfig.indypets.option.independentParrots.@Tooltip": "Only applies when Selective Following is disabled",
-  "text.autoconfig.indypets.option.independentWolves.@Tooltip": "Only applies when Selective Following is disabled"
+  "text.autoconfig.indypets.option.independentCats": "Cats are independent by default",
+  "text.autoconfig.indypets.option.independentParrots": "Parotts are independent by default",
+  "text.autoconfig.indypets.option.independentWolves": "Wolves are independent by default"
 }

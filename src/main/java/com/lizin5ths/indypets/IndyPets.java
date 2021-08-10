@@ -6,7 +6,10 @@ import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.entity.passive.CatEntity;
+import net.minecraft.entity.passive.ParrotEntity;
 import net.minecraft.entity.passive.TameableEntity;
+import net.minecraft.entity.passive.WolfEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.BaseText;
 import net.minecraft.text.LiteralText;
@@ -23,6 +26,13 @@ public class IndyPets implements ModInitializer {
 
 	public static final Identifier MOD_INSTALLED = new Identifier(MOD_ID, "mod_installed");
 	public static final HashSet<UUID> hasModInstalled = new HashSet<>();
+
+	public static boolean getDefaultIndependence(TameableEntity tameable) {
+		if (tameable instanceof CatEntity)    return CONFIG.independentCats;
+		if (tameable instanceof ParrotEntity) return CONFIG.independentParrots;
+		if (tameable instanceof WolfEntity)   return CONFIG.independentWolves;
+		return true;
+	}
 
 	public static boolean changeFollowing(PlayerEntity player, TameableEntity tameable) {
 		Follower follower = (Follower) tameable;

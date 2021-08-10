@@ -4,14 +4,10 @@ import com.lizin5ths.indypets.Follower;
 import com.lizin5ths.indypets.IndyPets;
 import net.minecraft.entity.ai.goal.FollowOwnerGoal;
 import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.passive.CatEntity;
-import net.minecraft.entity.passive.ParrotEntity;
 import net.minecraft.entity.passive.TameableEntity;
-import net.minecraft.entity.passive.WolfEntity;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -20,20 +16,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class FollowOwnerGoalMixin extends Goal {
 	@Shadow @Final private TameableEntity tameable;
 	@Shadow private int updateCountdownTicks;
-
-	@Unique
-	private static boolean hasToggles(TameableEntity pet) {
-		return pet instanceof CatEntity
-			|| pet instanceof ParrotEntity
-			|| pet instanceof WolfEntity;
-	}
-
-	@Unique
-	private static boolean hasTogglesAndIsIndependent(TameableEntity pet) {
-		return (pet instanceof CatEntity && IndyPets.CONFIG.independentCats)
-			|| (pet instanceof ParrotEntity && IndyPets.CONFIG.independentParrots)
-			|| (pet instanceof WolfEntity && IndyPets.CONFIG.independentWolves);
-	}
 
 	@Inject(method = "tick", at = @At("HEAD"))
 	public void delayTick(CallbackInfo ci) {
@@ -44,7 +26,7 @@ public abstract class FollowOwnerGoalMixin extends Goal {
 			if (!follower.isFollowing()) {
 				updateCountdownTicks = 10; // don't follow / teleport to the owner
 			}
-		} else if (!hasToggles(tameable) || hasTogglesAndIsIndependent(tameable)) {
+		} else if (IndyPets.getDefaultIndependence(tameable)) {
 			// Without selective following mode, don't follow / teleport to
 			// the owner unless it was disabled for the pet type
 			updateCountdownTicks = 10;

@@ -1,10 +1,8 @@
 package com.lizin5ths.indypets.mixin;
 
 import com.lizin5ths.indypets.Follower;
+import com.lizin5ths.indypets.IndyPets;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.nbt.NbtCompound;
@@ -18,10 +16,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(TameableEntity.class)
 public abstract class TameableEntityMixin extends AnimalEntity implements Follower {
 	@Unique
-	boolean isFollowing = false;
+	boolean isFollowing;
 
 	protected TameableEntityMixin(EntityType<? extends AnimalEntity> entityType, World world) {
 		super(entityType, world);
+	}
+
+	@Inject(method = "<init>", at = @At(value = "TAIL"))
+	private void initFollowData(EntityType<? extends TameableEntity> entityType, World world, CallbackInfo ci) {
+		isFollowing = !IndyPets.getDefaultIndependence((TameableEntity) (Object) this);
 	}
 
 	@Inject(method = "writeCustomDataToNbt", at = @At("TAIL"))
