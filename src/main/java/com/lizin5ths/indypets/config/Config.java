@@ -17,7 +17,7 @@ import net.minecraft.util.ActionResult;
 @SuppressWarnings("CanBeFinal")
 @me.shedaniel.autoconfig.annotation.Config(name = IndyPets.MOD_ID)
 public class Config implements ConfigData {
-	public static transient Config CONFIG;
+	public static transient Config LOCAL_CONFIG;
 
 	@ConfigEntry.Gui.Tooltip(count = 2)
 	public boolean selectiveFollowing = true;
@@ -47,6 +47,6 @@ public class Config implements ConfigData {
 			return ActionResult.PASS;
 		});
 
-		CONFIG = configHolder.get();
+		LOCAL_CONFIG = configHolder.get();
 	}
 }

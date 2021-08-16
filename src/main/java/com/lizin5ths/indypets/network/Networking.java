@@ -20,7 +20,7 @@ public class Networking {
 
 	public static void sendClientConfig() throws IllegalStateException {
 		PacketByteBuf buf = PacketByteBufs.create();
-		buf.writeString(GSON.toJson(Config.CONFIG));
+		buf.writeString(GSON.toJson(Config.LOCAL_CONFIG));
 		ClientPlayNetworking.send(PLAYER_CONFIG, buf);
 	}
 

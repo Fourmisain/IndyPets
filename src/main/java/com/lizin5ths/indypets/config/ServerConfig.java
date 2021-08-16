@@ -11,6 +11,6 @@ public class ServerConfig {
 	public static Config getPlayerConfig(@Nullable UUID playerUuid) {
 		Config config = PLAYER_CONFIG.get(playerUuid);
 		if (config != null) return config;
-		return Config.CONFIG;
+		return Config.LOCAL_CONFIG;
 	}
 }
