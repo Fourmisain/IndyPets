@@ -6,14 +6,12 @@ import com.lizin5ths.indypets.network.Networking;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.fabricmc.api.ModInitializer;
-
-import java.util.HashSet;
-import java.util.UUID;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class IndyPets implements ModInitializer {
 	public static final String MOD_ID = "indypets";
-
-	public static final HashSet<UUID> hasModInstalled = new HashSet<>();
+	public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
 
 	@Override
 	public void onInitialize() {

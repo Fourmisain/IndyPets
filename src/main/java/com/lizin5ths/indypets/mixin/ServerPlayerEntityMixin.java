@@ -1,6 +1,6 @@
 package com.lizin5ths.indypets.mixin;
 
-import com.lizin5ths.indypets.IndyPets;
+import com.lizin5ths.indypets.config.ServerConfig;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-/** Forget the player had the mod installed, in case they come back without it */
+/** Forget player data when player leaves the server */
 @Mixin(ServerPlayerEntity.class)
 public abstract class ServerPlayerEntityMixin extends PlayerEntity {
 	public ServerPlayerEntityMixin(World world, BlockPos pos, float yaw, GameProfile profile) {
@@ -20,6 +20,7 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity {
 
 	@Inject(method = "onDisconnect", at = @At("TAIL"))
 	public void onDisconnect(CallbackInfo ci) {
-		IndyPets.hasModInstalled.remove(getUuid());
+		ServerConfig.hasModInstalled.remove(getUuid());
+		ServerConfig.PLAYER_CONFIG.remove(getUuid());
 	}
 }

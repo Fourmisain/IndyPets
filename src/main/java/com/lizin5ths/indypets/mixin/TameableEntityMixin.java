@@ -2,6 +2,7 @@ package com.lizin5ths.indypets.mixin;
 
 import com.lizin5ths.indypets.Follower;
 import com.lizin5ths.indypets.config.Config;
+import com.lizin5ths.indypets.config.ServerConfig;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.TameableEntity;
@@ -24,7 +25,9 @@ public abstract class TameableEntityMixin extends AnimalEntity implements Follow
 
 	@Inject(method = "onTamedChanged", at = @At(value = "HEAD"))
 	protected void initFollowData(CallbackInfo ci) {
-		isFollowing = !Config.CONFIG.getDefaultIndependence((TameableEntity) (Object) this);
+		TameableEntity self = (TameableEntity) (Object) this;
+		Config config = ServerConfig.getPlayerConfig(self.getOwnerUuid());
+		isFollowing = !config.getDefaultIndependence(self);
 	}
 
 	@Inject(method = "writeCustomDataToNbt", at = @At("TAIL"))

@@ -1,8 +1,8 @@
 package com.lizin5ths.indypets.util;
 
 import com.lizin5ths.indypets.Follower;
-import com.lizin5ths.indypets.IndyPets;
 import com.lizin5ths.indypets.config.Config;
+import com.lizin5ths.indypets.config.ServerConfig;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.BaseText;
@@ -14,10 +14,12 @@ public class IndyPetsUtil {
 	public static boolean changeFollowing(PlayerEntity player, TameableEntity tameable) {
 		Follower follower = (Follower) tameable;
 
-		if (Config.CONFIG.selectiveFollowing && tameable.isOwner(player)) {
+		Config config = ServerConfig.getPlayerConfig(player.getUuid());
+
+		if (config.selectiveFollowing && tameable.isOwner(player)) {
 			follower.setFollowing(!follower.isFollowing());
 
-			if (!Config.CONFIG.silentMode) {
+			if (!config.silentMode) {
 				sendPetStatusMessage(player, tameable, follower);
 			}
 
@@ -30,7 +32,7 @@ public class IndyPetsUtil {
 	public static void sendPetStatusMessage(PlayerEntity player, TameableEntity tameable, Follower follower) {
 		BaseText text;
 
-		if (IndyPets.hasModInstalled.contains(player.getUuid())) {
+		if (ServerConfig.hasModInstalled.contains(player.getUuid())) {
 			// Send a translatable text
 			String key = follower.isFollowing() ? "text.indypets.following" : "text.indypets.independent";
 			if (tameable.hasCustomName()) {

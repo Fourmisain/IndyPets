@@ -1,0 +1,16 @@
+package com.lizin5ths.indypets.config;
+
+import org.jetbrains.annotations.Nullable;
+
+import java.util.*;
+
+public class ServerConfig {
+	public static final Set<UUID> hasModInstalled = new HashSet<>();
+	public static final Map<UUID, Config> PLAYER_CONFIG = new HashMap<>();
+
+	public static Config getPlayerConfig(@Nullable UUID playerUuid) {
+		Config config = PLAYER_CONFIG.get(playerUuid);
+		if (config != null) return config;
+		return Config.CONFIG;
+	}
+}
