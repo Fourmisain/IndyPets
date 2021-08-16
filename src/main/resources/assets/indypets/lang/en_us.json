@@ -7,6 +7,7 @@
   "text.indypets.following_named_suffix": "\" is following you",
   "text.indypets.independent_named_prefix": "\"",
   "text.indypets.independent_named_suffix": "\" is independent",
+  "text.autoconfig.indypets.title": "Independent Pets",
   "text.autoconfig.indypets.option.selectiveFollowing": "Selective Following",
   "text.autoconfig.indypets.option.selectiveFollowing.@Tooltip[0]": "If true, follow mode is handled per pet (via sneak-interact),",
   "text.autoconfig.indypets.option.selectiveFollowing.@Tooltip[1]": "otherwise pets are independent except when disabled below",
