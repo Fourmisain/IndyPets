@@ -1,6 +1,6 @@
 package com.lizin5ths.indypets.mixin;
 
-import com.lizin5ths.indypets.IndyPets;
+import com.lizin5ths.indypets.network.Networking;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -18,6 +18,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class ClientPlayNetworkHandlerMixin {
 	@Inject(method = "onGameJoin", at = @At("TAIL"))
 	public void onGameJoin(GameJoinS2CPacket packet, CallbackInfo ci) {
-		ClientPlayNetworking.send(IndyPets.MOD_INSTALLED, PacketByteBufs.empty());
+		ClientPlayNetworking.send(Networking.MOD_INSTALLED, PacketByteBufs.empty());
 	}
 }
