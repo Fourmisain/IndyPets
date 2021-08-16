@@ -1,6 +1,6 @@
 package com.lizin5ths.indypets.mixin;
 
-import com.lizin5ths.indypets.IndyPets;
+import com.lizin5ths.indypets.util.IndyPetsUtil;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.MobEntity;
@@ -34,7 +34,7 @@ public abstract class MobEntityMixin extends LivingEntity {
 
 			if (hand == Hand.MAIN_HAND) {
 				if (player.isSneaking()) {
-					if (IndyPets.changeFollowing(player, self)) {
+					if (IndyPetsUtil.changeFollowing(player, self)) {
 						// Note: This blocks interactMob() so it might conflict with other mods using sneak-interact
 						cir.setReturnValue(ActionResult.success(true));
 					}
