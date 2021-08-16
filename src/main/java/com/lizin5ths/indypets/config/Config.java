@@ -17,6 +17,7 @@ import net.minecraft.util.ActionResult;
 @SuppressWarnings("CanBeFinal")
 @me.shedaniel.autoconfig.annotation.Config(name = IndyPets.MOD_ID)
 public class Config implements ConfigData {
+	@ConfigEntry.Gui.Excluded
 	public static transient Config LOCAL_CONFIG;
 
 	@ConfigEntry.Gui.Tooltip(count = 2)
