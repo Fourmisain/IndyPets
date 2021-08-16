@@ -2,16 +2,15 @@ package com.lizin5ths.indypets.config;
 
 import com.lizin5ths.indypets.IndyPets;
 import me.shedaniel.autoconfig.ConfigData;
-import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import net.minecraft.entity.passive.CatEntity;
 import net.minecraft.entity.passive.ParrotEntity;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.passive.WolfEntity;
 
-@Config(name = IndyPets.MOD_ID)
-public class IndyPetsConfig implements ConfigData {
-	public static transient IndyPetsConfig CONFIG;
+@me.shedaniel.autoconfig.annotation.Config(name = IndyPets.MOD_ID)
+public class Config implements ConfigData {
+	public static transient Config CONFIG;
 
 	@ConfigEntry.Gui.Tooltip(count = 2)
 	public boolean selectiveFollowing = true;

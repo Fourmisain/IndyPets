@@ -2,7 +2,7 @@ package com.lizin5ths.indypets.util;
 
 import com.lizin5ths.indypets.Follower;
 import com.lizin5ths.indypets.IndyPets;
-import com.lizin5ths.indypets.config.IndyPetsConfig;
+import com.lizin5ths.indypets.config.Config;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.BaseText;
@@ -14,10 +14,10 @@ public class IndyPetsUtil {
 	public static boolean changeFollowing(PlayerEntity player, TameableEntity tameable) {
 		Follower follower = (Follower) tameable;
 
-		if (IndyPetsConfig.CONFIG.selectiveFollowing && tameable.isOwner(player)) {
+		if (Config.CONFIG.selectiveFollowing && tameable.isOwner(player)) {
 			follower.setFollowing(!follower.isFollowing());
 
-			if (!IndyPetsConfig.CONFIG.silentMode) {
+			if (!Config.CONFIG.silentMode) {
 				sendPetStatusMessage(player, tameable, follower);
 			}
 
