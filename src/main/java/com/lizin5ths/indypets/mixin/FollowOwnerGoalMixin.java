@@ -1,6 +1,6 @@
 package com.lizin5ths.indypets.mixin;
 
-import com.lizin5ths.indypets.Follower;
+import com.lizin5ths.indypets.util.Follower;
 import com.lizin5ths.indypets.config.Config;
 import com.lizin5ths.indypets.config.ServerConfig;
 import net.minecraft.entity.ai.goal.FollowOwnerGoal;
