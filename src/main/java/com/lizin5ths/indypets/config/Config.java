@@ -1,12 +1,19 @@
 package com.lizin5ths.indypets.config;
 
+import com.google.gson.GsonBuilder;
 import com.lizin5ths.indypets.IndyPets;
+import com.lizin5ths.indypets.network.Networking;
+import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigData;
+import me.shedaniel.autoconfig.ConfigHolder;
+import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
+import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.minecraft.entity.passive.CatEntity;
 import net.minecraft.entity.passive.ParrotEntity;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.passive.WolfEntity;
+import net.minecraft.util.ActionResult;
 
 @me.shedaniel.autoconfig.annotation.Config(name = IndyPets.MOD_ID)
 public class Config implements ConfigData {
@@ -26,5 +33,20 @@ public class Config implements ConfigData {
 		if (tameable instanceof ParrotEntity) return independentParrots;
 		if (tameable instanceof WolfEntity)   return independentWolves;
 		return true;
+	}
+
+	public static void init() {
+		ConfigHolder<Configuration> configHolder = AutoConfig.register(Configuration.class, (definition, configClass) -> new GsonConfigSerializer<>(
+			definition, configClass, new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create())
+		);
+
+		configHolder.registerSaveListener((manager, config) -> {
+			try {
+				Networking.sendClientConfig();
+			} catch (IllegalStateException ignored) {}
+			return ActionResult.PASS;
+		});
+
+		CONFIG = configHolder.get();
 	}
 }
