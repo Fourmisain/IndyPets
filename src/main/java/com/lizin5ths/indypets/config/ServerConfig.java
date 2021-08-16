@@ -5,7 +5,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 public class ServerConfig {
-	public static final Set<UUID> hasModInstalled = new HashSet<>();
+	public static final Set<UUID> HAS_MOD_INSTALLED = new HashSet<>();
 	public static final Map<UUID, Config> PLAYER_CONFIG = new HashMap<>();
 
 	public static Config getPlayerConfig(@Nullable UUID playerUuid) {

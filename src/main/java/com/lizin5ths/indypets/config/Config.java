@@ -6,7 +6,6 @@ import com.lizin5ths.indypets.network.Networking;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.ConfigHolder;
-import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.minecraft.entity.passive.CatEntity;
@@ -15,6 +14,7 @@ import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.passive.WolfEntity;
 import net.minecraft.util.ActionResult;
 
+@SuppressWarnings("CanBeFinal")
 @me.shedaniel.autoconfig.annotation.Config(name = IndyPets.MOD_ID)
 public class Config implements ConfigData {
 	public static transient Config CONFIG;
@@ -36,7 +36,7 @@ public class Config implements ConfigData {
 	}
 
 	public static void init() {
-		ConfigHolder<Configuration> configHolder = AutoConfig.register(Configuration.class, (definition, configClass) -> new GsonConfigSerializer<>(
+		ConfigHolder<Config> configHolder = AutoConfig.register(Config.class, (definition, configClass) -> new GsonConfigSerializer<>(
 			definition, configClass, new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create())
 		);
 

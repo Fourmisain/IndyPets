@@ -27,7 +27,7 @@ public class Networking {
 	public static void init() {
 		ServerPlayNetworking.registerGlobalReceiver(Networking.MOD_INSTALLED, (server, player, handler, buf, responseSender) -> {
 			server.execute(() -> {
-				ServerConfig.hasModInstalled.add(player.getUuid());
+				ServerConfig.HAS_MOD_INSTALLED.add(player.getUuid());
 			});
 		});
 
@@ -39,7 +39,7 @@ public class Networking {
 					Config config = GSON.fromJson(json, Config.class);
 					ServerConfig.PLAYER_CONFIG.put(player.getUuid(), config);
 				} catch (JsonSyntaxException e) {
-					IndyPets.LOGGER.error("couldn't parse received player config!");
+					IndyPets.LOGGER.error("couldn't parse received player config! \"{}\"", json, e);
 				}
 			});
 		});

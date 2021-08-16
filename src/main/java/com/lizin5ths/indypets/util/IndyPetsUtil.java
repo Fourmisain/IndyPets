@@ -32,7 +32,7 @@ public class IndyPetsUtil {
 	public static void sendPetStatusMessage(PlayerEntity player, TameableEntity tameable, Follower follower) {
 		BaseText text;
 
-		if (ServerConfig.hasModInstalled.contains(player.getUuid())) {
+		if (ServerConfig.HAS_MOD_INSTALLED.contains(player.getUuid())) {
 			// Send a translatable text
 			String key = follower.isFollowing() ? "text.indypets.following" : "text.indypets.independent";
 			if (tameable.hasCustomName()) {
