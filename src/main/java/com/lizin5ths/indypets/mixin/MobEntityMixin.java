@@ -26,18 +26,16 @@ public abstract class MobEntityMixin extends LivingEntity {
 			target = "Lnet/minecraft/entity/mob/MobEntity;interactMob(Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/util/Hand;)Lnet/minecraft/util/ActionResult;"),
 		cancellable = true
 	)
-	public final void interact(PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResult> cir) {
+	public final void tryChangeFollowing(PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResult> cir) {
 		if (world.isClient) return;
 
 		if ((Object) this instanceof TameableEntity) {
 			TameableEntity self = (TameableEntity) (Object) this;
 
-			if (hand == Hand.MAIN_HAND) {
-				if (player.isSneaking()) {
-					if (IndyPetsUtil.changeFollowing(player, self)) {
-						// Note: This blocks interactMob() so it might conflict with other mods using sneak-interact
-						cir.setReturnValue(ActionResult.success(true));
-					}
+			if (player.isSneaking() && hand == Hand.MAIN_HAND) {
+				if (IndyPetsUtil.changeFollowing(player, self)) {
+					// Note: This blocks interactMob() so it might conflict with other mods using sneak-interact
+					cir.setReturnValue(ActionResult.success(true));
 				}
 			}
 		}
