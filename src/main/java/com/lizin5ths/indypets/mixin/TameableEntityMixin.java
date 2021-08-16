@@ -25,6 +25,8 @@ public abstract class TameableEntityMixin extends AnimalEntity implements Follow
 
 	@Inject(method = "onTamedChanged", at = @At(value = "HEAD"))
 	protected void initFollowData(CallbackInfo ci) {
+		if (world.isClient) return;
+
 		TameableEntity self = (TameableEntity) (Object) this;
 		Config config = ServerConfig.getPlayerConfig(self.getOwnerUuid());
 		isFollowing = !config.getDefaultIndependence(self);
