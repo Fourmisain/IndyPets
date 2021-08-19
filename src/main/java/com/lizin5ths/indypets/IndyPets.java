@@ -1,5 +1,6 @@
 package com.lizin5ths.indypets;
 
+import com.lizin5ths.indypets.command.Commands;
 import com.lizin5ths.indypets.config.Config;
 import com.lizin5ths.indypets.network.Networking;
 import net.fabricmc.api.ModInitializer;
@@ -14,5 +15,6 @@ public class IndyPets implements ModInitializer {
 	public void onInitialize() {
 		Config.init();
 		Networking.init();
+		Commands.init();
 	}
 }

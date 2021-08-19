@@ -6,6 +6,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
@@ -33,7 +34,7 @@ public abstract class MobEntityMixin extends LivingEntity {
 			TameableEntity self = (TameableEntity) (Object) this;
 
 			if (player.isSneaking() && hand == Hand.MAIN_HAND) {
-				if (IndyPetsUtil.changeFollowing(player, self)) {
+				if (IndyPetsUtil.changeFollowing((ServerPlayerEntity) player, self)) {
 					// Note: This blocks interactMob() so it might conflict with other mods using sneak-interact
 					cir.setReturnValue(ActionResult.success(true));
 				}

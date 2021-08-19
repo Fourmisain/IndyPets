@@ -2,15 +2,19 @@ package com.lizin5ths.indypets.util;
 
 import com.lizin5ths.indypets.config.Config;
 import com.lizin5ths.indypets.config.ServerConfig;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.BaseText;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Util;
 
+import java.util.UUID;
+
 public class IndyPetsUtil {
-	public static boolean changeFollowing(PlayerEntity player, TameableEntity tameable) {
+	public static boolean changeFollowing(ServerPlayerEntity player, TameableEntity tameable) {
 		Follower follower = (Follower) tameable;
 
 		Config config = ServerConfig.getPlayerConfig(player.getUuid());
@@ -61,5 +65,24 @@ public class IndyPetsUtil {
 		}
 
 		player.sendSystemMessage(text, Util.NIL_UUID);
+	}
+
+	public static boolean isFollowing(Entity entity) {
+		if (entity instanceof Follower) {
+			Follower follower = (Follower) entity;
+			return follower.isFollowing();
+		}
+
+		return false;
+	}
+
+	public static boolean isPetOf(Entity entity, PlayerEntity player) {
+		if (entity instanceof TameableEntity) {
+			TameableEntity tameable = (TameableEntity) entity;
+			UUID owner = tameable.getOwnerUuid();
+			return owner != null && owner.equals(player.getUuid());
+		}
+
+		return false;
 	}
 }
