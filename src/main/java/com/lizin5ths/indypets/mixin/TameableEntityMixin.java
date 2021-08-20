@@ -1,8 +1,8 @@
 package com.lizin5ths.indypets.mixin;
 
-import com.lizin5ths.indypets.util.Follower;
 import com.lizin5ths.indypets.config.Config;
 import com.lizin5ths.indypets.config.ServerConfig;
+import com.lizin5ths.indypets.util.Follower;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.TameableEntity;
@@ -23,16 +23,20 @@ public abstract class TameableEntityMixin extends AnimalEntity implements Follow
 		super(entityType, world);
 	}
 
-	@Inject(method = "onTamedChanged", at = @At(value = "HEAD"))
+	@Inject(method = "setOwnerUuid", at = @At(value = "TAIL"))
 	protected void initFollowData(CallbackInfo ci) {
 		if (world.isClient) return;
 
 		TameableEntity self = (TameableEntity) (Object) this;
-		Config config = ServerConfig.getPlayerConfig(self.getOwnerUuid());
-		isFollowing = !config.getDefaultIndependence(self);
+
+		// only set state if it was player-caused
+		Config config = ServerConfig.PLAYER_CONFIG.get(self.getOwnerUuid());
+		if (config != null) {
+			isFollowing = !config.getDefaultIndependence(self);
+		}
 	}
 
-	@Inject(method = "writeCustomDataToNbt", at = @At("TAIL"))
+	@Inject(method = "writeCustomDataToNbt", at = @At("HEAD"))
 	private void writeFollowDataToNbt(NbtCompound nbt, CallbackInfo callbackInfo) {
 		nbt.putBoolean("AllowedToFollow", isFollowing);
 	}
