@@ -5,6 +5,7 @@ import com.lizin5ths.indypets.config.ServerConfig;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.BaseText;
 import net.minecraft.text.LiteralText;
@@ -23,6 +24,16 @@ public class IndyPetsUtil {
 			Config config = ServerConfig.getDefaultedPlayerConfig(player.getUuid());
 			if (!config.silentMode) {
 				sendPetStatusMessage(player, tameable, follower);
+			} else {
+				if (follower.isFollowing()) {
+					player.getServerWorld().spawnParticles(player, ParticleTypes.HAPPY_VILLAGER, true,
+						tameable.getX(), tameable.getBodyY(0.5), tameable.getZ(),
+						11, 0.5, 0.5, 0.5, 2);
+				} else {
+					player.getServerWorld().spawnParticles(player, ParticleTypes.ANGRY_VILLAGER, true,
+						tameable.getX(), tameable.getBodyY(0.5), tameable.getZ(),
+						7, 0.4, 0.4, 0.4, 0.3);
+				}
 			}
 
 			return true;

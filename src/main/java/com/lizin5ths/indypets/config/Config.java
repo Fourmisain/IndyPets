@@ -24,7 +24,6 @@ public class Config implements ConfigData {
 	public boolean independentParrots = true;
 	public boolean independentWolves = true;
 
-	@ConfigEntry.Gui.Tooltip
 	public boolean silentMode = false;
 
 	public boolean getDefaultIndependence(TameableEntity tameable) {

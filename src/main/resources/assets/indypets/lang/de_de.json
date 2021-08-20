@@ -7,8 +7,7 @@
   "text.indypets.following_named_suffix": "\" folgt dir",
   "text.indypets.independent_named_prefix": "\"",
   "text.indypets.independent_named_suffix": "\" ist unabhängig",
-  "text.autoconfig.indypets.option.silentMode": "Textnachrichten ausschalten (nicht empfohlen)",
-  "text.autoconfig.indypets.option.silentMode.@Tooltip": "Es gibt keinen anderen Hinweis ob dir ein Haustier folgt.",
+  "text.autoconfig.indypets.option.silentMode": "Textnachrichten ausschalten/Partikeleffekte benutzen",
   "text.autoconfig.indypets.option.independentCats": "Katzen sind standardmäßig unabhängig",
   "text.autoconfig.indypets.option.independentParrots": "Papageien sind standardmäßig unabhängig",
   "text.autoconfig.indypets.option.independentWolves": "Wölfe sind standardmäßig unabhängig"
