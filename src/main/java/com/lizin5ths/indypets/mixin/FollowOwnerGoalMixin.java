@@ -21,18 +21,8 @@ public abstract class FollowOwnerGoalMixin extends Goal {
 	@Inject(method = "tick", at = @At("HEAD"))
 	public void delayTick(CallbackInfo ci) {
 		Follower follower = (Follower) tameable;
-
-		Config config = ServerConfig.getPlayerConfig(tameable.getOwnerUuid());
-
-		if (config.selectiveFollowing) {
-			// In selective following mode, handle each pet separately
-			if (!follower.isFollowing()) {
-				updateCountdownTicks = 10; // don't follow / teleport to the owner
-			}
-		} else if (config.getDefaultIndependence(tameable)) {
-			// Without selective following mode, don't follow / teleport to
-			// the owner unless it was disabled for the pet type
-			updateCountdownTicks = 10;
+		if (!follower.isFollowing()) {
+			updateCountdownTicks = 10; // don't follow / teleport to the owner
 		}
 	}
 }

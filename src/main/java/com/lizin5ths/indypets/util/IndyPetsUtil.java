@@ -17,11 +17,10 @@ public class IndyPetsUtil {
 	public static boolean changeFollowing(ServerPlayerEntity player, TameableEntity tameable) {
 		Follower follower = (Follower) tameable;
 
-		Config config = ServerConfig.getPlayerConfig(player.getUuid());
-
-		if (config.selectiveFollowing && tameable.isOwner(player)) {
+		if (tameable.isOwner(player)) {
 			follower.setFollowing(!follower.isFollowing());
 
+			Config config = ServerConfig.getPlayerConfig(player.getUuid());
 			if (!config.silentMode) {
 				sendPetStatusMessage(player, tameable, follower);
 			}

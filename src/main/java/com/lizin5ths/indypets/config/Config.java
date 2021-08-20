@@ -20,8 +20,6 @@ public class Config implements ConfigData {
 	@ConfigEntry.Gui.Excluded
 	public static transient Config LOCAL_CONFIG;
 
-	@ConfigEntry.Gui.Tooltip(count = 2)
-	public boolean selectiveFollowing = true;
 	public boolean independentCats = true;
 	public boolean independentParrots = true;
 	public boolean independentWolves = true;
