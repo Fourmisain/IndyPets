@@ -18,6 +18,10 @@ public class Networking {
 
 	public static final Gson GSON = new GsonBuilder().disableHtmlEscaping().create();
 
+	public static void sendModInstalled() throws IllegalStateException {
+		ClientPlayNetworking.send(Networking.MOD_INSTALLED, PacketByteBufs.empty());
+	}
+
 	public static void sendClientConfig() throws IllegalStateException {
 		PacketByteBuf buf = PacketByteBufs.create();
 		buf.writeString(GSON.toJson(Config.LOCAL_CONFIG));
