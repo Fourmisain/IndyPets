@@ -9,7 +9,7 @@ This is the official continuation of lizin5ths's [Independent Pets v0.4.1 on Cur
     Selective Following! Interact while sneaking to toggle for individual pets.
 
 - requires [Cloth Config](https://www.curseforge.com/minecraft/mc-mods/cloth-config) and Fabric API
-- works on all Minecraft 1.16 and 1.17 versions
+- works on all Minecraft 1.16, 1.17 and 1.18 versions
 - works server-only, client-side installation allows for config synchronization and message translation
 - works on singleplayer if installed on the client
 
