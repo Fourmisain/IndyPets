@@ -8,7 +8,7 @@
   "text.indypets.independent_named_prefix": "\"",
   "text.indypets.independent_named_suffix": "\" is independent",
   "text.autoconfig.indypets.title": "Independent Pets",
-  "text.autoconfig.indypets.option.silentMode": "Disable text messages/Use particle effects",
+  "text.autoconfig.indypets.option.silentMode": "Use particle effects instead of text messages",
   "text.autoconfig.indypets.option.independentCats": "Cats are independent by default",
   "text.autoconfig.indypets.option.independentParrots": "Parotts are independent by default",
   "text.autoconfig.indypets.option.independentWolves": "Wolves are independent by default"
