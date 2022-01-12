@@ -23,6 +23,7 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.registry.Registry;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import static com.lizin5ths.indypets.util.IndyPetsUtil.isFollowing;
@@ -46,7 +47,7 @@ public class Commands {
 			ServerWorld world = context.getSource().getWorld();
 			ServerPlayerEntity player = context.getSource().getPlayer();
 
-			ArrayList<Identifier> suggestions = new ArrayList<>();
+			List<Identifier> suggestions = new ArrayList<>();
 
 			// suggest ids of owned, nearby pets that can be affected
 			for (Entity entity : world.getOtherEntities(null,
