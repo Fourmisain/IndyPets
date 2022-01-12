@@ -26,6 +26,9 @@ public class Config implements ConfigData {
 
 	public boolean silentMode = false;
 
+	@ConfigEntry.Gui.Tooltip(count = 3)
+	public Blocklist blocklist = Blocklist.getDefault();
+
 	public boolean getDefaultIndependence(TameableEntity tameable) {
 		if (tameable instanceof CatEntity)    return independentCats;
 		if (tameable instanceof ParrotEntity) return independentParrots;
@@ -34,9 +37,15 @@ public class Config implements ConfigData {
 	}
 
 	public static void init() {
-		ConfigHolder<Config> configHolder = AutoConfig.register(Config.class, (definition, configClass) -> new GsonConfigSerializer<>(
-			definition, configClass, new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create())
+		ConfigHolder<Config> configHolder = AutoConfig.register(Config.class, (definition, configClass) -> new GsonConfigSerializer<>(definition, configClass,
+			new GsonBuilder()
+				.setPrettyPrinting()
+				.disableHtmlEscaping()
+				.registerTypeAdapter(Blocklist.class, BlocklistTypeAdapter.INST)
+				.create())
 		);
+
+		AutoConfig.getGuiRegistry(Config.class).registerPredicateProvider(new BlocklistGuiProvider(), field -> field.getType().equals(Blocklist.class));
 
 		configHolder.registerSaveListener((manager, config) -> {
 			try {

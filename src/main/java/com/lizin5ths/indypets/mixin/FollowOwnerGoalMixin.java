@@ -1,9 +1,13 @@
 package com.lizin5ths.indypets.mixin;
 
+import com.lizin5ths.indypets.config.Config;
+import com.lizin5ths.indypets.config.ServerConfig;
 import com.lizin5ths.indypets.util.Follower;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.FollowOwnerGoal;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.passive.TameableEntity;
+import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -18,8 +22,13 @@ public abstract class FollowOwnerGoalMixin extends Goal {
 
 	@Inject(method = "tick", at = @At("HEAD"))
 	public void delayTick(CallbackInfo ci) {
-		Follower follower = (Follower) tameable;
-		if (!follower.isFollowing()) {
+		Identifier id = EntityType.getId(tameable.getType());
+
+		Config config = ServerConfig.getDefaultedPlayerConfig(tameable.getOwnerUuid());
+		if (config.blocklist.isBlocked(id))
+			return;
+
+		if (!((Follower) tameable).isFollowing()) {
 			updateCountdownTicks = 10; // don't follow / teleport to the owner
 		}
 	}

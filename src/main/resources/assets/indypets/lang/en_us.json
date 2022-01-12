@@ -11,5 +11,10 @@
   "text.autoconfig.indypets.option.silentMode": "Use particle effects instead of text messages",
   "text.autoconfig.indypets.option.independentCats": "Cats are independent by default",
   "text.autoconfig.indypets.option.independentParrots": "Parotts are independent by default",
-  "text.autoconfig.indypets.option.independentWolves": "Wolves are independent by default"
+  "text.autoconfig.indypets.option.independentWolves": "Wolves are independent by default",
+  "text.autoconfig.indypets.option.blocklist": "Pet Blocklist",
+  "text.autoconfig.indypets.option.blocklist.@Tooltip[0]": "Block IndyPets (independence and interactions) for specific pet types.",
+  "text.autoconfig.indypets.option.blocklist.@Tooltip[1]": "Useful for modded pets that don't have a follow mode or have their own way of changing it.",
+  "text.autoconfig.indypets.option.blocklist.@Tooltip[2]": "Add \"modid:*\" to disable all pets of a given mod.",
+  "text.autoconfig.indypets.option.blocklist.error": "Invalid blocklist entry"
 }

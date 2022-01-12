@@ -1,5 +1,7 @@
 package com.lizin5ths.indypets.mixin;
 
+import com.lizin5ths.indypets.config.Config;
+import com.lizin5ths.indypets.config.ServerConfig;
 import com.lizin5ths.indypets.util.IndyPetsUtil;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -9,6 +11,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -32,6 +35,11 @@ public abstract class MobEntityMixin extends LivingEntity {
 
 		if ((Object) this instanceof TameableEntity) {
 			TameableEntity self = (TameableEntity) (Object) this;
+			Identifier id = EntityType.getId(self.getType());
+
+			Config config = ServerConfig.getDefaultedPlayerConfig(player.getUuid());
+			if (config.blocklist.isBlocked(id))
+				return;
 
 			if (player.isSneaking() && hand == Hand.MAIN_HAND) {
 				if (IndyPetsUtil.changeFollowing((ServerPlayerEntity) player, self)) {
