@@ -13,6 +13,7 @@ import net.minecraft.entity.passive.ParrotEntity;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.passive.WolfEntity;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.Identifier;
 
 @SuppressWarnings("CanBeFinal")
 @me.shedaniel.autoconfig.annotation.Config(name = IndyPets.MOD_ID)
@@ -29,6 +30,9 @@ public class Config implements ConfigData {
 	@ConfigEntry.Gui.Tooltip(count = 3)
 	public Blocklist blocklist = Blocklist.getDefault();
 
+	@ConfigEntry.Gui.Tooltip
+	public Identifier interactItem = null;
+
 	public boolean getDefaultIndependence(TameableEntity tameable) {
 		if (tameable instanceof CatEntity)    return independentCats;
 		if (tameable instanceof ParrotEntity) return independentParrots;
@@ -42,10 +46,12 @@ public class Config implements ConfigData {
 				.setPrettyPrinting()
 				.disableHtmlEscaping()
 				.registerTypeAdapter(Blocklist.class, BlocklistTypeAdapter.INST)
+				.registerTypeAdapter(Identifier.class, IdentifierTypeAdapter.INST)
 				.create())
 		);
 
 		AutoConfig.getGuiRegistry(Config.class).registerPredicateProvider(new BlocklistGuiProvider(), field -> field.getType().equals(Blocklist.class));
+		AutoConfig.getGuiRegistry(Config.class).registerPredicateProvider(new ItemGuiProvider(), field -> field.getName().equals("interactItem"));
 
 		configHolder.registerSaveListener((manager, config) -> {
 			try {

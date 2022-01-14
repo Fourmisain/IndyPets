@@ -12,6 +12,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -37,11 +38,19 @@ public abstract class MobEntityMixin extends LivingEntity {
 			TameableEntity self = (TameableEntity) (Object) this;
 			Identifier id = EntityType.getId(self.getType());
 
+			// don't interact with blocked pets
 			Config config = ServerConfig.getDefaultedPlayerConfig(player.getUuid());
 			if (config.blocklist.isBlocked(id))
 				return;
 
 			if (player.isSneaking() && hand == Hand.MAIN_HAND) {
+				if (config.interactItem != null) {
+					// only interact when holding the chosen item
+					Identifier itemId = Registry.ITEM.getId(player.getMainHandStack().getItem());
+					if (!itemId.equals(config.interactItem))
+						return;
+				}
+
 				if (IndyPetsUtil.changeFollowing((ServerPlayerEntity) player, self)) {
 					// Note: This blocks interactMob() so it might conflict with other mods using sneak-interact
 					cir.setReturnValue(ActionResult.success(true));
