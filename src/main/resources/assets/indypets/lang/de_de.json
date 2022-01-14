@@ -10,5 +10,12 @@
   "text.autoconfig.indypets.option.silentMode": "Partikeleffekte anstatt Textnachrichten benutzen",
   "text.autoconfig.indypets.option.independentCats": "Katzen sind standardmäßig unabhängig",
   "text.autoconfig.indypets.option.independentParrots": "Papageien sind standardmäßig unabhängig",
-  "text.autoconfig.indypets.option.independentWolves": "Wölfe sind standardmäßig unabhängig"
+  "text.autoconfig.indypets.option.independentWolves": "Wölfe sind standardmäßig unabhängig",
+  "text.autoconfig.indypets.option.blocklist": "Blockliste",
+  "text.autoconfig.indypets.option.blocklist.@Tooltip[0]": "Deaktiviert IndyPets für spezifische Tiere.",
+  "text.autoconfig.indypets.option.blocklist.@Tooltip[1]": "Nützlich für gemoddete Tiere mit eigener Folge-Mechanik.",
+  "text.autoconfig.indypets.option.blocklist.@Tooltip[2]": "\"modid:*\" deaktiviert alle Tiere von der gegebenen Mod.",
+  "text.autoconfig.indypets.option.blocklist.error": "Ungültiger Blocklisteneintrag",
+  "text.autoconfig.indypets.option.interactItem": "Benötigter Gegenstand zum Interagieren",
+  "text.autoconfig.indypets.option.interactItem.@Tooltip": "Leer lassen um gehaltenen Gegenstand zu ignorieren"
 }
