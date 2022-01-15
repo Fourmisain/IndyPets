@@ -20,6 +20,9 @@
 		"main": [
 			"com.lizin5ths.indypets.IndyPets"
 		],
+		"client": [
+			"com.lizin5ths.indypets.IndyPetsClient"
+		],
 		"modmenu": [
 			"com.lizin5ths.indypets.config.ConfigScreen"
 		]

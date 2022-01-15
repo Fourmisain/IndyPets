@@ -8,6 +8,8 @@ import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.ConfigHolder;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.entity.passive.CatEntity;
 import net.minecraft.entity.passive.ParrotEntity;
 import net.minecraft.entity.passive.TameableEntity;
@@ -50,9 +52,6 @@ public class Config implements ConfigData {
 				.create())
 		);
 
-		AutoConfig.getGuiRegistry(Config.class).registerPredicateProvider(new BlocklistGuiProvider(), field -> field.getType().equals(Blocklist.class));
-		AutoConfig.getGuiRegistry(Config.class).registerPredicateProvider(new ItemGuiProvider(), field -> field.getName().equals("interactItem"));
-
 		configHolder.registerSaveListener((manager, config) -> {
 			try {
 				Networking.sendClientConfig();
@@ -61,5 +60,11 @@ public class Config implements ConfigData {
 		});
 
 		LOCAL_CONFIG = configHolder.get();
+	}
+
+	@Environment(EnvType.CLIENT)
+	public static void clientInit() {
+		AutoConfig.getGuiRegistry(Config.class).registerPredicateProvider(new BlocklistGuiProvider(), field -> field.getType().equals(Blocklist.class));
+		AutoConfig.getGuiRegistry(Config.class).registerPredicateProvider(new ItemGuiProvider(), field -> field.getName().equals("interactItem"));
 	}
 }
