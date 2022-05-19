@@ -7,10 +7,8 @@ import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.BaseText;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Util;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Text;
 
 import java.util.UUID;
 
@@ -43,7 +41,7 @@ public class IndyPetsUtil {
 	}
 
 	public static void sendPetStatusMessage(PlayerEntity player, TameableEntity tameable, Follower follower) {
-		BaseText text;
+		MutableText text;
 
 		if (ServerConfig.HAS_MOD_INSTALLED.contains(player.getUuid())) {
 			// Send a translatable text
@@ -53,9 +51,9 @@ public class IndyPetsUtil {
 			}
 
 			// This is a workaround for not being able to nest TranslatableText (the name especially)
-			text = new TranslatableText(key + "_prefix");
+			text = Text.translatable(key + "_prefix");
 			text.append(tameable.getName());
-			text.append(new TranslatableText(key + "_suffix"));
+			text.append(Text.translatable(key + "_suffix"));
 		} else {
 			// Default to sending an English message
 			String name = tameable.getName().getString();
@@ -71,10 +69,10 @@ public class IndyPetsUtil {
 			}
 			sb.append(follower.isFollowing() ? " is following you" : " is independent");
 
-			text = new LiteralText(sb.toString());
+			text = Text.translatable(sb.toString());
 		}
 
-		player.sendSystemMessage(text, Util.NIL_UUID);
+		player.sendMessage(text, false);
 	}
 
 	public static boolean isFollowing(Entity entity) {

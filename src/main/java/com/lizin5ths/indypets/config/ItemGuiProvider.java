@@ -8,14 +8,14 @@ import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import me.shedaniel.clothconfig2.impl.builders.DropdownMenuBuilder;
 import net.minecraft.item.Item;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.LiteralTextContent;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableTextContent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
 import java.lang.reflect.Field;
 import java.util.*;
-import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -57,11 +57,11 @@ public class ItemGuiProvider implements GuiProvider {
     public List<AbstractConfigListEntry> get(String i13n, Field field, Object config, Object defaults, GuiRegistryAccess registry) {
         return Collections.singletonList(
             ConfigEntryBuilder.create()
-                .startDropdownMenu(new TranslatableText("text.autoconfig.indypets.option.interactItem"),
+                .startDropdownMenu(Text.translatable("text.autoconfig.indypets.option.interactItem"),
                     DropdownMenuBuilder.TopCellElementBuilder.of(
                         ItemGuiProvider.get(field, config),
                         ItemGuiProvider::toObject,
-                        value -> new LiteralText(value == NULL ? "" : value.toString())),
+                        value -> Text.literal(value == NULL ? "" : value.toString())),
                     DropdownMenuBuilder.CellCreatorBuilder.ofItemIdentifier())
                 .setDefaultValue(NULL)
                 .setSelections(

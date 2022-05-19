@@ -5,8 +5,8 @@ import me.shedaniel.autoconfig.gui.registry.api.GuiRegistryAccess;
 import me.shedaniel.autoconfig.util.Utils;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
-import net.minecraft.text.TranslatableText;
-
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableTextContent;
 import java.lang.reflect.Field;
 import java.util.Collections;
 import java.util.List;
@@ -21,7 +21,7 @@ public class BlocklistGuiProvider implements GuiProvider {
     public List<AbstractConfigListEntry> get(String i13n, Field field, Object config, Object defaults, GuiRegistryAccess registry) {
         return Collections.singletonList(
             ConfigEntryBuilder.create()
-                .startStrList(new TranslatableText(i13n), blocklistToRaw(Utils.getUnsafely(field, config)))
+                .startStrList(Text.translatable(i13n), blocklistToRaw(Utils.getUnsafely(field, config)))
                 .setDefaultValue(() -> blocklistToRaw(Utils.getUnsafely(field, defaults)))
                 .setSaveConsumer(newValue -> Utils.setUnsafely(field, config, blocklistFromRaw(newValue)))
                 .setErrorSupplier(newValue -> {
@@ -29,7 +29,7 @@ public class BlocklistGuiProvider implements GuiProvider {
                         blocklistFromRaw(newValue);
                         return Optional.empty();
                     } catch (Exception e) {
-                        return Optional.of(new TranslatableText("text.autoconfig.indypets.option.blocklist.error"));
+                        return Optional.of(Text.translatable("text.autoconfig.indypets.option.blocklist.error"));
                     }
                 })
                 .build()

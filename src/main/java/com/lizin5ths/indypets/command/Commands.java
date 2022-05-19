@@ -45,7 +45,7 @@ public class Commands {
 		@Override
 		public CompletableFuture<Suggestions> getSuggestions(CommandContext<ServerCommandSource> context, SuggestionsBuilder builder) throws CommandSyntaxException {
 			ServerWorld world = context.getSource().getWorld();
-			ServerPlayerEntity player = context.getSource().getPlayer();
+			ServerPlayerEntity player = context.getSource().getPlayerOrThrow();
 
 			List<Identifier> suggestions = new ArrayList<>();
 
