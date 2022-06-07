@@ -31,9 +31,9 @@
 		"indypets.mixins.json"
 	],
 	"depends": {
-		"fabricloader": "*",
+		"fabricloader": ">=0.14.6",
 		"fabric": "*",
-		"minecraft": ">=1.16",
-		"cloth-config2": ">=4.0.0"
+		"minecraft": ">=1.19",
+		"cloth-config2": ">=7.0.0"
 	}
 }
