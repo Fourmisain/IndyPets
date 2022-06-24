@@ -19,6 +19,9 @@
   "text.autoconfig.indypets.option.blocklist.error": "Invalid blocklist entry",
   "text.autoconfig.indypets.option.interactItem": "Item needed to interact",
   "text.autoconfig.indypets.option.interactItem.@Tooltip": "Leave blank to ignore held item",
+  "key.categories.indypets": "Independent Pets",
+  "key.indypets.whistle": "Whistle",
+  "key.indypets.unwhistle": "Unwhistle",
   "subtitles.indypets.whistle": "Player whistles",
   "subtitles.indypets.unwhistle": "Player unwhistles"
 }
