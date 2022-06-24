@@ -18,6 +18,9 @@
   "text.autoconfig.indypets.option.blocklist.error": "Ungültiger Blocklisteneintrag",
   "text.autoconfig.indypets.option.interactItem": "Benötigter Gegenstand zum Interagieren",
   "text.autoconfig.indypets.option.interactItem.@Tooltip": "Leer lassen um gehaltenen Gegenstand zu ignorieren",
+  "key.categories.indypets": "Independent Pets",
+  "key.indypets.whistle": "Pfeifen",
+  "key.indypets.unwhistle": "Entpfeifen",
   "subtitles.indypets.whistle": "Spieler pfeift",
   "subtitles.indypets.unwhistle": "Spieler entpfeift"
 }
