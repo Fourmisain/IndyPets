@@ -6,7 +6,7 @@ import me.shedaniel.autoconfig.util.Utils;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableTextContent;
+
 import java.lang.reflect.Field;
 import java.util.Collections;
 import java.util.List;

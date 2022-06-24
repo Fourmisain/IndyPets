@@ -17,5 +17,7 @@
   "text.autoconfig.indypets.option.blocklist.@Tooltip[2]": "\"modid:*\" deaktiviert alle Tiere von der gegebenen Mod.",
   "text.autoconfig.indypets.option.blocklist.error": "Ungültiger Blocklisteneintrag",
   "text.autoconfig.indypets.option.interactItem": "Benötigter Gegenstand zum Interagieren",
-  "text.autoconfig.indypets.option.interactItem.@Tooltip": "Leer lassen um gehaltenen Gegenstand zu ignorieren"
+  "text.autoconfig.indypets.option.interactItem.@Tooltip": "Leer lassen um gehaltenen Gegenstand zu ignorieren",
+  "subtitles.indypets.whistle": "Spieler pfeift",
+  "subtitles.indypets.unwhistle": "Spieler entpfeift"
 }
