@@ -1,0 +1,16 @@
+{
+  "whistle": {
+    "sounds": [
+      "indypets:entity/player/whistle1",
+      "indypets:entity/player/whistle2",
+      "indypets:entity/player/whistle3"
+    ],
+    "subtitle": "subtitles.indypets.whistle"
+  },
+  "unwhistle": {
+    "sounds": [
+      "indypets:entity/player/unwhistle"
+    ],
+    "subtitle": "subtitles.indypets.unwhistle"
+  }
+}

@@ -7,11 +7,12 @@ This is the official continuation of lizin5ths's [Independent Pets v0.4.1 on Cur
 
     Disable the follow+teleport behavior of all tamed mobs, including modded ones!
     Selective Following! Interact while sneaking to toggle for individual pets.
+    /indypets whilste and unwhistle commands or keybinds to rally your army of pets!
 
+- for Minecraft 1.16 and above
 - requires [Cloth Config](https://www.curseforge.com/minecraft/mc-mods/cloth-config) and Fabric API
-- works on all Minecraft 1.16, 1.17 and 1.18 versions
-- works server-only, client-side installation allows for config synchronization and message translation
-- works on singleplayer if installed on the client
+- can work server-only
+- client-side installation allows for config synchronization, message translation and using whistle/unwhistle hotkeys
 
 ### Changelog
 
@@ -21,3 +22,9 @@ This is the official continuation of lizin5ths's [Independent Pets v0.4.1 on Cur
 - a new JSON config with Mod Menu support replaces the old 'properties' one
 - client configs are synchronized with the server, so each player can have their own settings
 - `/indypets whistle` and `unwhistle` commands to set follow behavior for all nearby pets (of optionally specified type)
+- keybindings to whilste and unwhilste your pets
+
+### Credits
+
+`whistle1.ogg`, `whistle2.ogg`, `whistle3.ogg` were clipped from https://bigsoundbank.com/detail-1173-whistling-in-the-mouth.html, CC0 licensed  
+`unwhistle.ogg` was slightly edited from https://freesound.org/people/PlumForestPodcast/sounds/519659/, CC0 licensed
