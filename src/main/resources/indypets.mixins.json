@@ -8,7 +8,9 @@
     "IdentifierAccessor",
     "MobEntityMixin",
     "ServerPlayerEntityMixin",
-    "TameableEntityMixin"
+    "TameableEntityMixin",
+    "WanderAroundGoalAccessor",
+    "WanderAroundGoalMixin"
   ],
   "client": [
     "ClientPlayNetworkHandlerMixin"
