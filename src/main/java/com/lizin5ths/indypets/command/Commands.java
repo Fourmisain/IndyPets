@@ -26,20 +26,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-import static com.lizin5ths.indypets.util.IndyPetsUtil.isFollowing;
-import static com.lizin5ths.indypets.util.IndyPetsUtil.isPetOf;
+import static com.lizin5ths.indypets.util.IndyPetsUtil.*;
 import static net.minecraft.server.command.CommandManager.argument;
 import static net.minecraft.server.command.CommandManager.literal;
 
 public class Commands {
 	private static class WhistleSuggestionProvider implements SuggestionProvider<ServerCommandSource> {
-		public static WhistleSuggestionProvider FOLLOWING = new WhistleSuggestionProvider(true);
-		public static WhistleSuggestionProvider INDEPENDENT = new WhistleSuggestionProvider(false);
+		public static WhistleSuggestionProvider INDEPENDENT = new WhistleSuggestionProvider(true);
+		public static WhistleSuggestionProvider FOLLOWING = new WhistleSuggestionProvider(false);
 
-		private final boolean following;
+		private final boolean independent;
 
-		public WhistleSuggestionProvider(boolean following) {
-			this.following = following;
+		public WhistleSuggestionProvider(boolean independent) {
+			this.independent = independent;
 		}
 
 		@Override
@@ -52,7 +51,7 @@ public class Commands {
 			// suggest ids of owned, nearby pets that can be affected
 			for (Entity entity : world.getOtherEntities(null,
 				new Box(player.getPos(), player.getPos()).expand(64),
-				(entity -> isPetOf(entity, player) && (following == isFollowing(entity))))) {
+				(entity -> isPetOf(entity, player) && (independent == isIndependent((TameableEntity) entity))))) {
 				suggestions.add(Registry.ENTITY_TYPE.getId(entity.getType()));
 			}
 

@@ -1,4 +1,4 @@
-package com.lizin5ths.indypets.mixin;
+package com.lizin5ths.indypets.mixin.access;
 
 import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Mixin;

@@ -3,6 +3,7 @@ package com.lizin5ths.indypets.util;
 import com.lizin5ths.indypets.config.Config;
 import com.lizin5ths.indypets.config.ServerConfig;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particle.ParticleTypes;
@@ -11,6 +12,7 @@ import net.minecraft.text.BaseText;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Util;
+import net.minecraft.util.Identifier;
 
 import java.util.UUID;
 
@@ -77,13 +79,14 @@ public class IndyPetsUtil {
 		player.sendSystemMessage(text, Util.NIL_UUID);
 	}
 
-	public static boolean isFollowing(Entity entity) {
-		if (entity instanceof Follower) {
-			Follower follower = (Follower) entity;
-			return follower.isFollowing();
-		}
+	public static boolean isIndependent(TameableEntity tameable) {
+		Identifier id = EntityType.getId(tameable.getType());
 
+		Config config = ServerConfig.getDefaultedPlayerConfig(tameable.getOwnerUuid());
+		if (config.blocklist.isBlocked(id))
 		return false;
+
+		return !((Follower) tameable).isFollowing();
 	}
 
 	public static boolean isPetOf(Entity entity, PlayerEntity player) {

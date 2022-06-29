@@ -5,10 +5,12 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "FollowOwnerGoalMixin",
-    "IdentifierAccessor",
     "MobEntityMixin",
     "ServerPlayerEntityMixin",
-    "TameableEntityMixin"
+    "TameableEntityMixin",
+    "WanderAroundGoalMixin",
+    "access.IdentifierAccessor",
+    "access.WanderAroundGoalAccessor"
   ],
   "client": [
     "ClientPlayNetworkHandlerMixin"

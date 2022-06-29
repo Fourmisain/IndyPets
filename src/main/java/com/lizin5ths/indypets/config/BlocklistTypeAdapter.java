@@ -3,7 +3,7 @@ package com.lizin5ths.indypets.config;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import com.lizin5ths.indypets.mixin.IdentifierAccessor;
+import com.lizin5ths.indypets.mixin.access.IdentifierAccessor;
 import net.minecraft.util.Identifier;
 
 import java.io.IOException;
