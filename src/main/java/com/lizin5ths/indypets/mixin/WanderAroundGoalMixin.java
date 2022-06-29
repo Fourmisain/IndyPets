@@ -1,5 +1,6 @@
 package com.lizin5ths.indypets.mixin;
 
+import com.lizin5ths.indypets.mixin.access.WanderAroundGoalAccessor;
 import net.minecraft.entity.ai.goal.WanderAroundGoal;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.passive.TameableEntity;

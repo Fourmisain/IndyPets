@@ -1,4 +1,4 @@
-package com.lizin5ths.indypets.mixin;
+package com.lizin5ths.indypets.mixin.access;
 
 import net.minecraft.entity.ai.goal.WanderAroundGoal;
 import org.spongepowered.asm.mixin.Mixin;
