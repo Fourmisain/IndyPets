@@ -3,7 +3,6 @@ package com.lizin5ths.indypets.client;
 import com.lizin5ths.indypets.IndyPetsClient;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import org.lwjgl.glfw.GLFW;
@@ -28,50 +27,40 @@ public class Keybindings {
             "key.categories.indypets"));
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            ClientPlayerEntity player = client.player;
-            if (player == null) return;
+            if (client.player == null) return;
 
             // detect keys
-            boolean pressedWhistle = false;
-            boolean pressedUnwhistle = false;
+            int whistleCount = 0;
+            int unwhistleCount = 0;
 
             while (whistle.wasPressed()) {
-                pressedWhistle = true;
+                whistleCount++;
             }
             while (unwhistle.wasPressed()) {
-                pressedUnwhistle = true;
+                unwhistleCount++;
             }
 
-            boolean doWhistle = false;
-            boolean doUnwhistle = false;
+            if (whistleCount + unwhistleCount == 0)
+                return;
+
+            boolean shouldWhistle; // else unwhistle
 
             // when both actions are bound to the same key, switch between the actions (whistle -> unwhistle -> whistle etc)
-            boolean shouldToggle = !whistle.isUnbound() && whistle.equals(unwhistle);
-            if (shouldToggle) {
-                if (pressedWhistle || pressedUnwhistle) {
+            if (!whistle.isUnbound() && whistle.equals(unwhistle)) {
+                if ((whistleCount + unwhistleCount) % 2 == 1) {
                     whistleToggle = !whistleToggle;
-
-                    if (whistleToggle) {
-                        doWhistle = true;
-                    } else {
-                        doUnwhistle = true;
-                    }
                 }
+                shouldWhistle = whistleToggle;
             } else {
                 // else just do the actions normally
-                if (pressedWhistle) {
-                    doWhistle = true;
-                }
-                if (pressedUnwhistle) {
-                    doUnwhistle = true;
-                }
+                shouldWhistle = (whistleCount > 0);
             }
 
-            if (doWhistle) {
-                player.sendCommand("indypets whistle");
+            if (shouldWhistle) {
+                client.player.sendCommand("indypets whistle");
                 IndyPetsClient.playLocalPlayerSound(WHISTLE);
-            } else if (doUnwhistle) {
-                player.sendCommand("indypets unwhistle");
+            } else {
+                client.player.sendCommand("indypets unwhistle");
                 IndyPetsClient.playLocalPlayerSound(UNWHISTLE);
             }
         });
