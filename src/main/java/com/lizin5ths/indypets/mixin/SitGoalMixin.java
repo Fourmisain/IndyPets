@@ -16,9 +16,9 @@ public abstract class SitGoalMixin {
 
     @ModifyConstant(
         method = "canStart",
-        constant = @Constant(intValue = 1)
+        constant = @Constant(intValue = 1) // the true inside owner == null
     )
-    public int dontSitOnLogoutWhenIndependent(int canStart) {
+    public int indypets$dontSitOnLogoutWhenIndependent(int canStart) {
         Follower follower = (Follower) tameable;
 
         if (!follower.isFollowing())

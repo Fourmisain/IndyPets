@@ -17,7 +17,7 @@ public abstract class WanderAroundGoalMixin {
     protected PathAwareEntity mob;
 
     @Inject(method = "canStart", at = @At("HEAD"))
-    public void countTamedPetsAsPersistent(CallbackInfoReturnable<Boolean> cir) {
+    public void indypets$countTamedPetsAsPersistent(CallbackInfoReturnable<Boolean> cir) {
         // WanderAroundGoal will only start if the mobs despawn timer isn't too high or if the mob is persistent
         // Tamed cats are persistent but wolves are not persistent (despite them not despawning), hence they will actually
         // stop wandering around after some time and only start moving again once their despawn timer resets (by a player getting near them)

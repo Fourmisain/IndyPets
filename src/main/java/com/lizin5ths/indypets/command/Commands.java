@@ -32,8 +32,8 @@ import static net.minecraft.server.command.CommandManager.literal;
 
 public class Commands {
 	private static class WhistleSuggestionProvider implements SuggestionProvider<ServerCommandSource> {
-		public static WhistleSuggestionProvider INDEPENDENT = new WhistleSuggestionProvider(true);
-		public static WhistleSuggestionProvider FOLLOWING = new WhistleSuggestionProvider(false);
+		public static final WhistleSuggestionProvider INDEPENDENT = new WhistleSuggestionProvider(true);
+		public static final WhistleSuggestionProvider FOLLOWING = new WhistleSuggestionProvider(false);
 
 		private final boolean independent;
 
@@ -60,10 +60,10 @@ public class Commands {
 	}
 
 	private static class WhistleCommand implements Command<ServerCommandSource> {
-		public static WhistleCommand WHISTLE = new WhistleCommand(false, false);
-		public static WhistleCommand UNWHISTLE = new WhistleCommand(false, true);
-		public static WhistleCommand TARGETED_WHISTLE = new WhistleCommand(true, false);
-		public static WhistleCommand TARGETED_UNWHISTLE = new WhistleCommand(true, true);
+		public static final WhistleCommand WHISTLE = new WhistleCommand(false, false);
+		public static final WhistleCommand UNWHISTLE = new WhistleCommand(false, true);
+		public static final WhistleCommand TARGETED_WHISTLE = new WhistleCommand(true, false);
+		public static final WhistleCommand TARGETED_UNWHISTLE = new WhistleCommand(true, true);
 
 		private final boolean targeted;
 		private final boolean unwhistle;
