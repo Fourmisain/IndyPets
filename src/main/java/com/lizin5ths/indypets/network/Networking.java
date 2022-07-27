@@ -13,8 +13,8 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 
 public class Networking {
-	public static final Identifier MOD_INSTALLED = new Identifier(IndyPets.MOD_ID, "mod_installed");
-	public static final Identifier PLAYER_CONFIG = new Identifier(IndyPets.MOD_ID, "config");
+	public static final Identifier MOD_INSTALLED = IndyPets.id("mod_installed");
+	public static final Identifier PLAYER_CONFIG = IndyPets.id("config");
 
 	public static final Gson GSON = new GsonBuilder().disableHtmlEscaping().create();
 
