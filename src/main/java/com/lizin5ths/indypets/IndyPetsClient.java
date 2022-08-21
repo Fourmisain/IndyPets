@@ -16,7 +16,7 @@ public class IndyPetsClient implements ClientModInitializer {
 	public static final SoundEvent UNWHISTLE = registerSoundEvent("unwhistle");
 
 	private static SoundEvent registerSoundEvent(String path) {
-		Identifier whistleId = new Identifier(IndyPets.MOD_ID, path);
+		Identifier whistleId = IndyPets.id(path);
 		// note: we technically don't need to register the event
 		return Registry.register(Registry.SOUND_EVENT, whistleId, new SoundEvent(whistleId));
 	}

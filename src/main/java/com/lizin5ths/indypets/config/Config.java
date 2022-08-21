@@ -1,5 +1,6 @@
 package com.lizin5ths.indypets.config;
 
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.lizin5ths.indypets.IndyPets;
 import com.lizin5ths.indypets.network.Networking;
@@ -20,8 +21,17 @@ import net.minecraft.util.Identifier;
 @SuppressWarnings("CanBeFinal")
 @me.shedaniel.autoconfig.annotation.Config(name = IndyPets.MOD_ID)
 public class Config implements ConfigData {
-	@ConfigEntry.Gui.Excluded
-	public static transient Config LOCAL_CONFIG;
+	public static GsonBuilder getGsonBuilder() {
+		return new GsonBuilder()
+			.registerTypeAdapter(Blocklist.class, BlocklistTypeAdapter.INST)
+			.registerTypeAdapter(Identifier.class, IdentifierTypeAdapter.INST)
+			.disableHtmlEscaping();
+	}
+
+	public static final Gson GSON = getGsonBuilder().create();
+	public static final Gson GSON_PRETTY = getGsonBuilder().setPrettyPrinting().create();
+
+	public static Config LOCAL_CONFIG;
 
 	public boolean independentCats = true;
 	public boolean independentParrots = true;
@@ -43,14 +53,7 @@ public class Config implements ConfigData {
 	}
 
 	public static void init() {
-		ConfigHolder<Config> configHolder = AutoConfig.register(Config.class, (definition, configClass) -> new GsonConfigSerializer<>(definition, configClass,
-			new GsonBuilder()
-				.setPrettyPrinting()
-				.disableHtmlEscaping()
-				.registerTypeAdapter(Blocklist.class, BlocklistTypeAdapter.INST)
-				.registerTypeAdapter(Identifier.class, IdentifierTypeAdapter.INST)
-				.create())
-		);
+		ConfigHolder<Config> configHolder = AutoConfig.register(Config.class, (definition, configClass) -> new GsonConfigSerializer<>(definition, configClass, GSON_PRETTY));
 
 		configHolder.registerSaveListener((manager, config) -> {
 			try {

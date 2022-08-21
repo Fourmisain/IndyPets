@@ -24,7 +24,7 @@ public abstract class TameableEntityMixin extends AnimalEntity implements Follow
 	}
 
 	@Inject(method = "setOwnerUuid", at = @At(value = "TAIL"))
-	protected void initFollowData(CallbackInfo ci) {
+	protected void indypets$initFollowData(CallbackInfo ci) {
 		if (world.isClient) return;
 
 		TameableEntity self = (TameableEntity) (Object) this;
@@ -37,12 +37,12 @@ public abstract class TameableEntityMixin extends AnimalEntity implements Follow
 	}
 
 	@Inject(method = "writeCustomDataToNbt", at = @At("HEAD"))
-	private void writeFollowDataToNbt(NbtCompound nbt, CallbackInfo callbackInfo) {
+	private void indypets$writeFollowDataToNbt(NbtCompound nbt, CallbackInfo callbackInfo) {
 		nbt.putBoolean("AllowedToFollow", isFollowing);
 	}
 
 	@Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
-	private void readFollowDataFromNbt(NbtCompound nbt, CallbackInfo callbackInfo) {
+	private void indypets$readFollowDataFromNbt(NbtCompound nbt, CallbackInfo callbackInfo) {
 		isFollowing = nbt.getBoolean("AllowedToFollow");
 	}
 

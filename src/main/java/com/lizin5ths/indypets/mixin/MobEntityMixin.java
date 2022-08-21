@@ -31,7 +31,7 @@ public abstract class MobEntityMixin extends LivingEntity {
 			target = "Lnet/minecraft/entity/mob/MobEntity;interactMob(Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/util/Hand;)Lnet/minecraft/util/ActionResult;"),
 		cancellable = true
 	)
-	public final void tryChangeFollowing(PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResult> cir) {
+	public final void indypets$tryChangeFollowing(PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResult> cir) {
 		if (world.isClient) return;
 
 		if ((Object) this instanceof TameableEntity) {

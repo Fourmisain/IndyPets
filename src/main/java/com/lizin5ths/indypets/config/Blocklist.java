@@ -6,8 +6,8 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class Blocklist {
-    public Set<Identifier> idBlocklist = new LinkedHashSet<>(); // specific pets
-    public Set<String> modBlocklist = new LinkedHashSet<>(); // specific mods
+    public final Set<Identifier> idBlocklist = new LinkedHashSet<>(); // specific pets
+    public final Set<String> modBlocklist = new LinkedHashSet<>(); // specific mods
 
     public static Blocklist getDefault() {
         Blocklist blocklist = new Blocklist();
