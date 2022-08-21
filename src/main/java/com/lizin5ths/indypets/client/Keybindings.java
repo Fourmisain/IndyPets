@@ -1,5 +1,6 @@
 package com.lizin5ths.indypets.client;
 
+import com.lizin5ths.indypets.IndyPets;
 import com.lizin5ths.indypets.IndyPetsClient;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
@@ -47,7 +48,7 @@ public class Keybindings {
 
             // when both actions are bound to the same key, switch between the actions (whistle -> unwhistle -> whistle etc)
             if (!whistle.isUnbound() && whistle.equals(unwhistle)) {
-                if ((whistleCount + unwhistleCount) % 2 == 1) {
+                if (whistleCount % 2 == 1) {
                     whistleToggle = !whistleToggle;
                 }
                 shouldWhistle = whistleToggle;
