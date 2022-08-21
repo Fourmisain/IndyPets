@@ -31,6 +31,8 @@ import static net.minecraft.server.command.CommandManager.argument;
 import static net.minecraft.server.command.CommandManager.literal;
 
 public class Commands {
+	public static final int WHISTLE_RADIUS = 96;
+
 	private static class WhistleSuggestionProvider implements SuggestionProvider<ServerCommandSource> {
 		public static final WhistleSuggestionProvider INDEPENDENT = new WhistleSuggestionProvider(true);
 		public static final WhistleSuggestionProvider FOLLOWING = new WhistleSuggestionProvider(false);
@@ -50,7 +52,7 @@ public class Commands {
 
 			// suggest ids of owned, nearby pets that can be affected
 			for (Entity entity : world.getOtherEntities(null,
-				new Box(player.getPos(), player.getPos()).expand(64),
+				new Box(player.getPos(), player.getPos()).expand(WHISTLE_RADIUS),
 				(entity -> isPetOf(entity, player) && (independent == isIndependent((TameableEntity) entity))))) {
 				suggestions.add(Registry.ENTITY_TYPE.getId(entity.getType()));
 			}
@@ -86,7 +88,7 @@ public class Commands {
 			ServerWorld world = context.getSource().getWorld();
 
 			for (Entity entity : world.getOtherEntities(null,
-				new Box(player.getPos(), player.getPos()).expand(64),
+				new Box(player.getPos(), player.getPos()).expand(WHISTLE_RADIUS),
 				(entity -> {
 					if (targeted) {
 						return isPetOf(entity, player) && entity.getType().equals(Registry.ENTITY_TYPE.get(id));
