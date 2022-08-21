@@ -1,7 +1,5 @@
 package com.lizin5ths.indypets.network;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.lizin5ths.indypets.IndyPets;
 import com.lizin5ths.indypets.config.Config;
@@ -16,15 +14,13 @@ public class Networking {
 	public static final Identifier MOD_INSTALLED = IndyPets.id("mod_installed");
 	public static final Identifier PLAYER_CONFIG = IndyPets.id("config");
 
-	public static final Gson GSON = new GsonBuilder().disableHtmlEscaping().create();
-
 	public static void sendModInstalled() throws IllegalStateException {
 		ClientPlayNetworking.send(Networking.MOD_INSTALLED, PacketByteBufs.empty());
 	}
 
 	public static void sendClientConfig() throws IllegalStateException {
 		PacketByteBuf buf = PacketByteBufs.create();
-		buf.writeString(GSON.toJson(Config.LOCAL_CONFIG));
+		buf.writeString(Config.GSON.toJson(Config.LOCAL_CONFIG));
 		ClientPlayNetworking.send(PLAYER_CONFIG, buf);
 	}
 
@@ -40,7 +36,7 @@ public class Networking {
 
 			server.execute(() -> {
 				try {
-					Config config = GSON.fromJson(json, Config.class);
+					Config config = Config.GSON.fromJson(json, Config.class);
 					ServerConfig.PLAYER_CONFIG.put(player.getUuid(), config);
 				} catch (JsonSyntaxException e) {
 					IndyPets.LOGGER.error("couldn't parse received player config! \"{}\"", json, e);
