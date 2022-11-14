@@ -19,58 +19,58 @@ import java.util.stream.Stream;
 
 
 public class ItemGuiProvider implements GuiProvider {
-    // Cloth Config understands null as an error, thus we use a "null object"
-    private static final Identifier NULL = IndyPets.id( "no_item");
+	// Cloth Config understands null as an error, thus we use a "null object"
+	private static final Identifier NULL = IndyPets.id( "no_item");
 
-    public static Identifier toObject(String id) {
-        if (id.isEmpty())
-            return NULL; // translate to null later
+	public static Identifier toObject(String id) {
+		if (id.isEmpty())
+			return NULL; // translate to null later
 
-        Identifier identifier = Identifier.tryParse(id);
+		Identifier identifier = Identifier.tryParse(id);
 
-        if (!Registry.ITEM.getOrEmpty(identifier).isPresent())
-            return null; // show as error
+		if (!Registry.ITEM.getOrEmpty(identifier).isPresent())
+			return null; // show as error
 
-        return identifier;
-    }
+		return identifier;
+	}
 
-    public static Identifier get(Field field, Object config) {
-        Identifier id = Utils.getUnsafely(field, config);
+	public static Identifier get(Field field, Object config) {
+		Identifier id = Utils.getUnsafely(field, config);
 
-        if (id == null)
-            return NULL;
+		if (id == null)
+			return NULL;
 
-        return id;
-    }
+		return id;
+	}
 
-    public static void set(Field field, Object config, Identifier newValue) {
-        if (newValue == NULL)
-            newValue = null;
+	public static void set(Field field, Object config, Identifier newValue) {
+		if (newValue == NULL)
+			newValue = null;
 
-        Utils.setUnsafely(field, config, newValue);
-    }
+		Utils.setUnsafely(field, config, newValue);
+	}
 
-    @SuppressWarnings("rawtypes")
-    @Override
-    public List<AbstractConfigListEntry> get(String i13n, Field field, Object config, Object defaults, GuiRegistryAccess registry) {
-        return Collections.singletonList(
-            ConfigEntryBuilder.create()
-                .startDropdownMenu(Text.translatable("text.autoconfig.indypets.option.interactItem"),
-                    DropdownMenuBuilder.TopCellElementBuilder.of(
-                        ItemGuiProvider.get(field, config),
-                        ItemGuiProvider::toObject,
-                        value -> Text.literal(value == NULL ? "" : value.toString())),
-                    DropdownMenuBuilder.CellCreatorBuilder.ofItemIdentifier())
-                .setDefaultValue(NULL)
-                .setSelections(
-                    Stream.concat(
-                            Registry.ITEM.stream()
-                                .sorted(Comparator.comparing(Item::toString))
-                                .map(Registry.ITEM::getId),
-                            Stream.of(NULL))
-                        .collect(Collectors.toCollection(LinkedHashSet::new)))
-                .setSaveConsumer(newValue -> set(field, config, newValue))
-                .build()
-        );
-    }
+	@SuppressWarnings("rawtypes")
+	@Override
+	public List<AbstractConfigListEntry> get(String i13n, Field field, Object config, Object defaults, GuiRegistryAccess registry) {
+		return Collections.singletonList(
+			ConfigEntryBuilder.create()
+				.startDropdownMenu(Text.translatable("text.autoconfig.indypets.option.interactItem"),
+					DropdownMenuBuilder.TopCellElementBuilder.of(
+						ItemGuiProvider.get(field, config),
+						ItemGuiProvider::toObject,
+						value -> Text.literal(value == NULL ? "" : value.toString())),
+					DropdownMenuBuilder.CellCreatorBuilder.ofItemIdentifier())
+				.setDefaultValue(NULL)
+				.setSelections(
+					Stream.concat(
+							Registry.ITEM.stream()
+								.sorted(Comparator.comparing(Item::toString))
+								.map(Registry.ITEM::getId),
+							Stream.of(NULL))
+						.collect(Collectors.toCollection(LinkedHashSet::new)))
+				.setSaveConsumer(newValue -> set(field, config, newValue))
+				.build()
+		);
+	}
 }

@@ -11,19 +11,19 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
 @Mixin(SitGoal.class)
 public abstract class SitGoalMixin {
-    @Shadow @Final
-    private TameableEntity tameable;
+	@Shadow @Final
+	private TameableEntity tameable;
 
-    @ModifyConstant(
-        method = "canStart",
-        constant = @Constant(intValue = 1) // the true inside owner == null
-    )
-    public int indypets$dontSitOnLogoutWhenIndependent(int canStart) {
-        Follower follower = (Follower) tameable;
+	@ModifyConstant(
+		method = "canStart",
+		constant = @Constant(intValue = 1) // the true inside owner == null
+	)
+	public int indypets$dontSitOnLogoutWhenIndependent(int canStart) {
+		Follower follower = (Follower) tameable;
 
-        if (!follower.isFollowing())
-            return 0;
+		if (!follower.isFollowing())
+			return 0;
 
-        return canStart;
-    }
+		return canStart;
+	}
 }

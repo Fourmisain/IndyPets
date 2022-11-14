@@ -10,24 +10,24 @@ import java.io.IOException;
 
 /** Allows Gson to de/serialize Identifiers */
 public class IdentifierTypeAdapter extends TypeAdapter<Identifier> {
-    public static final IdentifierTypeAdapter INST = new IdentifierTypeAdapter();
+	public static final IdentifierTypeAdapter INST = new IdentifierTypeAdapter();
 
-    private IdentifierTypeAdapter() { }
+	private IdentifierTypeAdapter() { }
 
-    public void write(JsonWriter out, Identifier value) throws IOException {
-        if (value == null) {
-            out.nullValue();
-        } else {
-            out.value(value.toString());
-        }
-    }
+	public void write(JsonWriter out, Identifier value) throws IOException {
+		if (value == null) {
+			out.nullValue();
+		} else {
+			out.value(value.toString());
+		}
+	}
 
-    public Identifier read(JsonReader reader) throws IOException {
-        if (reader.peek() == JsonToken.NULL) {
-            reader.nextNull();
-            return null;
-        } else {
-            return new Identifier(reader.nextString());
-        }
-    }
+	public Identifier read(JsonReader reader) throws IOException {
+		if (reader.peek() == JsonToken.NULL) {
+			reader.nextNull();
+			return null;
+		} else {
+			return new Identifier(reader.nextString());
+		}
+	}
 }
