@@ -84,7 +84,7 @@ public class IndyPetsUtil {
 
 		Config config = ServerConfig.getDefaultedPlayerConfig(tameable.getOwnerUuid());
 		if (config.blocklist.isBlocked(id))
-		return false;
+			return false;
 
 		return !((Follower) tameable).isFollowing();
 	}

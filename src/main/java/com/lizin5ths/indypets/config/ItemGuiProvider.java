@@ -15,7 +15,6 @@ import net.minecraft.util.registry.Registry;
 
 import java.lang.reflect.Field;
 import java.util.*;
-import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
