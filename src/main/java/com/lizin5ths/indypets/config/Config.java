@@ -28,9 +28,12 @@ public class Config implements ConfigData {
 			.disableHtmlEscaping();
 	}
 
+	@ConfigEntry.Gui.Excluded
 	public static final Gson GSON = getGsonBuilder().create();
+	@ConfigEntry.Gui.Excluded
 	public static final Gson GSON_PRETTY = getGsonBuilder().setPrettyPrinting().create();
 
+	@ConfigEntry.Gui.Excluded
 	public static Config LOCAL_CONFIG;
 
 	public boolean independentCats = true;
