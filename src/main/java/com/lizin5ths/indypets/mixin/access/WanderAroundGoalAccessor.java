@@ -7,6 +7,6 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(WanderAroundGoal.class)
 public interface WanderAroundGoalAccessor {
-    @Mutable @Accessor
-    void setCanDespawn(boolean value);
+	@Mutable @Accessor
+	void setCanDespawn(boolean value);
 }

@@ -6,8 +6,8 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(Identifier.class)
 public interface IdentifierAccessor {
-    @Invoker
-    static String[] invokeSplit(String id, char delimiter) {
-        throw new AssertionError();
-    }
+	@Invoker
+	static String[] invokeSplit(String id, char delimiter) {
+		throw new AssertionError();
+	}
 }

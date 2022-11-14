@@ -12,60 +12,60 @@ import java.util.List;
 
 /** Allows Gson to de/serialize Blocklists */
 public class BlocklistTypeAdapter extends TypeAdapter<Blocklist> {
-    public static final BlocklistTypeAdapter INST = new BlocklistTypeAdapter();
+	public static final BlocklistTypeAdapter INST = new BlocklistTypeAdapter();
 
-    public static Blocklist blocklistFromRaw(List<String> rawBlocklist) {
-        Blocklist blocklist = new Blocklist();
+	public static Blocklist blocklistFromRaw(List<String> rawBlocklist) {
+		Blocklist blocklist = new Blocklist();
 
-        for (String blocked : rawBlocklist) {
-            String[] strings = IdentifierAccessor.invokeSplit(blocked, ':');
+		for (String blocked : rawBlocklist) {
+			String[] strings = IdentifierAccessor.invokeSplit(blocked, ':');
 
-            if (strings[1].isEmpty())
-                throw new IllegalArgumentException("empty identifier");
+			if (strings[1].isEmpty())
+				throw new IllegalArgumentException("empty identifier");
 
-            if (strings[1].equals("*")) {
-                blocklist.modBlocklist.add(strings[0]);
-                continue;
-            }
+			if (strings[1].equals("*")) {
+				blocklist.modBlocklist.add(strings[0]);
+				continue;
+			}
 
-            // proper identifier
-            Identifier id = new Identifier(blocked);
-            blocklist.idBlocklist.add(id);
-        }
+			// proper identifier
+			Identifier id = new Identifier(blocked);
+			blocklist.idBlocklist.add(id);
+		}
 
-        return blocklist;
-    }
+		return blocklist;
+	}
 
-    public static List<String> blocklistToRaw(Blocklist blocklist) {
-        List<String> rawBlocklist = new ArrayList<>();
+	public static List<String> blocklistToRaw(Blocklist blocklist) {
+		List<String> rawBlocklist = new ArrayList<>();
 
-        for (String modId : blocklist.modBlocklist) {
-            rawBlocklist.add(modId + ":*");
-        }
-        for (Identifier id : blocklist.idBlocklist) {
-            rawBlocklist.add(id.toString());
-        }
+		for (String modId : blocklist.modBlocklist) {
+			rawBlocklist.add(modId + ":*");
+		}
+		for (Identifier id : blocklist.idBlocklist) {
+			rawBlocklist.add(id.toString());
+		}
 
-        return rawBlocklist;
-    }
+		return rawBlocklist;
+	}
 
-    private BlocklistTypeAdapter() { }
+	private BlocklistTypeAdapter() { }
 
-    public void write(JsonWriter out, Blocklist value) throws IOException {
-        out.beginArray();
-        for (String blocked : blocklistToRaw(value))
-            out.value(blocked);
-        out.endArray();
-    }
+	public void write(JsonWriter out, Blocklist value) throws IOException {
+		out.beginArray();
+		for (String blocked : blocklistToRaw(value))
+			out.value(blocked);
+		out.endArray();
+	}
 
-    public Blocklist read(JsonReader reader) throws IOException {
-        List<String> rawBlocklist = new ArrayList<>();
+	public Blocklist read(JsonReader reader) throws IOException {
+		List<String> rawBlocklist = new ArrayList<>();
 
-        reader.beginArray();
-        while (reader.hasNext())
-            rawBlocklist.add(reader.nextString());
-        reader.endArray();
+		reader.beginArray();
+		while (reader.hasNext())
+			rawBlocklist.add(reader.nextString());
+		reader.endArray();
 
-        return blocklistFromRaw(rawBlocklist);
-    }
+		return blocklistFromRaw(rawBlocklist);
+	}
 }
