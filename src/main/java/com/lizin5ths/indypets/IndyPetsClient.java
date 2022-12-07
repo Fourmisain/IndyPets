@@ -6,10 +6,11 @@ import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.sound.SoundInstance;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 
 public class IndyPetsClient implements ClientModInitializer {
 	public static final SoundEvent WHISTLE = registerSoundEvent("whistle");
@@ -18,7 +19,7 @@ public class IndyPetsClient implements ClientModInitializer {
 	private static SoundEvent registerSoundEvent(String path) {
 		Identifier whistleId = IndyPets.id(path);
 		// note: we technically don't need to register the event
-		return Registry.register(Registry.SOUND_EVENT, whistleId, new SoundEvent(whistleId));
+		return Registry.register(Registries.SOUND_EVENT, whistleId, SoundEvent.of(whistleId));
 	}
 
 	public static void playLocalPlayerSound(SoundEvent soundEvent) {

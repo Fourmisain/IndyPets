@@ -14,13 +14,13 @@ import net.minecraft.command.CommandSource;
 import net.minecraft.command.argument.IdentifierArgumentType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.passive.TameableEntity;
+import net.minecraft.registry.Registries;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Box;
-import net.minecraft.util.registry.Registry;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +54,7 @@ public class Commands {
 			for (Entity entity : world.getOtherEntities(null,
 				new Box(player.getPos(), player.getPos()).expand(WHISTLE_RADIUS),
 				(entity -> isPetOf(entity, player) && (independent == isIndependent((TameableEntity) entity))))) {
-				suggestions.add(Registry.ENTITY_TYPE.getId(entity.getType()));
+				suggestions.add(Registries.ENTITY_TYPE.getId(entity.getType()));
 			}
 
 			return CommandSource.suggestIdentifiers(suggestions, builder);
@@ -91,7 +91,7 @@ public class Commands {
 				new Box(player.getPos(), player.getPos()).expand(WHISTLE_RADIUS),
 				(entity -> {
 					if (targeted) {
-						return isPetOf(entity, player) && entity.getType().equals(Registry.ENTITY_TYPE.get(id));
+						return isPetOf(entity, player) && entity.getType().equals(Registries.ENTITY_TYPE.get(id));
 					} else {
 						return isPetOf(entity, player);
 					}

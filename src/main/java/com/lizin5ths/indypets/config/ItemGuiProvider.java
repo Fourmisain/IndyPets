@@ -8,9 +8,9 @@ import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import me.shedaniel.clothconfig2.impl.builders.DropdownMenuBuilder;
 import net.minecraft.item.Item;
+import net.minecraft.registry.Registries;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -28,7 +28,7 @@ public class ItemGuiProvider implements GuiProvider {
 
 		Identifier identifier = Identifier.tryParse(id);
 
-		if (!Registry.ITEM.getOrEmpty(identifier).isPresent())
+		if (!Registries.ITEM.getOrEmpty(identifier).isPresent())
 			return null; // show as error
 
 		return identifier;
@@ -64,9 +64,9 @@ public class ItemGuiProvider implements GuiProvider {
 				.setDefaultValue(NULL)
 				.setSelections(
 					Stream.concat(
-							Registry.ITEM.stream()
+							Registries.ITEM.stream()
 								.sorted(Comparator.comparing(Item::toString))
-								.map(Registry.ITEM::getId),
+								.map(Registries.ITEM::getId),
 							Stream.of(NULL))
 						.collect(Collectors.toCollection(LinkedHashSet::new)))
 				.setSaveConsumer(newValue -> set(field, config, newValue))

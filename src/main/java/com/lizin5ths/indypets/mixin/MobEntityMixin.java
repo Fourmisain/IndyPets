@@ -8,11 +8,11 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.registry.Registries;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -46,7 +46,7 @@ public abstract class MobEntityMixin extends LivingEntity {
 			if (player.isSneaking() && hand == Hand.MAIN_HAND) {
 				if (config.interactItem != null) {
 					// only interact when holding the chosen item
-					Identifier itemId = Registry.ITEM.getId(player.getMainHandStack().getItem());
+					Identifier itemId = Registries.ITEM.getId(player.getMainHandStack().getItem());
 					if (!itemId.equals(config.interactItem))
 						return;
 				}
