@@ -47,7 +47,8 @@ public class Keybindings {
 
 			// when both actions are bound to the same key, switch between the actions (whistle -> unwhistle -> whistle etc)
 			if (!whistle.isUnbound() && whistle.equals(unwhistle)) {
-				if (whistleCount % 2 == 1) {
+				// with Amecs, both key bindings count, in vanilla only one counts, so we check the max of the two
+				if (Math.max(whistleCount, unwhistleCount) % 2 == 1) {
 					whistleToggle = !whistleToggle;
 				}
 				shouldWhistle = whistleToggle;
