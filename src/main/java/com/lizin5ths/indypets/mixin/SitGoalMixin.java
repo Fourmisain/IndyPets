@@ -21,7 +21,7 @@ public abstract class SitGoalMixin {
 	public int indypets$dontSitOnLogoutWhenIndependent(int canStart) {
 		Follower follower = (Follower) tameable;
 
-		if (!follower.isFollowing())
+		if (!tameable.isSitting() && !follower.isFollowing())
 			return 0;
 
 		return canStart;
