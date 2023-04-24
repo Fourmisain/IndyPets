@@ -4,12 +4,16 @@ import com.lizin5ths.indypets.mixin.access.WanderAroundGoalAccessor;
 import net.minecraft.entity.ai.goal.WanderAroundGoal;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.passive.TameableEntity;
+import net.minecraft.util.math.Vec3d;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import static com.lizin5ths.indypets.util.IndyPetsUtil.headHome;
+import static com.lizin5ths.indypets.util.IndyPetsUtil.shouldHeadHome;
 
 @Mixin(WanderAroundGoal.class)
 public abstract class WanderAroundGoalMixin {
@@ -25,6 +29,14 @@ public abstract class WanderAroundGoalMixin {
 		// This will override the timer check for all tambed mobs, making them actually wander around even without player presence
 		if (mob instanceof TameableEntity && ((TameableEntity) mob).isTamed()) {
 			((WanderAroundGoalAccessor) this).setCanDespawn(false);
+		}
+	}
+
+	// vanilla pets only have a 1 in 1000 chance to use this, but just in case we shall too (using NoPenaltyTargeting too)
+	@Inject(method = "getWanderTarget", at = @At("HEAD"), cancellable = true)
+	protected void indypets$dontStrayFromHome(CallbackInfoReturnable<Vec3d> cir) {
+		if (shouldHeadHome(mob)) {
+			cir.setReturnValue(headHome(mob, true));
 		}
 	}
 }

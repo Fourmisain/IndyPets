@@ -9,6 +9,7 @@
     "ServerPlayerEntityMixin",
     "SitGoalMixin",
     "TameableEntityMixin",
+    "WanderAroundFarGoalMixin",
     "WanderAroundGoalMixin",
     "access.IdentifierAccessor",
     "access.WanderAroundGoalAccessor"

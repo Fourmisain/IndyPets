@@ -1,9 +1,13 @@
 package com.lizin5ths.indypets.util;
 
+import com.lizin5ths.indypets.command.Commands;
 import com.lizin5ths.indypets.config.Config;
 import com.lizin5ths.indypets.config.ServerConfig;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ai.FuzzyTargeting;
+import net.minecraft.entity.ai.NoPenaltyTargeting;
+import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particle.ParticleTypes;
@@ -11,6 +15,8 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 
 import java.util.UUID;
 
@@ -95,5 +101,44 @@ public class IndyPetsUtil {
 		}
 
 		return false;
+	}
+
+	public static boolean shouldHeadHome(PathAwareEntity mob) {
+		if (!(mob instanceof TameableEntity))
+			return false;
+
+		TameableEntity tameable = (TameableEntity) mob;
+		Follower follower = (Follower) mob;
+
+		if (!tameable.isTamed() || follower.isFollowing())
+			return false;
+
+		// distance to home
+		float d = (float) Math.sqrt(tameable.getBlockPos().getSquaredDistance(follower.getHomePos()));
+
+		float start = Commands.WHISTLE_RADIUS - 16;
+		float end   = Commands.WHISTLE_RADIUS + 32;
+
+		// probability to head home, starts at 0 and grows to 1 over the interval from start to end
+		float p;
+		if (d <= start)    p = 0;
+		else if (d >= end) p = 1;
+		else               p = (d - start) / (end - start);
+
+		return tameable.getRandom().nextFloat() < p;
+	}
+
+	public static Vec3d headHome(PathAwareEntity mob) {
+		return headHome(mob, false);
+	}
+
+	public static Vec3d headHome(PathAwareEntity mob, boolean ignorePenality) {
+		// assert mob instanceof TameableEntity
+		BlockPos homePos = ((Follower) mob).getHomePos();
+
+		if (ignorePenality)
+			return NoPenaltyTargeting.findTo(mob, 15, 7, Vec3d.ofBottomCenter(homePos), Math.PI / 2);
+
+		return FuzzyTargeting.findTo(mob, 15, 7, Vec3d.ofBottomCenter(homePos));
 	}
 }
