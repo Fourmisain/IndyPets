@@ -32,11 +32,11 @@ public class IndyPetsUtil {
 				sendPetStatusMessage(player, tameable, follower);
 			} else {
 				if (follower.isFollowing()) {
-					player.getWorld().spawnParticles(player, ParticleTypes.HAPPY_VILLAGER, true,
+					player.getServerWorld().spawnParticles(player, ParticleTypes.HAPPY_VILLAGER, true,
 						tameable.getX(), tameable.getBodyY(0.5), tameable.getZ(),
 						11, 0.5, 0.5, 0.5, 2);
 				} else {
-					player.getWorld().spawnParticles(player, ParticleTypes.ANGRY_VILLAGER, true,
+					player.getServerWorld().spawnParticles(player, ParticleTypes.ANGRY_VILLAGER, true,
 						tameable.getX(), tameable.getBodyY(0.5), tameable.getZ(),
 						7, 0.4, 0.4, 0.4, 0.3);
 				}

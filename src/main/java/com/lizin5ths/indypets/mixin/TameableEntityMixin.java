@@ -32,7 +32,7 @@ public abstract class TameableEntityMixin extends AnimalEntity implements Follow
 
 	@Inject(method = "setOwnerUuid", at = @At(value = "TAIL"))
 	protected void indypets$initFollowData(CallbackInfo ci) {
-		if (world.isClient) return;
+		if (getWorld().isClient()) return;
 
 		TameableEntity self = (TameableEntity) (Object) this;
 

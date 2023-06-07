@@ -32,7 +32,7 @@ public abstract class MobEntityMixin extends LivingEntity {
 		cancellable = true
 	)
 	public final void indypets$tryChangeFollowing(PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResult> cir) {
-		if (world.isClient) return;
+		if (getWorld().isClient()) return;
 
 		if ((Object) this instanceof TameableEntity) {
 			TameableEntity self = (TameableEntity) (Object) this;
