@@ -2,7 +2,7 @@
   "required": true,
   "minVersion": "0.8",
   "package": "com.lizin5ths.indypets.mixin",
-  "compatibilityLevel": "JAVA_8",
+  "compatibilityLevel": "JAVA_${java_version}",
   "plugin": "com.lizin5ths.indypets.MixinPlugin",
   "mixins": [
     "FollowOwnerGoalMixin",
