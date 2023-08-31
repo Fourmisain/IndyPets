@@ -1,6 +1,5 @@
 package com.lizin5ths.indypets.mixin;
 
-import com.lizin5ths.indypets.config.Config;
 import com.lizin5ths.indypets.config.ServerConfig;
 import com.lizin5ths.indypets.util.Follower;
 import net.minecraft.entity.EntityType;
@@ -36,12 +35,8 @@ public abstract class TameableEntityMixin extends AnimalEntity implements Follow
 
 		TameableEntity self = (TameableEntity) (Object) this;
 
-		// only set state if it was player-caused
-		Config config = ServerConfig.PLAYER_CONFIG.get(self.getOwnerUuid());
-		if (config != null) {
-			indypets$isFollowing = !config.getDefaultIndependence(self);
-			indypets$setHome();
-		}
+		indypets$isFollowing = !ServerConfig.getDefaultedPlayerConfig(self.getOwnerUuid()).getDefaultIndependence(self);
+		indypets$setHome();
 	}
 
 	@Unique
