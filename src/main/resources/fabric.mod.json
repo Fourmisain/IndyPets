@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
 	"id": "indypets",
-	"version": "${version}",
+	"version": "${mod_version}",
 	"name": "IndyPets - Independent Pets",
 	"description": "Free your pets from the curse of having to sit down, let 'em roam!\nDisables your pets' follow+teleport behavior by default and lets you toggle the behavior via sneak interact. Use the whistle/unwhistle keybinds to rally your army of pets.",
 	"authors": [
