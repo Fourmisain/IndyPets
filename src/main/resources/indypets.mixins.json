@@ -17,7 +17,8 @@
     "access.WanderAroundGoalAccessor"
   ],
   "client": [
-    "ClientPlayNetworkHandlerMixin"
+    "ClientPlayNetworkHandlerMixin",
+    "access.KeyBindingAccessor"
   ],
   "injectors": {
     "defaultRequire": 1
