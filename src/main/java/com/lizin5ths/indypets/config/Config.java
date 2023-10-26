@@ -42,8 +42,11 @@ public class Config implements ConfigData {
 
 	public boolean silentMode = false;
 
-	@ConfigEntry.Gui.Tooltip(count = 3)
+	@ConfigEntry.Gui.Tooltip
 	public Blocklist blocklist = Blocklist.getDefault();
+
+	@ConfigEntry.Gui.Tooltip
+	public Blocklist interactBlocklist = Blocklist.getInteractDefault();
 
 	@ConfigEntry.Gui.Tooltip
 	public Identifier interactItem = null;

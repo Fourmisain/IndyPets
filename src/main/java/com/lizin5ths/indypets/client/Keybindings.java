@@ -2,10 +2,13 @@ package com.lizin5ths.indypets.client;
 
 import com.lizin5ths.indypets.IndyPetsClient;
 import com.lizin5ths.indypets.mixin.access.KeyBindingAccessor;
+import com.lizin5ths.indypets.network.Networking;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.entity.passive.TameableEntity;
+import net.minecraft.util.Hand;
 import org.lwjgl.glfw.GLFW;
 
 import static com.lizin5ths.indypets.IndyPetsClient.UNWHISTLE;
@@ -32,19 +35,28 @@ public class Keybindings {
 		return ((KeyBindingAccessor) keyBinding).getBoundKey();
 	}
 
+	public static final KeyBinding        INTERACT_KEY  = new KeyBinding("key.indypets.interact", GLFW.GLFW_KEY_H, "key.categories.indypets");
 	public static final WhistleKeyBinding WHISTLE_KEY   = new WhistleKeyBinding("key.indypets.whistle");
 	public static final WhistleKeyBinding UNWHISTLE_KEY = new WhistleKeyBinding("key.indypets.unwhistle");
 
 	private static boolean whistleToggle = false;
 
 	public static void init() {
+		KeyBindingHelper.registerKeyBinding(INTERACT_KEY);
 		KeyBindingHelper.registerKeyBinding(WHISTLE_KEY);
 		KeyBindingHelper.registerKeyBinding(UNWHISTLE_KEY);
 
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
 			if (client.player == null) return;
 
-			// detect keys
+			while (INTERACT_KEY.wasPressed()) {
+				if (client.targetedEntity instanceof TameableEntity) {
+					Networking.sendPetInteract((TameableEntity) client.targetedEntity);
+					client.player.swingHand(Hand.MAIN_HAND); // give some visual feedback
+				}
+			}
+
+			// detect whistle key presses
 			int whistleCount = 0;
 			int unwhistleCount = 0;
 
