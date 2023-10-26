@@ -12,6 +12,7 @@
     "WanderAroundFarGoalMixin",
     "WanderAroundGoalMixin",
     "access.IdentifierAccessor",
+    "access.KeyBindingAccessor",
     "access.WanderAroundGoalAccessor"
   ],
   "client": [

@@ -24,6 +24,15 @@ public class Blocklist {
 		return blocklist;
 	}
 
+	public static Blocklist getInteractDefault() {
+		Blocklist blocklist = new Blocklist();
+
+		// Cobblemon have a custom sneak interact menu that would be blocked by this mod
+		blocklist.modBlocklist.add("cobblemon");
+
+		return blocklist;
+	}
+
 	public boolean isBlocked(Identifier petId) {
 		if (modBlocklist.contains(petId.getNamespace())) return true;
 		return idBlocklist.contains(petId);

@@ -16,38 +16,63 @@ import net.minecraft.text.BaseText;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Util;
+import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.registry.Registry;
 
 import java.util.UUID;
 
 public class IndyPetsUtil {
-	public static boolean changeFollowing(ServerPlayerEntity player, TameableEntity tameable) {
-		Follower follower = (Follower) tameable;
 
-		if (tameable.isOwner(player)) {
-			follower.setFollowing(!follower.isFollowing());
+	public static boolean sneakInteract(Entity entity, PlayerEntity player, Hand hand) {
+		if (!(player.isSneaking() && hand == Hand.MAIN_HAND && entity instanceof TameableEntity))
+			return false;
 
-			Config config = ServerConfig.getDefaultedPlayerConfig(player.getUuid());
-			if (!config.silentMode) {
-				sendPetStatusMessage(player, tameable, follower);
-			} else {
-				if (follower.isFollowing()) {
-					player.getWorld().spawnParticles(player, ParticleTypes.HAPPY_VILLAGER, true,
-						tameable.getX(), tameable.getBodyY(0.5), tameable.getZ(),
-						11, 0.5, 0.5, 0.5, 2);
-				} else {
-					player.getWorld().spawnParticles(player, ParticleTypes.ANGRY_VILLAGER, true,
-						tameable.getX(), tameable.getBodyY(0.5), tameable.getZ(),
-						7, 0.4, 0.4, 0.4, 0.3);
-				}
-			}
-
-			return true;
+		Config config = ServerConfig.getDefaultedPlayerConfig(player.getUuid());
+		if (config.interactItem != null) {
+			// only interact when holding the chosen item
+			Identifier itemId = Registry.ITEM.getId(player.getMainHandStack().getItem());
+			if (!itemId.equals(config.interactItem))
+				return false;
 		}
 
-		return false;
+		// don't interact with blocked pets
+		if (config.interactBlocklist.isBlocked(EntityType.getId(entity.getType())))
+			return false;
+
+		return IndyPetsUtil.changeFollowing((ServerPlayerEntity) player, (TameableEntity) entity);
+	}
+
+	public static boolean changeFollowing(ServerPlayerEntity player, TameableEntity tameable) {
+		if (!tameable.isOwner(player))
+			return false;
+
+		Config config = ServerConfig.getDefaultedPlayerConfig(player.getUuid());
+
+		// don't change blocked pets
+		if (config.blocklist.isBlocked(EntityType.getId(tameable.getType())))
+			return false;
+
+		Follower follower = (Follower) tameable;
+		follower.setFollowing(!follower.isFollowing());
+
+		if (!config.silentMode) {
+			sendPetStatusMessage(player, tameable, follower);
+		} else {
+			if (follower.isFollowing()) {
+				player.getWorld().spawnParticles(player, ParticleTypes.HAPPY_VILLAGER, true,
+					tameable.getX(), tameable.getBodyY(0.5), tameable.getZ(),
+					11, 0.5, 0.5, 0.5, 2);
+			} else {
+				player.getWorld().spawnParticles(player, ParticleTypes.ANGRY_VILLAGER, true,
+					tameable.getX(), tameable.getBodyY(0.5), tameable.getZ(),
+					7, 0.4, 0.4, 0.4, 0.3);
+			}
+		}
+
+		return true;
 	}
 
 	public static void sendPetStatusMessage(PlayerEntity player, TameableEntity tameable, Follower follower) {
