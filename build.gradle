@@ -107,7 +107,7 @@ curseforge {
 				toList(project.curseforge_dependencies).each{ requiredDependency(it) }
 			}
 			mainArtifact(remapJar.archiveFile.get().asFile) {
-				displayName = "${project.mod_version} ${versionRange(gameVersionList)}]"
+				displayName = "IndyPets ${project.mod_version} [${versionRange(gameVersionList)}]"
 			}
 			afterEvaluate {
 				uploadTask.dependsOn('build')
@@ -127,11 +127,13 @@ static String versionRange(List<String> gameVersions) {
 	def v0 = gameVersions.first()
 	def v1 = gameVersions.last()
 
-	def m0 = v0.split('[.]')[1]
-	def m1 = v1.split('[.]')[1]
+	def s0 = v0.split('[.]').collect { it as Integer}
+	def s1 = v1.split('[.]').collect { it as Integer}
 
-	if (m0 == m1)
-		return v1
+	// 1.19.3, 1.19.4 -> 1.19.3/4
+	if (s0.size() == 3 && s1.size() == 3 && s0[0] == s1[0] && s0[1] == s1[1] && s1[2] - s0[2] == 1) {
+		return "${s1[0]}.${s1[1]}.${s0[2]}/${s1[2]}"
+	}
 
 	return "${v0} - ${v1}"
 }
