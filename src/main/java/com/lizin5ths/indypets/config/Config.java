@@ -51,6 +51,11 @@ public class Config implements ConfigData {
 	@ConfigEntry.Gui.Tooltip
 	public Identifier interactItem = null;
 
+	// client-only
+
+	@ConfigEntry.Gui.Tooltip
+	public boolean positionedWhistleSound = false;
+
 	public boolean getDefaultIndependence(TameableEntity tameable) {
 		if (tameable instanceof CatEntity)    return independentCats;
 		if (tameable instanceof ParrotEntity) return independentParrots;
