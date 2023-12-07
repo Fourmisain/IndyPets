@@ -6,6 +6,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.sound.SoundInstance;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.sound.SoundCategory;
@@ -22,13 +23,17 @@ public class IndyPetsClient implements ClientModInitializer {
 		return Registry.register(Registries.SOUND_EVENT, whistleId, SoundEvent.of(whistleId));
 	}
 
-	public static void playLocalPlayerSound(SoundEvent soundEvent) {
-		// non-positioned sound (just like music, but with players category)
-		SoundInstance sound = new PositionedSoundInstance(soundEvent.getId(), SoundCategory.PLAYERS,
-			1.0F, 1.0F, SoundInstance.createRandom(), false, 0,
-			SoundInstance.AttenuationType.NONE, 0.0, 0.0, 0.0, true);
+	public static void playLocalPlayerSound(PlayerEntity player, SoundEvent soundEvent, boolean positioned) {
+		if (positioned) {
+			player.getWorld().playSound(player.getX(), player.getY(), player.getZ(), soundEvent, player.getSoundCategory(), 1.0F, 1.0F, true);
+		} else {
+			// non-positioned sound (just like music, but with players category)
+			SoundInstance sound = new PositionedSoundInstance(soundEvent.getId(), SoundCategory.PLAYERS,
+				1.0F, 1.0F, SoundInstance.createRandom(), false, 0,
+				SoundInstance.AttenuationType.NONE, 0.0, 0.0, 0.0, true);
 
-		MinecraftClient.getInstance().getSoundManager().play(sound);
+			MinecraftClient.getInstance().getSoundManager().play(sound);
+		}
 	}
 
 	@Override
