@@ -19,6 +19,8 @@
   "text.autoconfig.indypets.option.interactBlocklist.@Tooltip": "Disables IndyPets' sneak interact for specific pet types.\nUseful for modded pets with custom sneak interact behaviors.\n\"modid:*\" disables sneak interact for all pets of a given mod.\nPet idenpendence can still be changed via whistling or via\nthe Interact keybinding.",
   "text.autoconfig.indypets.option.interactItem": "Item needed to sneak interact",
   "text.autoconfig.indypets.option.interactItem.@Tooltip": "IndyPets' sneak interact will only be used if the chosen item is held.\nUseful for modded pets with custom sneak interact behaviors.\nLeave blank to ignore the held item.",
+  "text.autoconfig.indypets.option.positionedWhistleSound": "Use positioned whistle sound",
+  "text.autoconfig.indypets.option.positionedWhistleSound.@Tooltip": "Works with Sound Physics Remastered, but the sound won't move with the player.",
   "key.categories.indypets": "Independent Pets",
   "key.indypets.interact": "Interact",
   "key.indypets.whistle": "Whistle",

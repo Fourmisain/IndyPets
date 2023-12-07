@@ -1,6 +1,7 @@
 package com.lizin5ths.indypets.client;
 
 import com.lizin5ths.indypets.IndyPetsClient;
+import com.lizin5ths.indypets.config.Config;
 import com.lizin5ths.indypets.mixin.access.KeyBindingAccessor;
 import com.lizin5ths.indypets.network.Networking;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -86,10 +87,10 @@ public class Keybindings {
 
 			if (shouldWhistle) {
 				client.player.sendChatMessage("/indypets whistle");
-				IndyPetsClient.playLocalPlayerSound(WHISTLE);
+				IndyPetsClient.playLocalPlayerSound(client.player, WHISTLE, Config.LOCAL_CONFIG.positionedWhistleSound);
 			} else {
 				client.player.sendChatMessage("/indypets unwhistle");
-				IndyPetsClient.playLocalPlayerSound(UNWHISTLE);
+				IndyPetsClient.playLocalPlayerSound(client.player, UNWHISTLE, Config.LOCAL_CONFIG.positionedWhistleSound);
 			}
 		});
 	}
