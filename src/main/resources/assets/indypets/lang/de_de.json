@@ -18,6 +18,8 @@
   "text.autoconfig.indypets.option.interactBlocklist.@Tooltip": "Deaktiviert IndyPets' Schleichinteraktion für spezifische Tiere.\nNützlich für gemoddete Tiere mit eigenen Schleichinteraktionen.\n\"modid:*\" deaktiviert Schleichinteraktionen für alle Tiere von der gegebenen Mod.\nUnabhängigkeit von Tieren kann immer noch durch Pfeifen oder\ndie Interagieren-Tastenbelegung geändert werden.",
   "text.autoconfig.indypets.option.interactItem": "Benötigter Gegenstand zum Schleichinteragieren",
   "text.autoconfig.indypets.option.interactItem.@Tooltip": "Die Schleichinteraktion von IndyPets wird nur benutzt\nwenn der ausgewählte Gegenstand gehalten wird.\nNützlich für gemoddete Tiere mit eigenen Schleichinteraktionen.\nLeer lassen um den gehaltenen Gegenstand zu ignorieren.",
+  "text.autoconfig.indypets.option.positionedWhistleSound": "Positionierter Pfeifton",
+  "text.autoconfig.indypets.option.positionedWhistleSound.@Tooltip": "Funktioniert mit Sound Physics Remastered, der Ton bewegt sich aber nicht mit dem Spieler.",
   "key.categories.indypets": "Independent Pets",
   "key.indypets.interact": "Interagieren",
   "key.indypets.whistle": "Pfeifen",
