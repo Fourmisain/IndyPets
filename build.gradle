@@ -6,6 +6,7 @@ plugins {
 	id 'maven-publish'
 	id 'com.matthewprenger.cursegradle' version '1.4.0'
 	id 'com.modrinth.minotaur' version '2.+'
+	id 'minepkg-publish' version 'latest.release'
 }
 
 version = project.mod_version + '-' + project.minecraft_version
@@ -153,6 +154,20 @@ curseforge {
 			forgeGradleIntegration = false
 			javaVersionAutoDetect = false
 		}
+	}
+}
+
+minepkg {
+	def MINEPKG_TOKEN = System.getenv("MINEPKG_TOKEN")
+	if (MINEPKG_TOKEN != null) {
+		apiKey = MINEPKG_TOKEN
+		artifact = remapJar
+		platform = 'fabric'
+		name = project.minepkg_id
+		version = project.mod_version + "+" + project.minecraft_version
+		license = "CC0"
+		minecraftVersionRange = project.game_version_range
+		toList(project.minepkg_dependencies).each{ require(it) }
 	}
 }
 
