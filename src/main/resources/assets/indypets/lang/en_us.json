@@ -12,6 +12,7 @@
   "text.autoconfig.indypets.option.independentCats": "Cats are independent by default",
   "text.autoconfig.indypets.option.independentParrots": "Parotts are independent by default",
   "text.autoconfig.indypets.option.independentWolves": "Wolves are independent by default",
+  "text.autoconfig.indypets.option.independentModdedPets": "Modded pets are independent by default",
   "text.autoconfig.indypets.option.blocklist": "Blocklist",
   "text.autoconfig.indypets.option.blocklist.@Tooltip": "Completely disables IndyPets for specific pet types.\nUseful for modded pets with custom follow mechanics.\n\"modid:*\" disables all pets of a given mod.",
   "text.autoconfig.indypets.option.blocklist.error": "Invalid blocklist entry",
