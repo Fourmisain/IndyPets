@@ -11,6 +11,7 @@
   "text.autoconfig.indypets.option.independentCats": "Katzen sind standardmäßig unabhängig",
   "text.autoconfig.indypets.option.independentParrots": "Papageien sind standardmäßig unabhängig",
   "text.autoconfig.indypets.option.independentWolves": "Wölfe sind standardmäßig unabhängig",
+  "text.autoconfig.indypets.option.independentModdedPets": "Gemoddete Tiere sind standardmäßig unabhängig",
   "text.autoconfig.indypets.option.blocklist": "Blockliste",
   "text.autoconfig.indypets.option.blocklist.@Tooltip": "Deaktiviert IndyPets vollständig für spezifische Tiere.\nNützlich für gemoddete Tiere mit eigener Folge-Mechanik.\n\"modid:*\" deaktiviert alle Tiere von der gegebenen Mod.",
   "text.autoconfig.indypets.option.blocklist.error": "Ungültiger Blocklisteneintrag",
