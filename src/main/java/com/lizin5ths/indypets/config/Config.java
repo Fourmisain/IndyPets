@@ -39,6 +39,7 @@ public class Config implements ConfigData {
 	public boolean independentCats = true;
 	public boolean independentParrots = true;
 	public boolean independentWolves = true;
+	public boolean independentModdedPets = true;
 
 	public boolean silentMode = false;
 
@@ -60,7 +61,7 @@ public class Config implements ConfigData {
 		if (tameable instanceof CatEntity)    return independentCats;
 		if (tameable instanceof ParrotEntity) return independentParrots;
 		if (tameable instanceof WolfEntity)   return independentWolves;
-		return true;
+		return independentModdedPets;
 	}
 
 	public static void init() {
