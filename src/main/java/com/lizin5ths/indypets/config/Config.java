@@ -8,6 +8,7 @@ import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.ConfigHolder;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
+import me.shedaniel.autoconfig.gui.registry.GuiRegistry;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -42,6 +43,15 @@ public class Config implements ConfigData {
 	public boolean independentModdedPets = true;
 
 	public boolean silentMode = false;
+
+	@ConfigEntry.Gui.Tooltip
+	@ConfigEntry.BoundedDiscrete(max = 128)
+	public int homeRadius = 80;
+
+	@ConfigEntry.Gui.Excluded
+	public static final float INNER_HOME_PERCENTAGE_DEFAULT = 0.66f;
+
+	public float innerHomePercentage = INNER_HOME_PERCENTAGE_DEFAULT;
 
 	@ConfigEntry.Gui.Tooltip
 	public Blocklist blocklist = Blocklist.getDefault();
@@ -79,7 +89,9 @@ public class Config implements ConfigData {
 
 	@Environment(EnvType.CLIENT)
 	public static void clientInit() {
-		AutoConfig.getGuiRegistry(Config.class).registerPredicateProvider(new BlocklistGuiProvider(), field -> field.getType().equals(Blocklist.class));
-		AutoConfig.getGuiRegistry(Config.class).registerPredicateProvider(new ItemGuiProvider(), field -> field.getName().equals("interactItem"));
+		GuiRegistry guiRegistry = AutoConfig.getGuiRegistry(Config.class);
+		guiRegistry.registerPredicateProvider(new BlocklistGuiProvider(), field -> field.getType().equals(Blocklist.class));
+		guiRegistry.registerPredicateProvider(new ItemGuiProvider(), field -> field.getName().equals("interactItem"));
+		guiRegistry.registerPredicateProvider(new InnerHomeGuiProvider(), field -> field.getName().equals("innerHomePercentage"));
 	}
 }

@@ -40,7 +40,7 @@ public abstract class TameableEntityMixin extends AnimalEntity implements Follow
 	}
 
 	@Unique
-	public NbtList toNbtList(int... values) {
+	private static NbtList toNbtList(int... values) {
 		NbtList nbtList = new NbtList();
 
 		for (int i : values) {

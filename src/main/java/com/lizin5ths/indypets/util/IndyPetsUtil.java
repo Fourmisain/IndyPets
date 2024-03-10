@@ -1,6 +1,5 @@
 package com.lizin5ths.indypets.util;
 
-import com.lizin5ths.indypets.command.Commands;
 import com.lizin5ths.indypets.config.Config;
 import com.lizin5ths.indypets.config.ServerConfig;
 import net.minecraft.entity.Entity;
@@ -141,23 +140,24 @@ public class IndyPetsUtil {
 		// distance to home
 		float d = (float) Math.sqrt(tameable.getBlockPos().getSquaredDistance(follower.getHomePos()));
 
-		float start = Commands.WHISTLE_RADIUS - 16;
-		float end   = Commands.WHISTLE_RADIUS + 32;
+		Config config = ServerConfig.getDefaultedPlayerConfig(tameable.getOwnerUuid());
+		float start = config.homeRadius * config.innerHomePercentage;
+		float end   = config.homeRadius;
 
 		// probability to head home, starts at 0 and grows to 1 over the interval from start to end
 		float p;
-		if (d <= start)    p = 0;
+		if (d < start)     p = 0;
 		else if (d >= end) p = 1;
 		else               p = (d - start) / (end - start);
 
 		return tameable.getRandom().nextFloat() < p;
 	}
 
-	public static Vec3d headHome(PathAwareEntity mob) {
-		return headHome(mob, false);
+	public static Vec3d findTowardsHome(PathAwareEntity mob) {
+		return findTowardsHome(mob, false);
 	}
 
-	public static Vec3d headHome(PathAwareEntity mob, boolean ignorePenality) {
+	public static Vec3d findTowardsHome(PathAwareEntity mob, boolean ignorePenality) {
 		// assert mob instanceof TameableEntity
 		BlockPos homePos = ((Follower) mob).getHomePos();
 
