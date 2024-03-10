@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import static com.lizin5ths.indypets.util.IndyPetsUtil.headHome;
+import static com.lizin5ths.indypets.util.IndyPetsUtil.findTowardsHome;
 import static com.lizin5ths.indypets.util.IndyPetsUtil.shouldHeadHome;
 
 @Mixin(WanderAroundFarGoal.class)
@@ -21,7 +21,7 @@ public abstract class WanderAroundFarGoalMixin extends WanderAroundGoal {
 	@Inject(method = "getWanderTarget", at = @At("HEAD"), cancellable = true)
 	protected void indypets$dontStrayFromHome(CallbackInfoReturnable<Vec3d> cir) {
 		if (shouldHeadHome(mob)) {
-			cir.setReturnValue(headHome(mob));
+			cir.setReturnValue(findTowardsHome(mob));
 		}
 	}
 }
