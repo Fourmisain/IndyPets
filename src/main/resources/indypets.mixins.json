@@ -6,7 +6,10 @@
   "plugin": "com.lizin5ths.indypets.MixinPlugin",
   "mixins": [
     "FollowOwnerGoalMixin",
+    "GlareBrainMixin",
     "GlareFollowOwnerGoalMixin",
+    "GlareStrollTaskMixin",
+    "GlareTeleportToOwnerTaskMixin",
     "MobEntityMixin",
     "ServerPlayerEntityMixin",
     "SitGoalMixin",
