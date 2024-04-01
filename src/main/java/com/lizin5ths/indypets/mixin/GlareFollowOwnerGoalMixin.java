@@ -11,18 +11,19 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+// Friend's and Foes <2.0.8
 @Mixin(GlareFollowOwnerGoal.class)
 public abstract class GlareFollowOwnerGoalMixin {
 	@Shadow(remap = false) @Final private GlareEntity glare;
 
-	@Inject(method = {"canStart", "shouldContinue"}, at = @At("HEAD"), cancellable = true)
+	@Inject(method = {"canStart", "shouldContinue"}, at = @At("HEAD"), cancellable = true, require = 0)
 	public void indyPets$stopFollowing(CallbackInfoReturnable<Boolean> cir) {
 		if (IndyPetsUtil.isIndependent(glare)) {
 			cir.setReturnValue(false);
 		}
 	}
 
-	@Inject(method = "tick", at = @At("HEAD"), cancellable = true)
+	@Inject(method = "tick", at = @At("HEAD"), cancellable = true, require = 0)
 	public void indyPets$doNotFollow(CallbackInfo ci) {
 		if (IndyPetsUtil.isIndependent(glare)) {
 			ci.cancel();

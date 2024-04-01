@@ -1,18 +1,41 @@
 package com.lizin5ths.indypets;
 
 import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.api.ModContainer;
+import net.fabricmc.loader.api.Version;
+import net.fabricmc.loader.api.VersionParsingException;
+import net.fabricmc.loader.api.metadata.version.VersionPredicate;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 public class MixinPlugin implements IMixinConfigPlugin {
+	public static boolean testVersion(String modId, String versionRange) {
+		try {
+			Optional<ModContainer> container = FabricLoader.getInstance().getModContainer(modId);
+			if (!container.isPresent())
+				return false;
+
+			VersionPredicate pred = VersionPredicate.parse(versionRange);
+			Version version = container.get().getMetadata().getVersion();
+
+			return pred.test(version);
+		} catch (VersionParsingException e) {
+			IndyPets.LOGGER.error("version matching failed!", e);
+			return false;
+		}
+	}
+
 	@Override
 	public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
 		if (mixinClassName.endsWith("GlareFollowOwnerGoalMixin"))
-			return FabricLoader.getInstance().isModLoaded("friendsandfoes");
+			return testVersion("friendsandfoes", "<2.0.8");
+		if (mixinClassName.endsWith("GlareBrainMixin") || mixinClassName.endsWith("GlareTeleportToOwnerTaskMixin") || mixinClassName.endsWith("GlareStrollTaskMixin"))
+			return testVersion("friendsandfoes", ">=2.0.8");
 
 		return true;
 	}
