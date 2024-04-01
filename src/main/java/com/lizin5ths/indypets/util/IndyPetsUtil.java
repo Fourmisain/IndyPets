@@ -1,11 +1,15 @@
 package com.lizin5ths.indypets.util;
 
+import com.faboslav.friendsandfoes.entity.GlareEntity;
 import com.lizin5ths.indypets.config.Config;
 import com.lizin5ths.indypets.config.ServerConfig;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.FuzzyTargeting;
 import net.minecraft.entity.ai.NoPenaltyTargeting;
+import net.minecraft.entity.ai.brain.Brain;
+import net.minecraft.entity.ai.brain.MemoryModuleType;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -18,6 +22,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.registry.Registry;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
@@ -67,6 +72,13 @@ public class IndyPetsUtil {
 					tameable.getX(), tameable.getBodyY(0.5), tameable.getZ(),
 					7, 0.4, 0.4, 0.4, 0.3);
 			}
+		}
+
+		if (FabricLoader.getInstance().isModLoaded("friendsandfoes") && tameable instanceof GlareEntity) {
+			// immediately finish the Glare's WalkTowardsLookTargetTask
+			Brain<?> brain = tameable.getBrain();
+			brain.forget(MemoryModuleType.WALK_TARGET);
+			brain.forget(MemoryModuleType.LOOK_TARGET);
 		}
 
 		return true;
@@ -153,10 +165,12 @@ public class IndyPetsUtil {
 		return tameable.getRandom().nextFloat() < p;
 	}
 
+	@Nullable
 	public static Vec3d findTowardsHome(PathAwareEntity mob) {
 		return findTowardsHome(mob, false);
 	}
 
+	@Nullable
 	public static Vec3d findTowardsHome(PathAwareEntity mob, boolean ignorePenality) {
 		// assert mob instanceof TameableEntity
 		BlockPos homePos = ((Follower) mob).getHomePos();
