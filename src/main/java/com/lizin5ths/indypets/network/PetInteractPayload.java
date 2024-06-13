@@ -6,7 +6,7 @@ import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.packet.CustomPayload;
 
 public record PetInteractPayload(int entityId) implements CustomPayload {
-	public static final Id<PetInteractPayload> ID = CustomPayload.id(IndyPets.id("interact").toString());
+	public static final Id<PetInteractPayload> ID = new CustomPayload.Id<>(IndyPets.id("interact"));
 
 	public static final PacketCodec<PacketByteBuf, PetInteractPayload> CODEC = PacketCodec.of(
 		(value, buf) -> buf.writeVarInt(value.entityId()),

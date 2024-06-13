@@ -27,7 +27,7 @@ public class IdentifierTypeAdapter extends TypeAdapter<Identifier> {
 			reader.nextNull();
 			return null;
 		} else {
-			return new Identifier(reader.nextString());
+			return Identifier.of(reader.nextString());
 		}
 	}
 }

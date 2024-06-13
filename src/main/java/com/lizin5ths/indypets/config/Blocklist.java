@@ -13,10 +13,10 @@ public class Blocklist {
 		Blocklist blocklist = new Blocklist();
 
 		// capybaras change between sitting/standing by sneak-interacting with a stick
-//		blocklist.idBlocklist.add(new Identifier("capybara", "capybara"));
+//		blocklist.idBlocklist.add(Identifier.of("capybara", "capybara"));
 
 		// snails don't have follow state
-		blocklist.idBlocklist.add(new Identifier("lovely_snails", "snail"));
+		blocklist.idBlocklist.add(Identifier.of("lovely_snails", "snail"));
 
 		// mounts by default don't follow their owner and some have sneak-interactions
 		blocklist.modBlocklist.add("mythicmounts");

@@ -16,7 +16,6 @@
     "TameableEntityMixin",
     "WanderAroundFarGoalMixin",
     "WanderAroundGoalMixin",
-    "access.IdentifierAccessor",
     "access.WanderAroundGoalAccessor"
   ],
   "client": [

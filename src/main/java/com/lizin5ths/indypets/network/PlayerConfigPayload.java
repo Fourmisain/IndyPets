@@ -8,7 +8,7 @@ import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.packet.CustomPayload;
 
 public record PlayerConfigPayload(Config config) implements CustomPayload {
-	public static final Id<PlayerConfigPayload> ID = CustomPayload.id(IndyPets.id("player_config").toString());
+	public static final Id<PlayerConfigPayload> ID = new CustomPayload.Id<>(IndyPets.id("player_config"));
 
 	public static final PacketCodec<PacketByteBuf, PlayerConfigPayload> CODEC = PacketCodec.of(
 		(value, buf) -> buf.writeString(Config.GSON.toJson(Config.LOCAL_CONFIG)),

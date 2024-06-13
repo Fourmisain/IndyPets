@@ -13,7 +13,7 @@ public class IndyPets implements ModInitializer {
 	public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
 
 	public static Identifier id(String path) {
-		return new Identifier(MOD_ID, path);
+		return Identifier.of(MOD_ID, path);
 	}
 
 	@Override

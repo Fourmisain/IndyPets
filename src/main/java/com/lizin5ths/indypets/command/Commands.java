@@ -26,7 +26,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-import static com.lizin5ths.indypets.util.IndyPetsUtil.*;
+import static com.lizin5ths.indypets.util.IndyPetsUtil.isIndependent;
+import static com.lizin5ths.indypets.util.IndyPetsUtil.isPetOf;
 import static net.minecraft.server.command.CommandManager.argument;
 import static net.minecraft.server.command.CommandManager.literal;
 
