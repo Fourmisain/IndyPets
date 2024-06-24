@@ -2,10 +2,13 @@ package com.lizin5ths.indypets.util;
 
 import com.lizin5ths.indypets.config.Config;
 import com.lizin5ths.indypets.config.ServerConfig;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.FuzzyTargeting;
 import net.minecraft.entity.ai.NoPenaltyTargeting;
+import net.minecraft.entity.ai.brain.Brain;
+import net.minecraft.entity.ai.brain.MemoryModuleType;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -20,6 +23,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.registry.Registry;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
@@ -155,17 +159,24 @@ public class IndyPetsUtil {
 		return tameable.getRandom().nextFloat() < p;
 	}
 
+	@Nullable
 	public static Vec3d findTowardsHome(PathAwareEntity mob) {
 		return findTowardsHome(mob, false);
 	}
 
+	@Nullable
 	public static Vec3d findTowardsHome(PathAwareEntity mob, boolean ignorePenality) {
+		return findTowardsHome(mob, ignorePenality, 15, 7);
+	}
+
+	@Nullable
+	public static Vec3d findTowardsHome(PathAwareEntity mob, boolean ignorePenality, int horizontalRange, int verticalRange) {
 		// assert mob instanceof TameableEntity
 		BlockPos homePos = ((Follower) mob).getHomePos();
 
 		if (ignorePenality)
-			return NoPenaltyTargeting.findTo(mob, 15, 7, Vec3d.ofBottomCenter(homePos), Math.PI / 2);
+			return NoPenaltyTargeting.findTo(mob, horizontalRange, verticalRange, Vec3d.ofBottomCenter(homePos), Math.PI / 2);
 
-		return FuzzyTargeting.findTo(mob, 15, 7, Vec3d.ofBottomCenter(homePos));
+		return FuzzyTargeting.findTo(mob, horizontalRange, verticalRange, Vec3d.ofBottomCenter(homePos));
 	}
 }
