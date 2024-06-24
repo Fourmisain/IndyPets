@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_${java_version}",
   "mixins": [
     "FlyGoalMixin",
+    "FollowMobGoalMixin",
     "FollowOwnerGoalMixin",
     "MobEntityMixin",
     "ParrotEntityFlyOntoTreeGoalMixin",
