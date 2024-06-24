@@ -6,6 +6,7 @@ import com.lizin5ths.indypets.config.ServerConfig;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.TargetFinder;
+import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -130,7 +131,7 @@ public class IndyPetsUtil {
 		return false;
 	}
 
-	public static boolean shouldHeadHome(PathAwareEntity mob) {
+	public static boolean shouldHeadHome(MobEntity mob) {
 		if (!(mob instanceof TameableEntity))
 			return false;
 
