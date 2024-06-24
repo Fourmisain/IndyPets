@@ -63,8 +63,8 @@ public abstract class TameableEntityMixin extends AnimalEntity implements Follow
 	private void indypets$readFollowDataFromNbt(NbtCompound nbt, CallbackInfo callbackInfo) {
 		indypets$isFollowing = nbt.getBoolean("AllowedToFollow");
 
-		if (nbt.contains("IndyPets$HomePos", NbtElement.LIST_TYPE)) {
-			NbtList nbtList = nbt.getList("IndyPets$HomePos", NbtElement.INT_TYPE);
+		if (nbt.contains("IndyPets$HomePos", 9)) {
+			NbtList nbtList = nbt.getList("IndyPets$HomePos", 3);
 			indypets$homePos = new BlockPos(nbtList.getInt(0), nbtList.getInt(1), nbtList.getInt(2));
 		} else if (isTamed()) {
 			indypets$setHome(); // fallback

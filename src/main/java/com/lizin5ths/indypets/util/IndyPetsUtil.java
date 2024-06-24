@@ -1,14 +1,11 @@
 package com.lizin5ths.indypets.util;
 
+import com.lizin5ths.indypets.IndyPets;
 import com.lizin5ths.indypets.config.Config;
 import com.lizin5ths.indypets.config.ServerConfig;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.FuzzyTargeting;
-import net.minecraft.entity.ai.NoPenaltyTargeting;
-import net.minecraft.entity.ai.brain.Brain;
-import net.minecraft.entity.ai.brain.MemoryModuleType;
+import net.minecraft.entity.ai.TargetFinder;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -17,9 +14,9 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.BaseText;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Util;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.registry.Registry;
@@ -65,11 +62,11 @@ public class IndyPetsUtil {
 			sendPetStatusMessage(player, tameable, follower);
 		} else {
 			if (follower.isFollowing()) {
-				player.getWorld().spawnParticles(player, ParticleTypes.HAPPY_VILLAGER, true,
+				player.getServerWorld().spawnParticles(player, ParticleTypes.HAPPY_VILLAGER, true,
 					tameable.getX(), tameable.getBodyY(0.5), tameable.getZ(),
 					11, 0.5, 0.5, 0.5, 2);
 			} else {
-				player.getWorld().spawnParticles(player, ParticleTypes.ANGRY_VILLAGER, true,
+				player.getServerWorld().spawnParticles(player, ParticleTypes.ANGRY_VILLAGER, true,
 					tameable.getX(), tameable.getBodyY(0.5), tameable.getZ(),
 					7, 0.4, 0.4, 0.4, 0.3);
 			}
@@ -174,9 +171,13 @@ public class IndyPetsUtil {
 		// assert mob instanceof TameableEntity
 		BlockPos homePos = ((Follower) mob).getHomePos();
 
-		if (ignorePenality)
-			return NoPenaltyTargeting.findTo(mob, horizontalRange, verticalRange, Vec3d.ofBottomCenter(homePos), Math.PI / 2);
+		if (ignorePenality) {
+			return TargetFinder.findTargetTowards(mob, horizontalRange, verticalRange, Vec3d.ofBottomCenter(homePos));
+		}
 
-		return FuzzyTargeting.findTo(mob, horizontalRange, verticalRange, Vec3d.ofBottomCenter(homePos));
+		IndyPets.LOGGER.warn("{} head towards {}", mob, Vec3d.ofBottomCenter(homePos));
+
+		// method_27929 is the proper findGroundTargetTowards (using only valid positions)
+		return TargetFinder.method_27929(mob, horizontalRange, verticalRange, Vec3d.ofBottomCenter(homePos));
 	}
 }

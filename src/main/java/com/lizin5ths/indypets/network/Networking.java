@@ -30,7 +30,7 @@ public class Networking {
 
 	public static void sendPetInteract(TameableEntity entity) throws IllegalStateException {
 		PacketByteBuf buf = PacketByteBufs.create();
-		buf.writeVarInt(entity.getId());
+		buf.writeVarInt(entity.getEntityId());
 		ClientPlayNetworking.send(PET_INTERACT, buf);
 	}
 
@@ -58,7 +58,7 @@ public class Networking {
 			int entityId = buf.readVarInt();
 
 			server.execute(() -> {
-				Entity entity = player.getWorld().getEntityById(entityId);
+				Entity entity = player.getServerWorld().getEntityById(entityId);
 				if (entity instanceof TameableEntity) {
 					IndyPetsUtil.changeFollowing(player, (TameableEntity) entity);
 				}

@@ -4,7 +4,6 @@
   "package": "com.lizin5ths.indypets.mixin",
   "compatibilityLevel": "JAVA_${java_version}",
   "mixins": [
-    "FlyGoalMixin",
     "FollowOwnerGoalMixin",
     "MobEntityMixin",
     "ParrotEntityFlyOntoTreeGoalMixin",
