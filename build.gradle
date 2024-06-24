@@ -2,7 +2,7 @@ import java.nio.file.*
 import java.nio.file.attribute.BasicFileAttributes
 
 plugins {
-	id 'fabric-loom' version '1.6-SNAPSHOT'
+	id 'fabric-loom' version '1.7-SNAPSHOT'
 	id 'maven-publish'
 	id 'com.matthewprenger.cursegradle' version '1.4.0'
 	id 'com.modrinth.minotaur' version '2.+'
@@ -16,6 +16,10 @@ base {
 	archivesName = project.archives_base_name
 }
 
+loom {
+	accessWidenerPath = file("src/main/resources/indypets.accesswidener")
+}
+
 repositories {
 	maven { url "https://maven.shedaniel.me/" }
 	maven { url "https://maven.terraformersmc.com/" }
@@ -25,8 +29,6 @@ dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
 	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-
-	implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:${project.mixin_extras}"))
 
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 

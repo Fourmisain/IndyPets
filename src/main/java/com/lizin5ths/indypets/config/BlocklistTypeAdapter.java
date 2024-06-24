@@ -3,7 +3,6 @@ package com.lizin5ths.indypets.config;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import com.lizin5ths.indypets.mixin.access.IdentifierAccessor;
 import net.minecraft.util.Identifier;
 
 import java.io.IOException;
@@ -14,11 +13,20 @@ import java.util.List;
 public class BlocklistTypeAdapter extends TypeAdapter<Blocklist> {
 	public static final BlocklistTypeAdapter INST = new BlocklistTypeAdapter();
 
+	private static String[] split(String id) {
+		int i = id.indexOf(':');
+
+		return new String[] {
+			i >= 1 ? id.substring(0, i) : "minecraft",
+			i >= 0 ? id.substring(i + 1) : ""
+		};
+	}
+
 	public static Blocklist blocklistFromRaw(List<String> rawBlocklist) {
 		Blocklist blocklist = new Blocklist();
 
 		for (String blocked : rawBlocklist) {
-			String[] strings = IdentifierAccessor.invokeSplit(blocked, ':');
+			String[] strings = split(blocked);
 
 			if (strings[1].isEmpty())
 				throw new IllegalArgumentException("empty identifier");

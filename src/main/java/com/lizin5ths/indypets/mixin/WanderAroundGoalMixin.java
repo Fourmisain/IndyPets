@@ -22,11 +22,11 @@ public abstract class WanderAroundGoalMixin {
 
 	@Inject(method = "canStart", at = @At("HEAD"))
 	public void indypets$countTamedPetsAsPersistent(CallbackInfoReturnable<Boolean> cir) {
-		// WanderAroundGoal will only start if the mobs despawn timer isn't too high or if the mob is persistent
-		// Tamed cats are persistent but wolves are not persistent (despite them not despawning), hence they will actually
-		// stop wandering around after some time and only start moving again once their despawn timer resets (by a player getting near them)
+		// WanderAroundGoal will only start if the mob's despawn timer isn't too high or if the mob is persistent
+		// Tamed cats are persistent but wolves are not (despite them not despawning), hence they will stop
+		// wandering around after some time and only start moving again once their despawn timer resets (by a player getting near them)
 
-		// This will override the timer check for all tambed mobs, making them actually wander around even without player presence
+		// This will override the timer check for all tamed mobs, making them wander around even without player presence
 		if (mob instanceof TameableEntity && ((TameableEntity) mob).isTamed()) {
 			((WanderAroundGoalAccessor) this).setCanDespawn(false);
 		}
