@@ -6,6 +6,7 @@
   "plugin": "com.lizin5ths.indypets.MixinPlugin",
   "mixins": [
     "FlyGoalMixin",
+    "FollowMobGoalMixin",
     "FollowOwnerGoalMixin",
     "GlareBrainMixin",
     "GlareFollowOwnerGoalMixin",
