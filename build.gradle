@@ -96,6 +96,8 @@ modrinth {
 	}
 }
 
+tasks.modrinth.dependsOn("build") // ensure finalizer to delete "header files" runs
+
 curseforge {
 	def CURSEFORGE_TOKEN = System.getenv('CURSEFORGE_TOKEN')
 	if (CURSEFORGE_TOKEN != null) {
