@@ -5,18 +5,19 @@
   "compatibilityLevel": "JAVA_${java_version}",
   "plugin": "com.lizin5ths.indypets.MixinPlugin",
   "mixins": [
+    "FlyGoalMixin",
     "FollowOwnerGoalMixin",
     "GlareBrainMixin",
     "GlareFollowOwnerGoalMixin",
     "GlareStrollTaskMixin",
     "GlareTeleportToOwnerTaskMixin",
     "MobEntityMixin",
+    "ParrotEntityFlyOntoTreeGoalMixin",
     "ServerPlayerEntityMixin",
     "SitGoalMixin",
     "TameableEntityMixin",
     "WanderAroundFarGoalMixin",
     "WanderAroundGoalMixin",
-    "access.IdentifierAccessor",
     "access.WanderAroundGoalAccessor"
   ],
   "client": [

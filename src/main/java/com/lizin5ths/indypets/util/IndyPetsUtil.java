@@ -172,12 +172,17 @@ public class IndyPetsUtil {
 
 	@Nullable
 	public static Vec3d findTowardsHome(PathAwareEntity mob, boolean ignorePenality) {
+		return findTowardsHome(mob, ignorePenality, 15, 7);
+	}
+
+	@Nullable
+	public static Vec3d findTowardsHome(PathAwareEntity mob, boolean ignorePenality, int horizontalRange, int verticalRange) {
 		// assert mob instanceof TameableEntity
 		BlockPos homePos = ((Follower) mob).getHomePos();
 
 		if (ignorePenality)
-			return NoPenaltyTargeting.findTo(mob, 15, 7, Vec3d.ofBottomCenter(homePos), Math.PI / 2);
+			return NoPenaltyTargeting.findTo(mob, horizontalRange, verticalRange, Vec3d.ofBottomCenter(homePos), Math.PI / 2);
 
-		return FuzzyTargeting.findTo(mob, 15, 7, Vec3d.ofBottomCenter(homePos));
+		return FuzzyTargeting.findTo(mob, horizontalRange, verticalRange, Vec3d.ofBottomCenter(homePos));
 	}
 }
