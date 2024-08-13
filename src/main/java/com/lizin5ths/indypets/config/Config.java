@@ -41,6 +41,7 @@ public class Config implements ConfigData {
 	public boolean independentParrots = true;
 	public boolean independentWolves = true;
 	public boolean independentModdedPets = true;
+	public boolean changeIndependenceByInteract = true;
 
 	public boolean silentMode = false;
 

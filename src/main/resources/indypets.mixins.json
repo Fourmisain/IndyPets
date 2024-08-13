@@ -19,7 +19,10 @@
     "TameableEntityMixin",
     "WanderAroundFarGoalMixin",
     "WanderAroundGoalMixin",
-    "access.WanderAroundGoalAccessor"
+    "access.WanderAroundGoalAccessor",
+    "vanilla.CatEntityMixin",
+    "vanilla.ParrotEntityMixin",
+    "vanilla.WolfEntityMixin"
   ],
   "client": [
     "ClientPlayNetworkHandlerMixin",

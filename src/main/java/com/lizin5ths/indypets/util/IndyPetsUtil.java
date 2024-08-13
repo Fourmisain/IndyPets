@@ -186,4 +186,29 @@ public class IndyPetsUtil {
 
 		return FuzzyTargeting.findTo(mob, horizontalRange, verticalRange, Vec3d.ofBottomCenter(homePos));
 	}
+
+	// cycle sit -> follow -> independent
+	// returns true when sitting needs to be changed
+	public static boolean cycleState(TameableEntity tameable, ServerPlayerEntity player) {
+		Config config = ServerConfig.getDefaultedPlayerConfig(player.getUuid());
+		if (!config.changeIndependenceByInteract)
+			return true;
+
+		// sit -> follow (& stand up)
+		if (tameable.isSitting()) {
+			if (IndyPetsUtil.isIndependent(tameable))
+				IndyPetsUtil.changeFollowing(player, tameable);
+
+			return true;
+		} else {
+			// follow -> independent (& keep standing)
+			if (!IndyPetsUtil.isIndependent(tameable)) {
+				IndyPetsUtil.changeFollowing(player, tameable);
+				return false;
+			} else {
+				// independent -> sit
+				return true;
+			}
+		}
+	}
 }
