@@ -100,7 +100,7 @@ public class Commands {
 				Follower follower = (Follower) entity;
 
 				if (unwhistle == follower.isFollowing()) {
-					IndyPetsUtil.changeFollowing(player, (TameableEntity) entity);
+					IndyPetsUtil.changeFollowing(player, (TameableEntity) entity, false);
 				}
 			}
 

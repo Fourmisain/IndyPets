@@ -28,7 +28,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.UUID;
 
 public class IndyPetsUtil {
-
 	public static boolean sneakInteract(Entity entity, PlayerEntity player, Hand hand) {
 		if (!(player.isSneaking() && hand == Hand.MAIN_HAND && entity instanceof TameableEntity))
 			return false;
@@ -45,10 +44,10 @@ public class IndyPetsUtil {
 		if (config.interactBlocklist.isBlocked(EntityType.getId(entity.getType())))
 			return false;
 
-		return IndyPetsUtil.changeFollowing((ServerPlayerEntity) player, (TameableEntity) entity);
+		return IndyPetsUtil.changeFollowing((ServerPlayerEntity) player, (TameableEntity) entity, true);
 	}
 
-	public static boolean changeFollowing(ServerPlayerEntity player, TameableEntity tameable) {
+	public static boolean changeFollowing(ServerPlayerEntity player, TameableEntity tameable, boolean singlePet) {
 		if (!tameable.isOwner(player))
 			return false;
 
@@ -62,7 +61,7 @@ public class IndyPetsUtil {
 		follower.setFollowing(!follower.isFollowing());
 
 		if (!config.silentMode) {
-			sendPetStatusMessage(player, tameable, follower);
+			sendPetStatusMessage(player, tameable, follower, singlePet);
 		} else {
 			if (follower.isFollowing()) {
 				player.getServerWorld().spawnParticles(player, ParticleTypes.HAPPY_VILLAGER, true,
@@ -85,7 +84,7 @@ public class IndyPetsUtil {
 		return true;
 	}
 
-	public static void sendPetStatusMessage(PlayerEntity player, TameableEntity tameable, Follower follower) {
+	public static void sendPetStatusMessage(PlayerEntity player, TameableEntity tameable, Follower follower, boolean overlay) {
 		MutableText text;
 
 		if (ServerConfig.HAS_MOD_INSTALLED.contains(player.getUuid())) {
@@ -117,7 +116,7 @@ public class IndyPetsUtil {
 			text = Text.translatable(sb.toString());
 		}
 
-		player.sendMessage(text, false);
+		player.sendMessage(text, overlay);
 	}
 
 	public static boolean isIndependent(TameableEntity tameable) {
@@ -197,13 +196,13 @@ public class IndyPetsUtil {
 		// sit -> follow (& stand up)
 		if (tameable.isSitting()) {
 			if (IndyPetsUtil.isIndependent(tameable))
-				IndyPetsUtil.changeFollowing(player, tameable);
+				IndyPetsUtil.changeFollowing(player, tameable, true);
 
 			return true;
 		} else {
 			// follow -> independent (& keep standing)
 			if (!IndyPetsUtil.isIndependent(tameable)) {
-				IndyPetsUtil.changeFollowing(player, tameable);
+				IndyPetsUtil.changeFollowing(player, tameable, true);
 				return false;
 			} else {
 				// independent -> sit
