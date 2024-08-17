@@ -12,7 +12,7 @@
   "text.autoconfig.indypets.option.regularInteract.@Tooltip": "Wechsle zwischen sitzen, folgen und unabhängig durch reguläre Interaktion (Rechtsklick).\nBemerke dass z.B. Papageien nicht interagierbar sind während sie fliegen.\nBenutze dafür folgende Schleichinteraktion oder IndyPets' Interagieren-Taste.",
   "text.autoconfig.indypets.option.sneakInteract": "Ändere Unabhängigkeit durch Schleichinteraktion",
   "text.autoconfig.indypets.option.sneakInteract.@Tooltip": "Wechsle zwischen folgen und unabhängig durch Schleichinteraktion (Shift + Rechtsklick).\nFunktioniert womöglich nicht mit gemoddeten Tieren oder anderen Mods die bereits Schleichinteraktion benutzen.\nBenutze dafür IndyPets' Interagieren-Taste.",
-  "text.autoconfig.indypets.option.silentMode": "Partikeleffekte anstatt Textnachrichten benutzen",
+  "text.autoconfig.indypets.option.silentMode": "Partikeleffekte anstatt Statusnachrichten benutzen",
   "text.autoconfig.indypets.option.independentCats": "Katzen sind standardmäßig unabhängig",
   "text.autoconfig.indypets.option.independentParrots": "Papageien sind standardmäßig unabhängig",
   "text.autoconfig.indypets.option.independentWolves": "Wölfe sind standardmäßig unabhängig",

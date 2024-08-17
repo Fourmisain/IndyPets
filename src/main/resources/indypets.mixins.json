@@ -20,10 +20,10 @@
     "TameableEntityMixin",
     "WanderAroundFarGoalMixin",
     "WanderAroundGoalMixin",
+    "access.ServerConfigurationNetworkHandlerAccessor",
     "access.WanderAroundGoalAccessor"
   ],
   "client": [
-    "ClientPlayNetworkHandlerMixin",
     "access.KeyBindingAccessor"
   ],
   "injectors": {

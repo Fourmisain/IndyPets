@@ -21,6 +21,6 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity {
 	@Inject(method = "onDisconnect", at = @At("TAIL"))
 	public void indypets$forgetPlayerData(CallbackInfo ci) {
 		ServerConfig.HAS_MOD_INSTALLED.remove(getUuid());
-		ServerConfig.PLAYER_CONFIG.remove(getUuid());
+		ServerConfig.RECEIVED_PLAYER_CONFIGS.remove(getUuid());
 	}
 }

@@ -87,10 +87,10 @@ public class Keybindings {
 
 			if (shouldWhistle) {
 				client.getNetworkHandler().sendCommand("indypets whistle");
-				IndyPetsClient.playLocalPlayerSound(client.player, WHISTLE, Config.LOCAL_CONFIG.positionedWhistleSound);
+				IndyPetsClient.playLocalPlayerSound(client.player, WHISTLE, Config.local().positionedWhistleSound);
 			} else {
 				client.getNetworkHandler().sendCommand("indypets unwhistle");
-				IndyPetsClient.playLocalPlayerSound(client.player, UNWHISTLE, Config.LOCAL_CONFIG.positionedWhistleSound);
+				IndyPetsClient.playLocalPlayerSound(client.player, UNWHISTLE, Config.local().positionedWhistleSound);
 			}
 		});
 	}
