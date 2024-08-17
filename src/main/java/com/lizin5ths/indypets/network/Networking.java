@@ -3,7 +3,10 @@ package com.lizin5ths.indypets.network;
 import com.lizin5ths.indypets.config.Config;
 import com.lizin5ths.indypets.config.ServerConfig;
 import com.lizin5ths.indypets.mixin.access.ServerConfigurationNetworkHandlerAccessor;
-import com.lizin5ths.indypets.util.IndyPetsUtil;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationConnectionEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationNetworking;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerConfigurationNetworking;
@@ -15,7 +18,13 @@ import net.minecraft.server.network.ServerPlayerEntity;
 
 import java.util.UUID;
 
+import static com.lizin5ths.indypets.util.IndyPetsUtil.*;
+
 public class Networking {
+	public static void sendClientConfigConfPhase() throws IllegalStateException {
+		ClientConfigurationNetworking.send(new PlayerConfigPayload(Config.local()));
+	}
+
 	public static void sendClientConfig() throws IllegalStateException {
 		ClientPlayNetworking.send(new PlayerConfigPayload(Config.local()));
 	}
@@ -60,13 +69,21 @@ public class Networking {
 			if (server != null) {
 				server.execute(() -> {
 					Entity entity = player.getWorld().getEntityById(payload.entityId());
-					if (entity instanceof TameableEntity) {
-						if (IndyPetsUtil.changeFollowing(player, (TameableEntity) entity)) {
-							IndyPetsUtil.showPetStatus(player, (TameableEntity) entity, true);
-						}
+
+					if (canInteract(player, entity)) {
+						TameableEntity tameable = (TameableEntity) entity;
+						toggleIndependence(tameable);
+						showPetStatus(player, tameable, true);
 					}
 				});
 			}
+		});
+	}
+
+	@Environment(EnvType.CLIENT)
+	public static void clientInit() {
+		ClientConfigurationConnectionEvents.START.register((handler, client) -> {
+			sendClientConfigConfPhase();
 		});
 	}
 }

@@ -13,7 +13,6 @@ public record PlayerConfigPayload(Config config) implements CustomPayload {
 	public static final PacketCodec<PacketByteBuf, PlayerConfigPayload> CODEC = PacketCodec.of(
 		(value, buf) -> {
 			String json = Config.GSON_EXCLUDE_LOCAL.toJson(Config.local());
-			IndyPets.LOGGER.warn("writing json:\n{}", json);
 			buf.writeString(json);
 		},
 		buf -> {

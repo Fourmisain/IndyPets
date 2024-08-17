@@ -1,20 +1,16 @@
 package com.lizin5ths.indypets.mixin;
 
 import com.lizin5ths.indypets.IndyPets;
-import com.lizin5ths.indypets.config.ServerConfig;
-import com.lizin5ths.indypets.util.Follower;
-import com.lizin5ths.indypets.util.IndyPetsUtil;
+import com.lizin5ths.indypets.util.Independence;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.TameableEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtInt;
 import net.minecraft.nbt.NbtList;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
@@ -25,51 +21,48 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import static com.lizin5ths.indypets.util.IndyPetsUtil.cycleState;
+import static com.lizin5ths.indypets.util.IndyPetsUtil.showPetStatus;
+
 @Mixin(TameableEntity.class)
-public abstract class TameableEntityMixin extends AnimalEntity implements Follower {
+public abstract class TameableEntityMixin extends AnimalEntity implements Independence {
 	@Shadow public abstract boolean isTamed();
+	@Shadow private boolean sitting;
 
-	@Unique boolean indypets$isFollowing;
+	@Unique boolean indypets$isIndependent = false;
 	@Unique BlockPos indypets$homePos;
-
-	@Shadow
-	private boolean sitting;
 
 	protected TameableEntityMixin(EntityType<? extends AnimalEntity> entityType, World world) {
 		super(entityType, world);
 	}
 
 	@ModifyVariable(method = "setSitting", at = @At("HEAD"), argsOnly = true, ordinal = 0)
-	private boolean indypets$cycleState(boolean value, @Share("cycling") LocalBooleanRef cycling) {
+	private boolean indypets$tryCycleState(boolean value, @Share("cycling") LocalBooleanRef cycling) {
 		if (getWorld().isClient())
 			return value;
 
-		if (value == sitting) {
-			IndyPets.LOGGER.warn("unexpected setSitting call");
-			return value;
+		if (IndyPets.interactingPlayer.get() != null) {
+			if (value == sitting) {
+				IndyPets.LOGGER.warn("unexpected setSitting call");
+				return value;
+			}
+
+			cycling.set(true); // continue in indypets$showState below
+
+			if (cycleState((TameableEntity) (Object) this)) {
+				return value;
+			} else {
+				return sitting;
+			}
 		}
 
-		TameableEntity self = (TameableEntity) (Object) this;
-		PlayerEntity player = IndyPets.interactingPlayer.get();
-
-		if (!(player instanceof ServerPlayerEntity))
-			return value;
-
-		cycling.set(true);
-
-		if (IndyPetsUtil.cycleState(self, (ServerPlayerEntity) player)) {
-			return value;
-		} else {
-			return sitting;
-		}
+		return value;
 	}
 
 	@Inject(method = "setSitting", at = @At("RETURN"))
 	private void indypets$showState(boolean sitting, CallbackInfo ci, @Share("cycling") LocalBooleanRef cycling) {
 		if (cycling.get()) {
-			TameableEntity self = (TameableEntity) (Object) this;
-			ServerPlayerEntity player = (ServerPlayerEntity) IndyPets.interactingPlayer.get();
-			IndyPetsUtil.showPetStatus(player, self, true);
+			showPetStatus(IndyPets.interactingPlayer.get(), (TameableEntity) (Object) this, true);
 
 			IndyPets.interactingPlayer.remove(); // for safety
 		}
@@ -77,11 +70,10 @@ public abstract class TameableEntityMixin extends AnimalEntity implements Follow
 
 	@Inject(method = "setOwnerUuid", at = @At(value = "TAIL"))
 	protected void indypets$initFollowData(CallbackInfo ci) {
-		if (getWorld().isClient()) return;
+		if (getWorld().isClient())
+			return;
 
-		TameableEntity self = (TameableEntity) (Object) this;
-
-		indypets$isFollowing = !ServerConfig.getDefaultedPlayerConfig(self.getOwnerUuid()).getDefaultIndependence(self);
+		indypets$isIndependent = false;
 		indypets$setHome();
 	}
 
@@ -98,7 +90,7 @@ public abstract class TameableEntityMixin extends AnimalEntity implements Follow
 
 	@Inject(method = "writeCustomDataToNbt", at = @At("HEAD"))
 	private void indypets$writeFollowDataToNbt(NbtCompound nbt, CallbackInfo callbackInfo) {
-		nbt.putBoolean("AllowedToFollow", indypets$isFollowing);
+		nbt.putBoolean("AllowedToFollow", !indypets$isIndependent);
 
 		if (indypets$homePos != null) {
 			nbt.put("IndyPets$HomePos", toNbtList(indypets$homePos.getX(), indypets$homePos.getY(), indypets$homePos.getZ()));
@@ -107,7 +99,7 @@ public abstract class TameableEntityMixin extends AnimalEntity implements Follow
 
 	@Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
 	private void indypets$readFollowDataFromNbt(NbtCompound nbt, CallbackInfo callbackInfo) {
-		indypets$isFollowing = nbt.getBoolean("AllowedToFollow");
+		indypets$isIndependent = !nbt.getBoolean("AllowedToFollow");
 
 		if (nbt.contains("IndyPets$HomePos", NbtElement.LIST_TYPE)) {
 			NbtList nbtList = nbt.getList("IndyPets$HomePos", NbtElement.INT_TYPE);
@@ -117,29 +109,26 @@ public abstract class TameableEntityMixin extends AnimalEntity implements Follow
 		}
 	}
 
-	@Unique
-	@Override
-	public boolean isFollowing() {
-		return indypets$isFollowing;
+	@Unique @Override
+	public boolean indypets$isIndependent() {
+		return indypets$isIndependent;
 	}
 
-	@Unique
-	@Override
-	public void setFollowing(boolean value) {
-		indypets$isFollowing = value;
-		if (!value) {
+	@Unique @Override
+	public void indypets$toggleIndependence() {
+		indypets$isIndependent = !indypets$isIndependent;
+		if (indypets$isIndependent) {
 			indypets$setHome();
 		}
+	}
+
+	@Unique @Override
+	public BlockPos indypets$getHomePos() {
+		return indypets$homePos;
 	}
 
 	@Unique
 	public void indypets$setHome() {
 		indypets$homePos = getBlockPos();
-	}
-
-	@Unique
-	@Override
-	public BlockPos getHomePos() {
-		return indypets$homePos;
 	}
 }

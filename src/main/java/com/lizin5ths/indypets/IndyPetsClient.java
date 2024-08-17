@@ -2,10 +2,8 @@ package com.lizin5ths.indypets;
 
 import com.lizin5ths.indypets.client.Keybindings;
 import com.lizin5ths.indypets.config.Config;
-import com.lizin5ths.indypets.network.PlayerConfigPayload;
+import com.lizin5ths.indypets.network.Networking;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationConnectionEvents;
-import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationNetworking;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.sound.SoundInstance;
@@ -43,9 +41,6 @@ public class IndyPetsClient implements ClientModInitializer {
 	public void onInitializeClient() {
 		Config.clientInit();
 		Keybindings.init();
-
-		ClientConfigurationConnectionEvents.START.register(((handler, client) -> {
-			ClientConfigurationNetworking.send(new PlayerConfigPayload(Config.local()));
-		}));
+		Networking.clientInit();
 	}
 }

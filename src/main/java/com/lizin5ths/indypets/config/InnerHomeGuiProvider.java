@@ -13,7 +13,6 @@ import java.util.List;
 
 import static com.lizin5ths.indypets.config.Config.INNER_HOME_PERCENTAGE_DEFAULT;
 
-
 public class InnerHomeGuiProvider implements GuiProvider {
 	@SuppressWarnings("rawtypes")
 	@Override

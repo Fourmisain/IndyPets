@@ -15,9 +15,8 @@ import java.util.UUID;
 public class VanillaPlayerConfigsTypeAdapter implements TypeAdapterFactory {
     @Override
     public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type) {
-        if (!TypeToken.getParameterized(Map.class, UUID.class, Config.class).equals(type)) {
+        if (!TypeToken.getParameterized(Map.class, UUID.class, Config.class).equals(type))
             return null;
-        }
 
         var delegate = gson.getDelegateAdapter(this, type);
 

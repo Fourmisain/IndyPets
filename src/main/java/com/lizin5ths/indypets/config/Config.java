@@ -13,10 +13,6 @@ import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.passive.CatEntity;
-import net.minecraft.entity.passive.ParrotEntity;
-import net.minecraft.entity.passive.TameableEntity;
-import net.minecraft.entity.passive.WolfEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
 
@@ -49,7 +45,7 @@ public class Config implements ConfigData {
 
 	public static Config vanillaCopyOf(Config other) {
 		Config config = new Config();
-		// see VanillaPlayerConfigsTypeAdapter
+		// currently only supports these values. needs to be in sync with VanillaPlayerConfigsTypeAdapter
 		config.regularInteract = other.regularInteract;
 		config.sneakInteract = other.sneakInteract;
 		config.silentMode = other.silentMode;
@@ -66,11 +62,6 @@ public class Config implements ConfigData {
 	}
 
 	// actual config
-
-	public boolean independentCats = true;
-	public boolean independentParrots = true;
-	public boolean independentWolves = true;
-	public boolean independentModdedPets = true;
 
 	@ConfigEntry.Gui.Tooltip
 	public boolean regularInteract = true;
@@ -107,13 +98,6 @@ public class Config implements ConfigData {
 	@LocalOnly
 	@ConfigEntry.Gui.Excluded
 	public Map<UUID, Config> vanillaPlayerConfigs = new HashMap<>();
-
-	public boolean getDefaultIndependence(TameableEntity tameable) {
-		if (tameable instanceof CatEntity)    return independentCats;
-		if (tameable instanceof ParrotEntity) return independentParrots;
-		if (tameable instanceof WolfEntity)   return independentWolves;
-		return independentModdedPets;
-	}
 
 	public static void init() {
 		LOCAL_CONFIG = AutoConfig.register(Config.class, (definition, configClass) -> new GsonConfigSerializer<>(definition, configClass, GSON_PRETTY));

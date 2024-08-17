@@ -3,8 +3,6 @@ package com.lizin5ths.indypets.command;
 import com.lizin5ths.indypets.IndyPets;
 import com.lizin5ths.indypets.config.Config;
 import com.lizin5ths.indypets.config.ServerConfig;
-import com.lizin5ths.indypets.util.Follower;
-import com.lizin5ths.indypets.util.IndyPetsUtil;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.LiteralMessage;
 import com.mojang.brigadier.context.CommandContext;
@@ -31,8 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-import static com.lizin5ths.indypets.util.IndyPetsUtil.isIndependent;
-import static com.lizin5ths.indypets.util.IndyPetsUtil.isPetOf;
+import static com.lizin5ths.indypets.util.IndyPetsUtil.*;
 import static com.mojang.brigadier.arguments.BoolArgumentType.bool;
 import static com.mojang.brigadier.arguments.IntegerArgumentType.integer;
 import static net.minecraft.server.command.CommandManager.argument;
@@ -60,8 +57,8 @@ public class Commands {
 
 			// suggest ids of owned, nearby pets that can be affected
 			for (Entity entity : world.getOtherEntities(null,
-				new Box(player.getPos(), player.getPos()).expand(WHISTLE_RADIUS),
-				(entity -> isPetOf(entity, player) && (independent == isIndependent((TameableEntity) entity))))) {
+					new Box(player.getPos(), player.getPos()).expand(WHISTLE_RADIUS),
+					entity -> canInteract(player, entity) && independent == isIndependent((TameableEntity) entity))) {
 				suggestions.add(Registries.ENTITY_TYPE.getId(entity.getType()));
 			}
 
@@ -85,33 +82,26 @@ public class Commands {
 
 		@Override
 		public int run(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-			Identifier id;
-			if (targeted) {
-				id = IdentifierArgumentType.getIdentifier(context, "targets");
-			} else {
-				id = null;
-			}
+			Identifier id = targeted ? IdentifierArgumentType.getIdentifier(context, "targets") : null;
 
 			ServerPlayerEntity player = context.getSource().getPlayerOrThrow();
 			ServerWorld world = context.getSource().getWorld();
 
 			for (Entity entity : world.getOtherEntities(null,
-				new Box(player.getPos(), player.getPos()).expand(WHISTLE_RADIUS),
-				(entity -> {
-					if (targeted) {
-						return isPetOf(entity, player) && entity.getType().equals(Registries.ENTITY_TYPE.get(id));
-					} else {
-						return isPetOf(entity, player);
-					}
-				}))) {
-				TameableEntity tameable = (TameableEntity) entity;
-				Follower follower = (Follower) entity;
+					new Box(player.getPos(), player.getPos()).expand(WHISTLE_RADIUS),
+					entity -> {
+						boolean canWhistle = canInteract(player, entity) && unwhistle == !isIndependent((TameableEntity) entity);
 
-				if (unwhistle == follower.isFollowing()) {
-					if (IndyPetsUtil.changeFollowing(player, tameable)) {
-						IndyPetsUtil.showPetStatus(player, tameable, false);
-					}
-				}
+						if (targeted) {
+							return canWhistle && entity.getType().equals(Registries.ENTITY_TYPE.get(id));
+						} else {
+							return canWhistle;
+						}
+					})) {
+				TameableEntity tameable = (TameableEntity) entity;
+
+				toggleIndependence(tameable);
+				showPetStatus(player, tameable, false);
 			}
 
 			return 0;
@@ -193,7 +183,7 @@ public class Commands {
 				case "regularInteract" -> "Cycle a pet's state between sitting, following and independent by regular interact (right click). Note that e.g. parrots cannot be interacted with when flying.";
 				case "sneakInteract" -> "Change a pet's state between following and independent by sneak interact (shift + right click)";
 				case "homeRadius" -> "Pets can roam within this block radius of their home before turning back.\"Home\" is where the pet was last set independent.";
-				default -> throw new SimpleCommandExceptionType(new LiteralMessage("no help")).create();
+				default -> throw new SimpleCommandExceptionType(new LiteralMessage("no help for " + input)).create();
 			};
 
 			player.sendMessage(Text.literal(input + ": " + message));
@@ -216,7 +206,6 @@ public class Commands {
 						.suggests(WhistleSuggestionProvider.FOLLOWING)
 						.executes(WhistleCommand.TARGETED_UNWHISTLE)))
 				.then(CommandManager.literal("config")
-					.executes(new GetConfigCommand())
 					// only available for vanilla players
 					.requires(source -> source.getPlayer() != null && !ServerConfig.HAS_MOD_INSTALLED.contains(source.getPlayer().getUuid()))
 					.then(CommandManager.literal("set")

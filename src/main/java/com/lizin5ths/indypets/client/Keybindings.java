@@ -51,8 +51,8 @@ public class Keybindings {
 			if (client.player == null) return;
 
 			while (INTERACT_KEY.wasPressed()) {
-				if (client.targetedEntity instanceof TameableEntity) {
-					Networking.sendPetInteract((TameableEntity) client.targetedEntity);
+				if (client.targetedEntity instanceof TameableEntity tameable) {
+					Networking.sendPetInteract(tameable); // note: is checked server-side
 					client.player.swingHand(Hand.MAIN_HAND); // give some visual feedback
 				}
 			}

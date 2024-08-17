@@ -1,10 +1,14 @@
 package com.lizin5ths.indypets.mixin;
 
 import com.lizin5ths.indypets.IndyPets;
+import com.lizin5ths.indypets.config.Config;
+import com.lizin5ths.indypets.config.ServerConfig;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
@@ -13,6 +17,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import static com.lizin5ths.indypets.util.IndyPetsUtil.canInteract;
 import static com.lizin5ths.indypets.util.IndyPetsUtil.sneakInteract;
 
 @Mixin(MobEntity.class)
@@ -31,15 +36,23 @@ public abstract class MobEntityMixin extends LivingEntity {
 		cancellable = true
 	)
 	public final void indypets$tryChangeFollowing(PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResult> cir) {
-		if (getWorld().isClient()) return;
-
-		if (sneakInteract(this, player, hand)) {
-			// Note: This blocks interactMob() so it might conflict with other mods using sneak-interact
-			cir.setReturnValue(ActionResult.success(true));
+		if (getWorld().isClient() || !(player instanceof ServerPlayerEntity serverPlayer))
 			return;
-		}
 
-		IndyPets.interactingPlayer.set(player);
+		if (hand == Hand.MAIN_HAND && canInteract(serverPlayer, this)) {
+			if (player.isSneaking()) {
+				if (sneakInteract((TameableEntity) (Object) this, serverPlayer)) {
+					// Note: This blocks interactMob() so it might conflict with other mods using sneak-interact
+					cir.setReturnValue(ActionResult.success(true));
+				}
+			} else {
+				Config config = ServerConfig.getDefaultedPlayerConfig(player.getUuid());
+				if (config.regularInteract) {
+					// triggers inside TameableEntity.setSitting
+					IndyPets.interactingPlayer.set(serverPlayer);
+				}
+			}
+		}
 	}
 
 	@Inject(
