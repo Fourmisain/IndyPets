@@ -43,7 +43,9 @@ public class Networking {
 				server.execute(() -> {
 					Entity entity = player.getWorld().getEntityById(payload.entityId());
 					if (entity instanceof TameableEntity) {
-						IndyPetsUtil.changeFollowing(player, (TameableEntity) entity, true);
+						if (IndyPetsUtil.changeFollowing(player, (TameableEntity) entity)) {
+							IndyPetsUtil.showPetStatus(player, (TameableEntity) entity, true);
+						}
 					}
 				});
 			}

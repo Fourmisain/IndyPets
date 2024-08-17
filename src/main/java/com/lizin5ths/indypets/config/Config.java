@@ -41,7 +41,11 @@ public class Config implements ConfigData {
 	public boolean independentParrots = true;
 	public boolean independentWolves = true;
 	public boolean independentModdedPets = true;
-	public boolean changeIndependenceByInteract = true;
+
+	@ConfigEntry.Gui.Tooltip
+	public boolean regularInteract = true;
+	@ConfigEntry.Gui.Tooltip
+	public boolean sneakInteract = true;
 
 	public boolean silentMode = false;
 

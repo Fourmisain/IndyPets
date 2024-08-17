@@ -97,10 +97,13 @@ public class Commands {
 						return isPetOf(entity, player);
 					}
 				}))) {
+				TameableEntity tameable = (TameableEntity) entity;
 				Follower follower = (Follower) entity;
 
 				if (unwhistle == follower.isFollowing()) {
-					IndyPetsUtil.changeFollowing(player, (TameableEntity) entity, false);
+					if (IndyPetsUtil.changeFollowing(player, tameable)) {
+						IndyPetsUtil.showPetStatus(player, tameable, false);
+					}
 				}
 			}
 

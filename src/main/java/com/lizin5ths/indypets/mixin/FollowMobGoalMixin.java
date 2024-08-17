@@ -3,7 +3,6 @@ package com.lizin5ths.indypets.mixin;
 import com.lizin5ths.indypets.util.IndyPetsUtil;
 import net.minecraft.entity.ai.goal.FollowMobGoal;
 import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.entity.passive.TameableEntity;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
