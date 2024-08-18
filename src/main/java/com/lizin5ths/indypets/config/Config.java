@@ -118,12 +118,9 @@ public class Config implements ConfigData {
 		guiRegistry.registerPredicateProvider(new InnerHomeGuiProvider(), field -> field.getName().equals("innerHomePercentage"));
 
 		LOCAL_CONFIG.registerSaveListener((manager, config) -> {
-			if (!MinecraftClient.getInstance().isInSingleplayer()) {
-				try {
-					Networking.sendClientConfig();
-				} catch (IllegalStateException ignored) {
-				}
-			}
+			try {
+				Networking.sendClientConfig();
+			} catch (IllegalStateException ignored) { }
 			return ActionResult.PASS;
 		});
 	}
