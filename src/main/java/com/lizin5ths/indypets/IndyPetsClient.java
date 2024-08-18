@@ -2,6 +2,7 @@ package com.lizin5ths.indypets;
 
 import com.lizin5ths.indypets.client.Keybindings;
 import com.lizin5ths.indypets.config.Config;
+import com.lizin5ths.indypets.network.Networking;
 import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.sound.PositionedSoundInstance;
@@ -40,5 +41,6 @@ public class IndyPetsClient implements ClientModInitializer {
 	public void onInitializeClient() {
 		Config.clientInit();
 		Keybindings.init();
+		Networking.clientInit();
 	}
 }

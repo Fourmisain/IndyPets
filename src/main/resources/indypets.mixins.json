@@ -15,14 +15,15 @@
     "MobEntityMixin",
     "ParrotEntityFlyOntoTreeGoalMixin",
     "ServerPlayerEntityMixin",
+    "ServerPlayNetworkHandlerInnerMixin",
     "SitGoalMixin",
     "TameableEntityMixin",
     "WanderAroundFarGoalMixin",
     "WanderAroundGoalMixin",
+    "access.ServerConfigurationNetworkHandlerAccessor",
     "access.WanderAroundGoalAccessor"
   ],
   "client": [
-    "ClientPlayNetworkHandlerMixin",
     "access.KeyBindingAccessor"
   ],
   "injectors": {

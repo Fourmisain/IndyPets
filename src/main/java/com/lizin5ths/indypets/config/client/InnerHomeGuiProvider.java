@@ -1,4 +1,4 @@
-package com.lizin5ths.indypets.config;
+package com.lizin5ths.indypets.config.client;
 
 import me.shedaniel.autoconfig.gui.registry.api.GuiProvider;
 import me.shedaniel.autoconfig.gui.registry.api.GuiRegistryAccess;
@@ -12,7 +12,6 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.lizin5ths.indypets.config.Config.INNER_HOME_PERCENTAGE_DEFAULT;
-
 
 public class InnerHomeGuiProvider implements GuiProvider {
 	@SuppressWarnings("rawtypes")

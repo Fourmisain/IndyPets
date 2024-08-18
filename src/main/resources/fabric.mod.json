@@ -3,17 +3,17 @@
 	"id": "indypets",
 	"version": "${mod_version}",
 	"name": "IndyPets - Independent Pets",
-	"description": "Free your pets from the curse of having to sit down, let 'em roam!\nDisables your pets' follow+teleport behavior by default and lets you toggle the behavior via sneak interact. Use the whistle/unwhistle keybinds to rally your army of pets.",
+	"description": "Free your pets from the curse of having to sit down, let 'em roam!\nIndependent pets won't follow or teleport to you but roam around, doing their own thing!\nRight Click to cycle between sitting, following, and independent.\nShift + Right Click to toggle following and independent directly.\nWhistle/Unwhistle (J) to toggle all your nearby pets - rally your army!\nPets have a home where they won't stray too far off. \"Home\" is where they were last set independent.\nMore in the config.",
 	"authors": [
-		"lizin5ths",
-		"Fourmisain"
+		"Fourmisain",
+		"lizin5ths"
 	],
 	"contact": {
 		"homepage": "https://www.curseforge.com/minecraft/mc-mods/indypets",
 		"sources": "https://github.com/Fourmisain/IndyPets",
 		"issues": "https://github.com/Fourmisain/IndyPets/issues"
 	},
-	"license": "CC0",
+	"license": "MIT",
 	"icon": "assets/indypets/icon.png",
 	"environment": "*",
 	"entrypoints": {
@@ -24,7 +24,7 @@
 			"com.lizin5ths.indypets.IndyPetsClient"
 		],
 		"modmenu": [
-			"com.lizin5ths.indypets.config.ConfigScreen"
+			"com.lizin5ths.indypets.config.client.ConfigScreen"
 		]
 	},
 	"mixins": [
@@ -32,8 +32,8 @@
 	],
 	"depends": {
 		"fabricloader": ">=0.15.0",
-		"fabric": "*",
+		"fabric": ">=0.100.2",
 		"minecraft": "${game_version_range}",
-		"cloth-config2": ">=11.0.0"
+		"cloth-config": "*"
 	}
 }
