@@ -1,6 +1,6 @@
 ## Independent Pets / IndyPets
 
-This is the official continuation of lizin5ths's [Independent Pets v0.4.1 on CurseForge](https://www.curseforge.com/minecraft/mc-mods/indypets), licensed under [CC0](https://creativecommons.org/publicdomain/zero/1.0/legalcode.txt).  
+This is the official continuation of lizin5ths's [Independent Pets v0.4.1 on CurseForge](https://www.curseforge.com/minecraft/mc-mods/indypets).  
 (The original source code can be found [here](https://pastebin.com/Q7WX2tUX) and it was specified to be CC0 [here](https://www.curseforge.com/minecraft/mc-mods/indypets?comment=98).)
 
 ### Short Description
@@ -24,7 +24,9 @@ This is the official continuation of lizin5ths's [Independent Pets v0.4.1 on Cur
 - `/indypets whistle` and `unwhistle` commands to set follow behavior for all nearby pets (of optionally specified type)
 - keybindings to whilste and unwhilste your pets
 
-### Credits
+### Licenses
 
+The project's code is licensed under MIT since 1.4.0 (previously CC0).  
+  
 `whistle1.ogg`, `whistle2.ogg`, `whistle3.ogg` were clipped from https://bigsoundbank.com/detail-1173-whistling-in-the-mouth.html, CC0 licensed  
 `unwhistle.ogg` was slightly edited from https://freesound.org/people/PlumForestPodcast/sounds/519659/, CC0 licensed
