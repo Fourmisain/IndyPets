@@ -1,4 +1,4 @@
-package com.lizin5ths.indypets.config;
+package com.lizin5ths.indypets.config.client;
 
 import com.lizin5ths.indypets.IndyPets;
 import me.shedaniel.autoconfig.gui.registry.api.GuiProvider;

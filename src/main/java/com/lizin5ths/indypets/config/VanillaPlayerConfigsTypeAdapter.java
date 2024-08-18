@@ -13,44 +13,44 @@ import java.util.UUID;
 
 /** Serialize only the used fields */
 public class VanillaPlayerConfigsTypeAdapter implements TypeAdapterFactory {
-    @Override
-    public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type) {
-        if (!TypeToken.getParameterized(Map.class, UUID.class, Config.class).equals(type))
-            return null;
+	@Override
+	public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type) {
+		if (!TypeToken.getParameterized(Map.class, UUID.class, Config.class).equals(type))
+			return null;
 
-        var delegate = gson.getDelegateAdapter(this, type);
+		var delegate = gson.getDelegateAdapter(this, type);
 
-        return new TypeAdapter<>() {
-            @SuppressWarnings("unchecked")
-            @Override
-            public void write(JsonWriter out, T value) throws IOException {
-                var map = (Map<UUID, Config>) value;
+		return new TypeAdapter<>() {
+			@SuppressWarnings("unchecked")
+			@Override
+			public void write(JsonWriter out, T value) throws IOException {
+				var map = (Map<UUID, Config>) value;
 
-                out.beginObject();
+				out.beginObject();
 
-                for (var entry : map.entrySet()) {
-                    var uuid = entry.getKey();
-                    var config = entry.getValue();
+				for (var entry : map.entrySet()) {
+					var uuid = entry.getKey();
+					var config = entry.getValue();
 
-                    out.name(uuid.toString());
-                    out.beginObject();
+					out.name(uuid.toString());
+					out.beginObject();
 
-                    // see Config.vanilla(Config)
-                    out.name("regularInteract").value(config.regularInteract);
-                    out.name("sneakInteract").value(config.sneakInteract);
-                    out.name("silentMode").value(config.silentMode);
-                    out.name("homeRadius").value(config.homeRadius);
+					// see Config.vanilla(Config)
+					out.name("regularInteract").value(config.regularInteract);
+					out.name("sneakInteract").value(config.sneakInteract);
+					out.name("silentMode").value(config.silentMode);
+					out.name("homeRadius").value(config.homeRadius);
 
-                    out.endObject();
-                }
+					out.endObject();
+				}
 
-                out.endObject();
-            }
+				out.endObject();
+			}
 
-            @Override
-            public T read(JsonReader in) throws IOException {
-                return delegate.read(in);
-            }
-        };
-    }
+			@Override
+			public T read(JsonReader in) throws IOException {
+				return delegate.read(in);
+			}
+		};
+	}
 }

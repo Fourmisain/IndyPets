@@ -24,7 +24,7 @@
 			"com.lizin5ths.indypets.IndyPetsClient"
 		],
 		"modmenu": [
-			"com.lizin5ths.indypets.config.ConfigScreen"
+			"com.lizin5ths.indypets.config.client.ConfigScreen"
 		]
 	},
 	"mixins": [
