@@ -17,7 +17,7 @@ public class MixinPlugin implements IMixinConfigPlugin {
 	public static boolean testVersion(String modId, String versionRange) {
 		try {
 			Optional<ModContainer> container = FabricLoader.getInstance().getModContainer(modId);
-			if (!container.isPresent())
+			if (container.isEmpty())
 				return false;
 
 			VersionPredicate pred = VersionPredicate.parse(versionRange);
