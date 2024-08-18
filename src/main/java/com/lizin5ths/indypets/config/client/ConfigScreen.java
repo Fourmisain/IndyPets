@@ -1,5 +1,6 @@
-package com.lizin5ths.indypets.config;
+package com.lizin5ths.indypets.config.client;
 
+import com.lizin5ths.indypets.config.Config;
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
 import me.shedaniel.autoconfig.AutoConfig;

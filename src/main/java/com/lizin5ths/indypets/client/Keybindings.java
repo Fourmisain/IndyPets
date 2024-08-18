@@ -52,7 +52,7 @@ public class Keybindings {
 
 			while (INTERACT_KEY.wasPressed()) {
 				if (client.targetedEntity instanceof TameableEntity) {
-					Networking.sendPetInteract((TameableEntity) client.targetedEntity);
+					Networking.sendPetInteract((TameableEntity) client.targetedEntity); // note: is checked server-side
 					client.player.swingHand(Hand.MAIN_HAND); // give some visual feedback
 				}
 			}
@@ -87,10 +87,10 @@ public class Keybindings {
 
 			if (shouldWhistle) {
 				client.player.sendChatMessage("/indypets whistle");
-				IndyPetsClient.playLocalPlayerSound(client.player, WHISTLE, Config.LOCAL_CONFIG.positionedWhistleSound);
+				IndyPetsClient.playLocalPlayerSound(client.player, WHISTLE, Config.local().positionedWhistleSound);
 			} else {
 				client.player.sendChatMessage("/indypets unwhistle");
-				IndyPetsClient.playLocalPlayerSound(client.player, UNWHISTLE, Config.LOCAL_CONFIG.positionedWhistleSound);
+				IndyPetsClient.playLocalPlayerSound(client.player, UNWHISTLE, Config.local().positionedWhistleSound);
 			}
 		});
 	}

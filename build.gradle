@@ -132,7 +132,7 @@ minepkg {
 		platform = 'fabric'
 		name = project.minepkg_id
 		version = project.mod_version + "+" + project.minecraft_version
-		license = "CC0"
+		license = "MIT"
 		minecraftVersionRange = project.game_version_range
 		toList(project.minepkg_dependencies).each{ require(it) }
 	}

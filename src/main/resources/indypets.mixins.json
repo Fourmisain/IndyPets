@@ -9,6 +9,7 @@
     "MobEntityMixin",
     "ParrotEntityFlyOntoTreeGoalMixin",
     "ServerPlayerEntityMixin",
+    "ServerPlayNetworkHandlerMixin",
     "SitGoalMixin",
     "TameableEntityMixin",
     "WanderAroundFarGoalMixin",
