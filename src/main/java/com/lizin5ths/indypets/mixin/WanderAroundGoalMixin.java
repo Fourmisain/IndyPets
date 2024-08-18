@@ -27,7 +27,7 @@ public abstract class WanderAroundGoalMixin {
 		// wandering around after some time and only start moving again once their despawn timer resets (by a player getting near them)
 
 		// This will override the timer check for all tamed mobs, making them wander around even without player presence
-		if (mob instanceof TameableEntity && ((TameableEntity) mob).isTamed()) {
+		if (mob instanceof TameableEntity tameable && tameable.isTamed()) {
 			((WanderAroundGoalAccessor) this).setCanDespawn(false);
 		}
 	}

@@ -16,7 +16,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class ClientPlayNetworkHandlerMixin {
 	@Inject(method = "onGameJoin", at = @At("TAIL"))
 	public void indypets$sendPlayerData(GameJoinS2CPacket packet, CallbackInfo ci) {
-		Networking.sendModInstalled();
 		Networking.sendClientConfig();
 	}
 }
