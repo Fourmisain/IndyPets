@@ -1,4 +1,4 @@
-package com.lizin5ths.indypets.config;
+package com.lizin5ths.indypets.config.client;
 
 import com.lizin5ths.indypets.IndyPets;
 import me.shedaniel.autoconfig.gui.registry.api.GuiProvider;
@@ -19,7 +19,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
 
 public class ItemGuiProvider implements GuiProvider {
 	// Cloth Config understands null as an error, thus we use a "null object"

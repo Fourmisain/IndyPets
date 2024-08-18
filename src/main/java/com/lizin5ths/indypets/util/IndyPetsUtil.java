@@ -13,27 +13,22 @@ import net.minecraft.entity.ai.brain.MemoryModuleType;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.passive.TameableEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.registry.Registry;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.UUID;
-
 public class IndyPetsUtil {
-
-	public static boolean sneakInteract(Entity entity, PlayerEntity player, Hand hand) {
-		if (!(player.isSneaking() && hand == Hand.MAIN_HAND && entity instanceof TameableEntity))
+	public static boolean sneakInteract(TameableEntity tameable, ServerPlayerEntity player) {
+		Config config = ServerConfig.getDefaultedPlayerConfig(player.getUuid());
+		if (!config.sneakInteract)
 			return false;
 
-		Config config = ServerConfig.getDefaultedPlayerConfig(player.getUuid());
 		if (config.interactItem != null) {
 			// only interact when holding the chosen item
 			Identifier itemId = Registry.ITEM.getId(player.getMainHandStack().getItem());
@@ -42,38 +37,37 @@ public class IndyPetsUtil {
 		}
 
 		// don't interact with blocked pets
-		if (config.interactBlocklist.isBlocked(EntityType.getId(entity.getType())))
+		if (config.interactBlocklist.isBlocked(EntityType.getId(tameable.getType())))
 			return false;
 
-		return IndyPetsUtil.changeFollowing((ServerPlayerEntity) player, (TameableEntity) entity);
+		toggleIndependence(tameable);
+		showPetStatus(player, tameable, true);
+		return true; // block further interactions
 	}
 
-	public static boolean changeFollowing(ServerPlayerEntity player, TameableEntity tameable) {
-		if (!tameable.isOwner(player))
+	public static boolean isActiveIndependent(Entity entity) {
+		return isActive(entity) && isIndependent((TameableEntity) entity);
+	}
+
+	/** Whether the entity is affected by IndyPets */
+	public static boolean isActive(Entity entity) {
+		if (!(entity instanceof TameableEntity tameable))
 			return false;
 
-		Config config = ServerConfig.getDefaultedPlayerConfig(player.getUuid());
-
-		// don't change blocked pets
-		if (config.blocklist.isBlocked(EntityType.getId(tameable.getType())))
+		if (!tameable.isTamed())
 			return false;
 
-		Follower follower = (Follower) tameable;
-		follower.setFollowing(!follower.isFollowing());
+		Config config = ServerConfig.getDefaultedPlayerConfig(tameable.getOwnerUuid());
+		return !config.blocklist.isBlocked(EntityType.getId(tameable.getType()));
+	}
 
-		if (!config.silentMode) {
-			sendPetStatusMessage(player, tameable, follower);
-		} else {
-			if (follower.isFollowing()) {
-				player.getWorld().spawnParticles(player, ParticleTypes.HAPPY_VILLAGER, true,
-					tameable.getX(), tameable.getBodyY(0.5), tameable.getZ(),
-					11, 0.5, 0.5, 0.5, 2);
-			} else {
-				player.getWorld().spawnParticles(player, ParticleTypes.ANGRY_VILLAGER, true,
-					tameable.getX(), tameable.getBodyY(0.5), tameable.getZ(),
-					7, 0.4, 0.4, 0.4, 0.3);
-			}
-		}
+	/** Whether the player can change the independence of the entity */
+	public static boolean canInteract(ServerPlayerEntity player, @Nullable Entity entity) {
+		return isActive(entity) && player.getUuid().equals(((TameableEntity) entity).getOwnerUuid());
+	}
+
+	public static void toggleIndependence(TameableEntity tameable) {
+		((Independence) tameable).indypets$toggleIndependence();
 
 		if (FabricLoader.getInstance().isModLoaded("friendsandfoes") && tameable instanceof GlareEntity) {
 			// immediately finish the Glare's WalkTowardsLookTargetTask
@@ -81,16 +75,32 @@ public class IndyPetsUtil {
 			brain.forget(MemoryModuleType.WALK_TARGET);
 			brain.forget(MemoryModuleType.LOOK_TARGET);
 		}
-
-		return true;
 	}
 
-	public static void sendPetStatusMessage(PlayerEntity player, TameableEntity tameable, Follower follower) {
+	public static void showPetStatus(ServerPlayerEntity player, TameableEntity tameable, boolean singlePet) {
+		Config config = ServerConfig.getDefaultedPlayerConfig(player.getUuid());
+
+		if (!config.silentMode) {
+			sendPetStatusMessage(player, tameable, singlePet);
+		} else {
+			if (isIndependent(tameable)) {
+				player.getWorld().spawnParticles(player, ParticleTypes.ANGRY_VILLAGER, true,
+					tameable.getX(), tameable.getBodyY(0.5), tameable.getZ(),
+					7, 0.4, 0.4, 0.4, 0.3);
+			} else {
+				player.getWorld().spawnParticles(player, ParticleTypes.HAPPY_VILLAGER, true,
+					tameable.getX(), tameable.getBodyY(0.5), tameable.getZ(),
+					11, 0.5, 0.5, 0.5, 2);
+			}
+		}
+	}
+
+	public static void sendPetStatusMessage(ServerPlayerEntity player, TameableEntity tameable, boolean overlay) {
 		MutableText text;
 
 		if (ServerConfig.HAS_MOD_INSTALLED.contains(player.getUuid())) {
 			// Send a translatable text
-			String key = follower.isFollowing() ? "text.indypets.following" : "text.indypets.independent";
+			String key = isIndependent(tameable) ? "text.indypets.independent" : "text.indypets.following";
 			if (tameable.hasCustomName()) {
 				key += "_named";
 			}
@@ -99,6 +109,9 @@ public class IndyPetsUtil {
 			text = Text.translatable(key + "_prefix");
 			text.append(tameable.getName());
 			text.append(Text.translatable(key + "_suffix"));
+
+			if (tameable.isSitting())
+				text.append(Text.translatable("text.indypets.but_sits"));
 		} else {
 			// Default to sending an English message
 			String name = tameable.getName().getString();
@@ -112,46 +125,33 @@ public class IndyPetsUtil {
 				sb.append("Your ");
 				sb.append(name);
 			}
-			sb.append(follower.isFollowing() ? " is following you" : " is independent");
+			sb.append(isIndependent(tameable) ? " is independent" : " is following you");
+			if (tameable.isSitting())
+				sb.append(" (but sits)");
 
 			text = Text.translatable(sb.toString());
 		}
 
-		player.sendMessage(text, false);
+		player.sendMessage(text, overlay);
 	}
 
 	public static boolean isIndependent(TameableEntity tameable) {
-		Identifier id = EntityType.getId(tameable.getType());
-
-		Config config = ServerConfig.getDefaultedPlayerConfig(tameable.getOwnerUuid());
-		if (config.blocklist.isBlocked(id))
-			return false;
-
-		return !((Follower) tameable).isFollowing();
+		return ((Independence) tameable).indypets$isIndependent();
 	}
 
-	public static boolean isPetOf(Entity entity, PlayerEntity player) {
-		if (entity instanceof TameableEntity) {
-			TameableEntity tameable = (TameableEntity) entity;
-			UUID owner = tameable.getOwnerUuid();
-			return owner != null && owner.equals(player.getUuid());
-		}
-
-		return false;
+	public static BlockPos getHomePos(TameableEntity tameable) {
+		return ((Independence) tameable).indypets$getHomePos();
 	}
 
 	public static boolean shouldHeadHome(MobEntity mob) {
-		if (!(mob instanceof TameableEntity))
+		if (!(mob instanceof TameableEntity tameable))
 			return false;
 
-		TameableEntity tameable = (TameableEntity) mob;
-		Follower follower = (Follower) mob;
-
-		if (!tameable.isTamed() || follower.isFollowing())
+		if (!isActiveIndependent(tameable))
 			return false;
 
 		// distance to home
-		float d = (float) Math.sqrt(tameable.getBlockPos().getSquaredDistance(follower.getHomePos()));
+		float d = (float) Math.sqrt(tameable.getBlockPos().getSquaredDistance(getHomePos(tameable)));
 
 		Config config = ServerConfig.getDefaultedPlayerConfig(tameable.getOwnerUuid());
 		float start = config.homeRadius * config.innerHomePercentage;
@@ -179,11 +179,32 @@ public class IndyPetsUtil {
 	@Nullable
 	public static Vec3d findTowardsHome(PathAwareEntity mob, boolean ignorePenality, int horizontalRange, int verticalRange) {
 		// assert mob instanceof TameableEntity
-		BlockPos homePos = ((Follower) mob).getHomePos();
+		BlockPos homePos = getHomePos((TameableEntity) mob);
 
 		if (ignorePenality)
 			return NoPenaltyTargeting.findTo(mob, horizontalRange, verticalRange, Vec3d.ofBottomCenter(homePos), Math.PI / 2);
 
 		return FuzzyTargeting.findTo(mob, horizontalRange, verticalRange, Vec3d.ofBottomCenter(homePos));
+	}
+
+	// cycle sit -> follow -> independent
+	// returns true when sitting needs to be changed
+	public static boolean cycleState(TameableEntity tameable) {
+		// sit -> follow (& stand up)
+		if (tameable.isSitting()) {
+			if (isIndependent(tameable))
+				toggleIndependence(tameable);
+
+			return true;
+		} else {
+			// follow -> independent (& keep standing)
+			if (!isIndependent(tameable)) {
+				toggleIndependence(tameable);
+				return false;
+			} else {
+				// independent -> sit
+				return true;
+			}
+		}
 	}
 }
