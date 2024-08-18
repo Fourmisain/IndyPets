@@ -1,12 +1,12 @@
 package com.lizin5ths.indypets.mixin;
 
-import com.lizin5ths.indypets.util.Follower;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.LeavesBlock;
 import net.minecraft.entity.ai.goal.FlyGoal;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.passive.ParrotEntity;
+import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -23,8 +23,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.lizin5ths.indypets.util.IndyPetsUtil.findTowardsHome;
-import static com.lizin5ths.indypets.util.IndyPetsUtil.shouldHeadHome;
+import static com.lizin5ths.indypets.util.IndyPetsUtil.*;
 
 @Mixin(ParrotEntity.FlyOntoTreeGoal.class)
 public abstract class ParrotEntityFlyOntoTreeGoalMixin extends FlyGoal {
@@ -89,7 +88,7 @@ public abstract class ParrotEntityFlyOntoTreeGoalMixin extends FlyGoal {
 
 	@Unique @Nullable
 	private Vec3d indypets$findTreeClosestToHome() {
-		BlockPos homePos = ((Follower) mob).getHomePos();
+		BlockPos homePos = getHomePos((TameableEntity) mob);
 		BlockPos.Mutable temp = new BlockPos.Mutable();
 
 		BlockPos.Mutable closest = new BlockPos.Mutable();

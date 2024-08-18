@@ -6,11 +6,18 @@ import java.util.*;
 
 public class ServerConfig {
 	public static final Set<UUID> HAS_MOD_INSTALLED = new HashSet<>();
-	public static final Map<UUID, Config> PLAYER_CONFIG = new HashMap<>();
+	public static final Map<UUID, Config> RECEIVED_PLAYER_CONFIGS = new HashMap<>();
 
 	public static Config getDefaultedPlayerConfig(@Nullable UUID playerUuid) {
-		Config config = PLAYER_CONFIG.get(playerUuid);
+		// use client-sent config if possible
+		Config config = RECEIVED_PLAYER_CONFIGS.get(playerUuid);
 		if (config != null) return config;
-		return Config.LOCAL_CONFIG;
+
+		// use server-stored config if possible
+		config = Config.local().vanillaPlayerConfigs.get(playerUuid);
+		if (config != null) return config;
+
+		// default to server config
+		return Config.local();
 	}
 }
