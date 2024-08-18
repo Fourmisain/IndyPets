@@ -1,6 +1,5 @@
 package com.lizin5ths.indypets.mixin.access;
 
-
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import org.spongepowered.asm.mixin.Mixin;
