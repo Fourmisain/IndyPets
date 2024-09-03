@@ -12,6 +12,7 @@
     "GlareFollowOwnerGoalMixin",
     "GlareStrollTaskMixin",
     "GlareTeleportToOwnerTaskMixin",
+    "GoatHornItemMixin",
     "MobEntityMixin",
     "ParrotEntityFlyOntoTreeGoalMixin",
     "ServerPlayerEntityMixin",

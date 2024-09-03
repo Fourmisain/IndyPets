@@ -2,9 +2,11 @@ package com.lizin5ths.indypets.command;
 
 import com.lizin5ths.indypets.IndyPets;
 import com.lizin5ths.indypets.config.Config;
+import com.lizin5ths.indypets.config.HornSetting;
 import com.lizin5ths.indypets.config.ServerConfig;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.LiteralMessage;
+import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
@@ -27,6 +29,7 @@ import net.minecraft.util.math.Box;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.CompletableFuture;
 
 import static com.lizin5ths.indypets.util.IndyPetsUtil.*;
@@ -66,11 +69,15 @@ public class Commands {
 		}
 	}
 
-	private static class WhistleCommand implements Command<ServerCommandSource> {
+	public static class WhistleCommand implements Command<ServerCommandSource> {
 		public static final WhistleCommand WHISTLE = new WhistleCommand(false, false);
 		public static final WhistleCommand UNWHISTLE = new WhistleCommand(false, true);
 		public static final WhistleCommand TARGETED_WHISTLE = new WhistleCommand(true, false);
 		public static final WhistleCommand TARGETED_UNWHISTLE = new WhistleCommand(true, true);
+
+		public static WhistleCommand untargeted(boolean unwhistle) {
+			return unwhistle ? UNWHISTLE : WHISTLE;
+		}
 
 		private final boolean targeted;
 		private final boolean unwhistle;
@@ -82,29 +89,37 @@ public class Commands {
 
 		@Override
 		public int run(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-			Identifier id = targeted ? IdentifierArgumentType.getIdentifier(context, "targets") : null;
+			Identifier targets = targeted ? IdentifierArgumentType.getIdentifier(context, "targets") : null;
 
 			ServerPlayerEntity player = context.getSource().getPlayerOrThrow();
 			ServerWorld world = context.getSource().getWorld();
 
-			for (Entity entity : world.getOtherEntities(null,
-					new Box(player.getPos(), player.getPos()).expand(WHISTLE_RADIUS),
-					entity -> {
-						boolean canWhistle = canInteract(player, entity) && unwhistle == !isIndependent((TameableEntity) entity);
+			run(world, player, targets);
 
-						if (targeted) {
-							return canWhistle && entity.getType().equals(Registries.ENTITY_TYPE.get(id));
-						} else {
-							return canWhistle;
-						}
-					})) {
+			return 0;
+		}
+
+		public void run(ServerWorld world, ServerPlayerEntity player) {
+			run(world, player, null);
+		}
+
+		public void run(ServerWorld world, ServerPlayerEntity player, Identifier targets) {
+			for (Entity entity : world.getOtherEntities(null,
+				new Box(player.getPos(), player.getPos()).expand(WHISTLE_RADIUS),
+				entity -> {
+					boolean canWhistle = canInteract(player, entity) && unwhistle == !isIndependent((TameableEntity) entity);
+
+					if (targeted) {
+						return canWhistle && entity.getType().equals(Registries.ENTITY_TYPE.get(targets));
+					} else {
+						return canWhistle;
+					}
+				})) {
 				TameableEntity tameable = (TameableEntity) entity;
 
 				toggleIndependence(tameable);
 				showPetStatus(player, tameable, false);
 			}
-
-			return 0;
 		}
 	}
 
@@ -136,6 +151,72 @@ public class Commands {
 			Config.save();
 
 			player.sendMessage(Text.literal("set " + option + " to " + value));
+
+			return 0;
+		}
+	}
+
+	// note: a EnumArgumentType<HornSetting> would need to be registered in ArgumentTypes, which requires the client knowing about the enum, hence we just use strings
+	private static class HornSettingSuggestionProvider implements SuggestionProvider<ServerCommandSource> {
+		@Override
+		public CompletableFuture<Suggestions> getSuggestions(CommandContext<ServerCommandSource> context, SuggestionsBuilder builder) throws CommandSyntaxException {
+
+			IndyPets.LOGGER.warn("remaining setting {}", builder.getRemaining());
+
+			for (var hornSetting : HornSetting.values()) {
+				builder.suggest(hornSetting.asString());
+			}
+
+			return builder.buildFuture();
+		}
+	}
+
+	private static class HornTypeSuggestionProvider implements SuggestionProvider<ServerCommandSource> {
+		@Override
+		public CompletableFuture<Suggestions> getSuggestions(CommandContext<ServerCommandSource> context, SuggestionsBuilder builder) throws CommandSyntaxException {
+			for (var id : Registries.INSTRUMENT.getIds()) {
+				builder.suggest(id.toString());
+			}
+
+			return builder.buildFuture();
+		}
+	}
+
+	private static class SetHornSettingCommand implements Command<ServerCommandSource> {
+		@Override
+		public int run(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+			ServerPlayerEntity player = context.getSource().getPlayerOrThrow();
+
+			Identifier hornId = context.getArgument("horn_type", Identifier.class);
+			String setting = context.getArgument("setting", String.class);
+			HornSetting hornSetting = HornSetting.valueOf(HornSetting.class, setting.toUpperCase(Locale.ROOT));
+
+			Config config = Config.vanilla(player.getUuid());
+
+			if (hornSetting == HornSetting.DISABLED) {
+				config.hornConfig.remove(hornId);
+			} else {
+				config.hornConfig.put(hornId, hornSetting);
+			}
+
+			player.sendMessage(Text.literal("set horn " + hornId + " to " + hornSetting.asString()));
+
+			Config.save();
+
+			return 0;
+		}
+	}
+
+	private static class GetHornSettingsCommand implements Command<ServerCommandSource> {
+		@Override
+		public int run(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+			ServerPlayerEntity player = context.getSource().getPlayerOrThrow();
+
+			Config config = Config.vanilla(player.getUuid());
+
+			for (var hornId : Registries.INSTRUMENT.getIds()) {
+				player.sendMessage(Text.literal("set horn " + hornId + " to " + config.hornConfig.getOrDefault(hornId, HornSetting.DISABLED).asString()));
+			}
 
 			return 0;
 		}
@@ -205,6 +286,15 @@ public class Commands {
 					.then(argument("targets", IdentifierArgumentType.identifier())
 						.suggests(WhistleSuggestionProvider.FOLLOWING)
 						.executes(WhistleCommand.TARGETED_UNWHISTLE)))
+				.then(CommandManager.literal("horn")
+					// only available for vanilla players
+					.requires(source -> source.getPlayer() != null && !ServerConfig.HAS_MOD_INSTALLED.contains(source.getPlayer().getUuid()))
+					.executes(new GetHornSettingsCommand())
+					.then(argument("horn_type", IdentifierArgumentType.identifier())
+						.suggests(new HornTypeSuggestionProvider())
+						.then(argument("setting", StringArgumentType.string())
+							.suggests(new HornSettingSuggestionProvider())
+							.executes(new SetHornSettingCommand()))))
 				.then(CommandManager.literal("config")
 					// only available for vanilla players
 					.requires(source -> source.getPlayer() != null && !ServerConfig.HAS_MOD_INSTALLED.contains(source.getPlayer().getUuid()))
