@@ -19,9 +19,11 @@ public class Networking {
 	public static final Identifier PET_INTERACT  = IndyPets.id("pet_interact");
 
 	public static void sendClientConfig() throws IllegalStateException {
-		PacketByteBuf buf = PacketByteBufs.create();
-		buf.writeString(Config.GSON_EXCLUDE_LOCAL.toJson(Config.local()));
-		ClientPlayNetworking.send(PLAYER_CONFIG, buf);
+		if (ClientPlayNetworking.canSend(PLAYER_CONFIG)) {
+			PacketByteBuf buf = PacketByteBufs.create();
+			buf.writeString(Config.GSON_EXCLUDE_LOCAL.toJson(Config.local()));
+			ClientPlayNetworking.send(PLAYER_CONFIG, buf);
+		}
 	}
 
 	public static void sendPetInteract(TameableEntity entity) throws IllegalStateException {
