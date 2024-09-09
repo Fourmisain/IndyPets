@@ -35,11 +35,21 @@ public class VanillaPlayerConfigsTypeAdapter implements TypeAdapterFactory {
 					out.name(uuid.toString());
 					out.beginObject();
 
-					// see Config.vanilla(Config)
+					// see Config.vanillaCopyOf(Config)
 					out.name("regularInteract").value(config.regularInteract);
 					out.name("sneakInteract").value(config.sneakInteract);
 					out.name("silentMode").value(config.silentMode);
 					out.name("homeRadius").value(config.homeRadius);
+					out.name("hornState").value(config.hornState);
+
+					out.name("hornConfig");
+					out.beginObject();
+					for (var hornEntry : config.hornConfig.entrySet()) {
+						String hornId = hornEntry.getKey().toString();
+						String hornSetting = hornEntry.getValue().toString();
+						out.name(hornId).value(hornSetting);
+					}
+					out.endObject();
 
 					out.endObject();
 				}
