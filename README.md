@@ -5,7 +5,7 @@ This is the official continuation of lizin5ths's [Independent Pets v0.4.1 on Cur
 
 ### Description
 
-Free your pets from the curse of having to sit down, let 'em roam!
+Free your pets from the curse of having to sit down, let 'em roam! 🐱🦜🐺
 
 Independent pets won't follow or teleport to you but roam around, doing their own thing!  
 Right Click to cycle between sitting, following, and independent.   

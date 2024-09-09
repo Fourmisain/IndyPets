@@ -6,6 +6,7 @@
   "mixins": [
     "FollowMobGoalMixin",
     "FollowOwnerGoalMixin",
+    "MinecraftServerMixin",
     "MobEntityMixin",
     "ParrotEntityFlyOntoTreeGoalMixin",
     "ServerPlayerEntityMixin",

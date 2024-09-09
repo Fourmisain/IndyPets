@@ -22,11 +22,9 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.LiteralText;
-import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.registry.Registry;
-import org.apache.logging.log4j.core.jmx.Server;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,11 +67,15 @@ public class Commands {
 		}
 	}
 
-	private static class WhistleCommand implements Command<ServerCommandSource> {
+	public static class WhistleCommand implements Command<ServerCommandSource> {
 		public static final WhistleCommand WHISTLE = new WhistleCommand(false, false);
 		public static final WhistleCommand UNWHISTLE = new WhistleCommand(false, true);
 		public static final WhistleCommand TARGETED_WHISTLE = new WhistleCommand(true, false);
 		public static final WhistleCommand TARGETED_UNWHISTLE = new WhistleCommand(true, true);
+
+		public static WhistleCommand untargeted(boolean unwhistle) {
+			return unwhistle ? UNWHISTLE : WHISTLE;
+		}
 
 		private final boolean targeted;
 		private final boolean unwhistle;
@@ -85,18 +87,28 @@ public class Commands {
 
 		@Override
 		public int run(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-			Identifier id = targeted ? IdentifierArgumentType.getIdentifier(context, "targets") : null;
+			Identifier targets = targeted ? IdentifierArgumentType.getIdentifier(context, "targets") : null;
 
 			ServerPlayerEntity player = context.getSource().getPlayer();
 			ServerWorld world = context.getSource().getWorld();
 
+			run(world, player, targets);
+
+			return 0;
+		}
+
+		public void run(ServerWorld world, ServerPlayerEntity player) {
+			run(world, player, null);
+		}
+
+		public void run(ServerWorld world, ServerPlayerEntity player, Identifier targets) {
 			for (Entity entity : world.getOtherEntities(null,
 					new Box(player.getPos(), player.getPos()).expand(WHISTLE_RADIUS),
 					entity -> {
 						boolean canWhistle = canInteract(player, entity) && unwhistle == !isIndependent((TameableEntity) entity);
 
 						if (targeted) {
-							return canWhistle && entity.getType().equals(Registry.ENTITY_TYPE.get(id));
+							return canWhistle && entity.getType().equals(Registry.ENTITY_TYPE.get(targets));
 						} else {
 							return canWhistle;
 						}
@@ -106,8 +118,6 @@ public class Commands {
 				toggleIndependence(tameable);
 				showPetStatus(player, tameable, false);
 			}
-
-			return 0;
 		}
 	}
 
@@ -135,8 +145,6 @@ public class Commands {
 
 			T value = (T) context.getArgument(argumentName, Object.class);
 			setter.set(config, value);
-
-			Config.save();
 
 			player.sendMessage(new LiteralText("set " + option + " to " + value), false);
 
@@ -166,7 +174,6 @@ public class Commands {
 			ServerPlayerEntity player = context.getSource().getPlayer();
 
 			Config.resetVanilla(player.getUuid());
-			Config.save();
 
 			player.sendMessage(new LiteralText("Reset config to server default"), false);
 
@@ -220,8 +227,7 @@ public class Commands {
 						.suggests(WhistleSuggestionProvider.FOLLOWING)
 						.executes(WhistleCommand.TARGETED_UNWHISTLE)))
 				.then(CommandManager.literal("config")
-					// only available for vanilla players
-					.requires(source -> source.getEntity() instanceof ServerPlayerEntity && !ServerConfig.HAS_MOD_INSTALLED.contains(source.getEntity().getUuid()))
+					.requires(Commands::isVanillaPlayer)
 					.then(CommandManager.literal("set")
 						.then(CommandManager.literal("silentMode")
 							.then(argument("value", bool())
@@ -261,5 +267,9 @@ public class Commands {
 						.executes(new ResetConfigCommand()))));
 
 		});
+	}
+
+	private static boolean isVanillaPlayer(ServerCommandSource source) {
+		return source.getEntity() instanceof ServerPlayerEntity && !ServerConfig.HAS_MOD_INSTALLED.contains(source.getEntity().getUuid());
 	}
 }
