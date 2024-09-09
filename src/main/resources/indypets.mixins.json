@@ -7,6 +7,7 @@
     "FlyGoalMixin",
     "FollowMobGoalMixin",
     "FollowOwnerGoalMixin",
+    "MinecraftServerMixin",
     "MobEntityMixin",
     "ParrotEntityFlyOntoTreeGoalMixin",
     "ServerPlayerEntityMixin",
