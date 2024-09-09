@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.lizin5ths.indypets.IndyPets;
 import com.lizin5ths.indypets.config.client.BlocklistGuiProvider;
+import com.lizin5ths.indypets.config.client.HornConfigGuiProvider;
 import com.lizin5ths.indypets.config.client.InnerHomeGuiProvider;
 import com.lizin5ths.indypets.config.client.ItemGuiProvider;
 import com.lizin5ths.indypets.network.Networking;
@@ -15,7 +16,6 @@ import me.shedaniel.autoconfig.gui.registry.GuiRegistry;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
 
@@ -53,6 +53,8 @@ public class Config implements ConfigData {
 		config.sneakInteract = other.sneakInteract;
 		config.silentMode = other.silentMode;
 		config.homeRadius = other.homeRadius;
+		config.hornState = other.hornState;
+		config.hornConfig = new HashMap<>(other.hornConfig);
 		return config;
 	}
 
@@ -90,6 +92,12 @@ public class Config implements ConfigData {
 	@ConfigEntry.Gui.Tooltip
 	public Identifier interactItem = null;
 
+	@ConfigEntry.Category("horns")
+	public Map<Identifier, HornSetting> hornConfig = new HashMap<>();
+
+	@ConfigEntry.Gui.Excluded
+	public boolean hornState = false;
+
 	// client-only
 
 	@LocalOnly
@@ -101,6 +109,18 @@ public class Config implements ConfigData {
 	@LocalOnly
 	@ConfigEntry.Gui.Excluded
 	public Map<UUID, Config> vanillaPlayerConfigs = new HashMap<>();
+
+	public HornSetting getHornSetting(Identifier hornId) {
+		return hornConfig.getOrDefault(hornId, HornSetting.DISABLED);
+	}
+
+	public void setHornSetting(Identifier hornId, HornSetting hornSetting) {
+		if (hornSetting == HornSetting.DISABLED) {
+			hornConfig.remove(hornId);
+		} else {
+			hornConfig.put(hornId, hornSetting);
+		}
+	}
 
 	public static void init() {
 		LOCAL_CONFIG = AutoConfig.register(Config.class, (definition, configClass) -> new GsonConfigSerializer<>(definition, configClass, GSON_PRETTY));
@@ -116,6 +136,7 @@ public class Config implements ConfigData {
 		guiRegistry.registerPredicateProvider(new BlocklistGuiProvider(), field -> field.getType().equals(Blocklist.class));
 		guiRegistry.registerPredicateProvider(new ItemGuiProvider(), field -> field.getName().equals("interactItem"));
 		guiRegistry.registerPredicateProvider(new InnerHomeGuiProvider(), field -> field.getName().equals("innerHomePercentage"));
+		guiRegistry.registerPredicateProvider(new HornConfigGuiProvider(), field -> field.getName().equals("hornConfig"));
 
 		LOCAL_CONFIG.registerSaveListener((manager, config) -> {
 			try {
