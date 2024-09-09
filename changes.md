@@ -1,3 +1,12 @@
+## 1.4.1
+
+- Goat Horns can be configured as a whistle! Each horn can be set individually with differing settings:  
+  Whistle only, Unwhistle only, Toggle (which alternates between whistling and unwhistling) and Whistle / Sneak Unwhistle (which whistles while standing and unwhistles while sneaking)  
+  Vanilla clients can use the `/indypets horns <horn_type> <setting>` command to configure each horn  
+	`/indypets horn` by itself prints all current horn settings
+- don't send player config to vanilla servers
+- delay saving of server config to server shutdown
+
 ## 1.4.0
 
 This is a large update to the mod, please make sure to read!

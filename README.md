@@ -14,9 +14,14 @@ Whistle/Unwhistle (J) to toggle all your nearby pets - rally your army!
 
 Pets have a home where they won't stray too far off. "Home" is where they were last set independent. 
 
+Goat Horns can be configured as a whistle as well. Each horn can be set individually with differing settings:  
+Whistle only, Unwhistle only, Toggle (which alternates between whistling and unwhistling) and Whistle / Sneak Unwhistle (which whistles while standing and unwhistles while sneaking).
+
 The mod can work completely server-only.  
 Vanilla clients can use `/indypets whistle` and `unwhistle` commands and  
 `/indypets config` `get` to view and `set` change some basic settings and `help` get descriptions.  
+The `/indypets horn <horn_type> <setting>` command allows to configure each Goat Horn as a whistle.  
+`/indypets horn` by itself prints all current horn settings.  
 It is recommended to install the mod client-side too for whistle and interact hotkeys, whistle sound effects, translated status messages and more config options.
 
 In case (Shift +) Right Click conflicts with other mods or modded pets, try IndyPets' Interact hotkey (H) or one of the many compatibility options in the config.
