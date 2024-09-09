@@ -22,11 +22,15 @@ import static com.lizin5ths.indypets.util.IndyPetsUtil.*;
 
 public class Networking {
 	public static void sendClientConfigConfPhase() throws IllegalStateException {
-		ClientConfigurationNetworking.send(new PlayerConfigPayload(Config.local()));
+		if (ClientConfigurationNetworking.canSend(PlayerConfigPayload.ID)) {
+			ClientConfigurationNetworking.send(new PlayerConfigPayload(Config.local()));
+		}
 	}
 
 	public static void sendClientConfig() throws IllegalStateException {
-		ClientPlayNetworking.send(new PlayerConfigPayload(Config.local()));
+		if (ClientPlayNetworking.canSend(PlayerConfigPayload.ID)) {
+			ClientPlayNetworking.send(new PlayerConfigPayload(Config.local()));
+		}
 	}
 
 	public static void sendPetInteract(TameableEntity entity) throws IllegalStateException {
