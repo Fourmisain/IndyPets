@@ -1,3 +1,8 @@
+## 1.4.2
+
+- Pets will try to escape when they are about to drown
+- add Chinese (zh_cn) translation, thanks to suoyukii!
+
 ## 1.4.1
 
 - Goat Horns can be configured as a whistle! Each horn can be set individually with differing settings:  
