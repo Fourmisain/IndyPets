@@ -1,0 +1,25 @@
+
+	@WrapOperation(method = "setInSittingPose", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/data/DataTracker;set(Lnet/minecraft/entity/data/TrackedData;Ljava/lang/Object;)V"))
+	private void indypets$delaySetInSittingPose(DataTracker instance, TrackedData<?> key, Object value, Operation<Void> original) {
+
+		// Glare sets the sitting pose with sitting field
+		
+		
+//		// Glare isn't using SitGoal but syncs sitting field with the sitting pose
+//		Identifier id = Registries.ENTITY_TYPE.getId(getType());
+//		if (id.getNamespace().equals("friendsandfoes") && id.getPath().equals("glare")) {
+//			IndyPets.LOGGER.warn("syncing sitting pose");
+//			setInSittingPose(value);
+//		}
+	}
+
+	@Inject(method = "setSitting", at = @At("RETURN"))
+	private void indypets$showState(boolean sitting, CallbackInfo ci, @Share("cycling") LocalBooleanRef cycling) {
+//		if (cycling.get()) {
+//			IndyPets.LOGGER.warn("after: sitting = {}, inSittingPose = {}", sitting, isInSittingPose());
+//
+//			showPetStatus(IndyPets.interactingPlayer.get(), (TameableEntity) (Object) this, true);
+//
+//			IndyPets.interactingPlayer.remove(); // for safety
+//		}
+	}

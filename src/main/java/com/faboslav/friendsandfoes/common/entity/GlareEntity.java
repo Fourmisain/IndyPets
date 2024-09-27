@@ -1,4 +1,4 @@
-package com.faboslav.friendsandfoes.entity;
+package com.faboslav.friendsandfoes.common.entity;
 
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.passive.TameableEntity;
