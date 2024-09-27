@@ -1,6 +1,5 @@
 package com.lizin5ths.indypets.util;
 
-import com.faboslav.friendsandfoes.entity.GlareEntity;
 import com.lizin5ths.indypets.config.Config;
 import com.lizin5ths.indypets.config.ServerConfig;
 import net.fabricmc.loader.api.FabricLoader;
@@ -69,8 +68,9 @@ public class IndyPetsUtil {
 	public static void toggleIndependence(TameableEntity tameable) {
 		((Independence) tameable).indypets$toggleIndependence();
 
-		if (FabricLoader.getInstance().isModLoaded("friendsandfoes") && tameable instanceof GlareEntity) {
-			// immediately finish the Glare's WalkTowardsLookTargetTask
+		// immediately finish the Glare's WalkTowardsLookTargetTask
+		Identifier id = Registries.ENTITY_TYPE.getId(tameable.getType());
+		if (FabricLoader.getInstance().isModLoaded("friendsandfoes") && id.getNamespace().equals("friendsandfoes") && id.getPath().equals("glare")) {
 			Brain<?> brain = tameable.getBrain();
 			brain.forget(MemoryModuleType.WALK_TARGET);
 			brain.forget(MemoryModuleType.LOOK_TARGET);
@@ -188,22 +188,21 @@ public class IndyPetsUtil {
 	}
 
 	// cycle sit -> follow -> independent
-	// returns true when sitting needs to be changed
-	public static boolean cycleState(TameableEntity tameable) {
+	public static void cycleState(boolean wasSitting, TameableEntity tameable) {
 		// sit -> follow (& stand up)
-		if (tameable.isSitting()) {
+		if (wasSitting) {
 			if (isIndependent(tameable))
 				toggleIndependence(tameable);
 
-			return true;
+			tameable.setSitting(false);
 		} else {
 			// follow -> independent (& keep standing)
 			if (!isIndependent(tameable)) {
 				toggleIndependence(tameable);
-				return false;
+				tameable.setSitting(false);
 			} else {
 				// independent -> sit
-				return true;
+				tameable.setSitting(true);
 			}
 		}
 	}

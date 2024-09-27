@@ -1,8 +1,9 @@
 package com.lizin5ths.indypets.mixin;
 
-import com.lizin5ths.indypets.IndyPets;
 import com.lizin5ths.indypets.config.Config;
 import com.lizin5ths.indypets.config.ServerConfig;
+import com.llamalad7.mixinextras.sugar.Share;
+import com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.MobEntity;
@@ -17,8 +18,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import static com.lizin5ths.indypets.util.IndyPetsUtil.canInteract;
-import static com.lizin5ths.indypets.util.IndyPetsUtil.sneakInteract;
+import static com.lizin5ths.indypets.util.IndyPetsUtil.*;
 
 @Mixin(MobEntity.class)
 public abstract class MobEntityMixin extends LivingEntity {
@@ -35,7 +35,8 @@ public abstract class MobEntityMixin extends LivingEntity {
 		),
 		cancellable = true
 	)
-	public final void indypets$tryChangeFollowing(PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResult> cir) {
+	public final void indypets$tryChangeFollowing(PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResult> cir,
+			@Share("isInteracting") LocalBooleanRef isInteracting, @Share("wasSitting") LocalBooleanRef wasSitting) {
 		if (getWorld().isClient() || !(player instanceof ServerPlayerEntity serverPlayer))
 			return;
 
@@ -48,13 +49,15 @@ public abstract class MobEntityMixin extends LivingEntity {
 			} else {
 				Config config = ServerConfig.getDefaultedPlayerConfig(player.getUuid());
 				if (config.regularInteract) {
-					// triggers inside TameableEntity.setSitting
-					IndyPets.interactingPlayer.set(serverPlayer);
+					// continue in method below
+					isInteracting.set(true);
+					wasSitting.set(((TameableEntity) (Object) this).isSitting());
 				}
 			}
 		}
 	}
 
+	@SuppressWarnings("ConstantConditions")
 	@Inject(
 		method = "interact",
 		at = @At(
@@ -63,7 +66,16 @@ public abstract class MobEntityMixin extends LivingEntity {
 			shift = At.Shift.AFTER
 		)
 	)
-	public final void indypets$disableInteractHook(PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResult> cir) {
-		IndyPets.interactingPlayer.remove(); // this may be cancelled by some mods, so we have multiple points unsetting the ThreadLocal
+	public final void indypets$tryChangeFollowingAfter(PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResult> cir,
+			@Share("isInteracting") LocalBooleanRef isInteracting, @Share("wasSitting") LocalBooleanRef wasSitting) {
+		if (getWorld().isClient() || !(player instanceof ServerPlayerEntity serverPlayer))
+			return;
+
+		if (isInteracting.get()) {
+			TameableEntity tameable = (TameableEntity) (Object) this;
+
+			cycleState(wasSitting.get(), tameable);
+			showPetStatus(serverPlayer, tameable, true);
+		}
 	}
 }
