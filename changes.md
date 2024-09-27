@@ -1,3 +1,9 @@
+## 1.4.3
+
+- \[1.19.2+\] update Friends & Foes compatibility for 3.0.0+  
+  (note: also removes compatibility code for older versions, so please update Friends & Foes)
+- right click interact should be compatible with more mods
+
 ## 1.4.2
 
 - Pets will try to escape when they are about to drown
