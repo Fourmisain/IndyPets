@@ -186,22 +186,21 @@ public class IndyPetsUtil {
 	}
 
 	// cycle sit -> follow -> independent
-	// returns true when sitting needs to be changed
-	public static boolean cycleState(TameableEntity tameable) {
+	public static void cycleState(boolean wasSitting, TameableEntity tameable) {
 		// sit -> follow (& stand up)
-		if (tameable.isSitting()) {
+		if (wasSitting) {
 			if (isIndependent(tameable))
 				toggleIndependence(tameable);
 
-			return true;
+			tameable.setSitting(false);
 		} else {
 			// follow -> independent (& keep standing)
 			if (!isIndependent(tameable)) {
 				toggleIndependence(tameable);
-				return false;
+				tameable.setSitting(false);
 			} else {
 				// independent -> sit
-				return true;
+				tameable.setSitting(true);
 			}
 		}
 	}
