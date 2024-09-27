@@ -32,10 +32,8 @@ public class MixinPlugin implements IMixinConfigPlugin {
 
 	@Override
 	public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-		if (mixinClassName.endsWith("GlareFollowOwnerGoalMixin"))
-			return testVersion("friendsandfoes", "<2.0.8");
 		if (mixinClassName.endsWith("GlareBrainMixin") || mixinClassName.endsWith("GlareTeleportToOwnerTaskMixin") || mixinClassName.endsWith("GlareStrollTaskMixin"))
-			return testVersion("friendsandfoes", ">=2.0.8");
+			return testVersion("friendsandfoes", ">=3.0.0");
 
 		return true;
 	}
