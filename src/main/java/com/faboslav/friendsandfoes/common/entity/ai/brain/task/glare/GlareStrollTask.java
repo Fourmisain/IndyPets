@@ -1,6 +1,6 @@
-package com.faboslav.friendsandfoes.entity.ai.brain.task.glare;
+package com.faboslav.friendsandfoes.common.entity.ai.brain.task.glare;
 
-import com.faboslav.friendsandfoes.entity.GlareEntity;
+import com.faboslav.friendsandfoes.common.entity.GlareEntity;
 import net.minecraft.server.world.ServerWorld;
 
 public class GlareStrollTask {

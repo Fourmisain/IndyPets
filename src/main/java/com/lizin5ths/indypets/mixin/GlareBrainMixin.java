@@ -1,7 +1,7 @@
 package com.lizin5ths.indypets.mixin;
 
-import com.faboslav.friendsandfoes.entity.GlareEntity;
-import com.faboslav.friendsandfoes.entity.ai.brain.GlareBrain;
+import com.faboslav.friendsandfoes.common.entity.GlareEntity;
+import com.faboslav.friendsandfoes.common.entity.ai.brain.GlareBrain;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.brain.Brain;

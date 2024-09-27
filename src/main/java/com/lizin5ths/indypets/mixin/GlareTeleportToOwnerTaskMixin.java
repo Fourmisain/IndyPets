@@ -1,7 +1,7 @@
 package com.lizin5ths.indypets.mixin;
 
-import com.faboslav.friendsandfoes.entity.GlareEntity;
-import com.faboslav.friendsandfoes.entity.ai.brain.task.glare.GlareTeleportToOwnerTask;
+import com.faboslav.friendsandfoes.common.entity.GlareEntity;
+import com.faboslav.friendsandfoes.common.entity.ai.brain.task.glare.GlareTeleportToOwnerTask;
 import net.minecraft.server.world.ServerWorld;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

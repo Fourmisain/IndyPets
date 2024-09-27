@@ -1,6 +1,6 @@
-package com.faboslav.friendsandfoes.entity.ai.brain;
+package com.faboslav.friendsandfoes.common.entity.ai.brain;
 
-import com.faboslav.friendsandfoes.entity.GlareEntity;
+import com.faboslav.friendsandfoes.common.entity.GlareEntity;
 import net.minecraft.entity.ai.brain.Brain;
 
 public class GlareBrain {
