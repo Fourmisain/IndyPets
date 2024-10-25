@@ -29,7 +29,7 @@ public class IndyPetsClient implements ClientModInitializer {
 			player.getWorld().playSound(player.getX(), player.getY(), player.getZ(), soundEvent, player.getSoundCategory(), 1.0F, 1.0F, true);
 		} else {
 			// non-positioned sound (just like music, but with players category)
-			SoundInstance sound = new PositionedSoundInstance(soundEvent.getId(), SoundCategory.PLAYERS,
+			SoundInstance sound = new PositionedSoundInstance(soundEvent.id(), SoundCategory.PLAYERS,
 				1.0F, 1.0F, SoundInstance.createRandom(), false, 0,
 				SoundInstance.AttenuationType.NONE, 0.0, 0.0, 0.0, true);
 

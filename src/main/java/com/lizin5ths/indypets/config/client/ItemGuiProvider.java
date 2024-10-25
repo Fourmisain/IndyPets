@@ -30,7 +30,7 @@ public class ItemGuiProvider implements GuiProvider {
 
 		Identifier identifier = Identifier.tryParse(id);
 
-		if (!Registries.ITEM.getOrEmpty(identifier).isPresent())
+		if (!Registries.ITEM.containsId(identifier))
 			return null; // show as error
 
 		return identifier;

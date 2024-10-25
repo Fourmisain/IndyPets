@@ -8,7 +8,7 @@ import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.GoatHornItem;
 import net.minecraft.item.Instrument;
-import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
@@ -31,7 +31,7 @@ public abstract class GoatHornItemMixin {
 		if (world instanceof ServerWorld serverWorld && user instanceof ServerPlayerEntity serverPlayer) {
 			Config config = ServerConfig.getDefaultedPlayerConfig(user.getUuid());
 
-			Identifier hornId = Registries.INSTRUMENT.getId(instrument);
+			Identifier hornId = serverWorld.getRegistryManager().getOrThrow(RegistryKeys.INSTRUMENT).getId(instrument);
 			HornSetting hornSetting = config.getHornSetting(hornId);
 
 			switch (hornSetting) {

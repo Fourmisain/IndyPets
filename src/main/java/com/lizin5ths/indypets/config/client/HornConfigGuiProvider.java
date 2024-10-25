@@ -7,7 +7,11 @@ import me.shedaniel.autoconfig.gui.registry.api.GuiProvider;
 import me.shedaniel.autoconfig.gui.registry.api.GuiRegistryAccess;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
-import net.minecraft.registry.Registries;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.world.ClientWorld;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.tag.InstrumentTags;
 import net.minecraft.text.Text;
 import net.minecraft.util.Util;
 
@@ -18,6 +22,7 @@ import java.util.List;
 
 public class HornConfigGuiProvider implements GuiProvider {
 	private static final String EXPLANATION = "text.autoconfig.indypets.option.goatHornExplanation";
+	private static final String NOT_IN_WORLD = "text.autoconfig.indypets.option.goatHornExplanation.notInWorld";
 
 	@SuppressWarnings({"rawtypes"})
 	@Override
@@ -33,20 +38,31 @@ public class HornConfigGuiProvider implements GuiProvider {
 					.build()
 			);
 
-			Registries.INSTRUMENT.getIds().stream()
-				.sorted()
-				.forEachOrdered(hornId -> {
-					Text name = Text.translatable(Util.createTranslationKey("instrument", hornId));
+			ClientWorld world = MinecraftClient.getInstance().world;
+			if (world != null) {
+				world.getRegistryManager().getOrThrow(RegistryKeys.INSTRUMENT)
+					.getOptional(InstrumentTags.GOAT_HORNS)
+					.ifPresent(registryEntries -> registryEntries.stream()
+					.map(entry -> entry.getKey().map(RegistryKey::getValue).orElseThrow()) //
+					.sorted()
+					.forEachOrdered(hornId -> {
+						Text name = Text.translatable(Util.createTranslationKey("instrument", hornId));
 
-					entries.add(
-						ConfigEntryBuilder.create()
-							.startEnumSelector(name, HornSetting.class, config.getHornSetting(hornId))
-							.setDefaultValue(HornSetting.DISABLED)
-							.setSaveConsumer(setting -> config.setHornSetting(hornId, setting))
-							.setEnumNameProvider(anEnum -> Text.translatable("text.autoconfig.indypets.option.goatHorn." + anEnum.name()))
-							.build()
-					);
-				});
+						entries.add(
+							ConfigEntryBuilder.create()
+								.startEnumSelector(name, HornSetting.class, config.getHornSetting(hornId))
+								.setDefaultValue(HornSetting.DISABLED)
+								.setSaveConsumer(setting -> config.setHornSetting(hornId, setting))
+								.setEnumNameProvider(anEnum -> Text.translatable("text.autoconfig.indypets.option.goatHorn." + anEnum.name()))
+								.build());
+					}));
+			} else {
+				entries.add(
+					ConfigEntryBuilder.create()
+						.startTextDescription(Text.translatable(NOT_IN_WORLD))
+						.setTooltip(Text.translatable(NOT_IN_WORLD + ".@Tooltip"))
+						.build());
+			}
 
 			return entries;
 		} catch (ClassCastException e) {

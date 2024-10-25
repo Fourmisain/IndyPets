@@ -19,6 +19,8 @@ import net.minecraft.command.argument.IdentifierArgumentType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.tag.InstrumentTags;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -169,9 +171,14 @@ public class Commands {
 	private static class HornTypeSuggestionProvider implements SuggestionProvider<ServerCommandSource> {
 		@Override
 		public CompletableFuture<Suggestions> getSuggestions(CommandContext<ServerCommandSource> context, SuggestionsBuilder builder) throws CommandSyntaxException {
-			for (var id : Registries.INSTRUMENT.getIds()) {
-				builder.suggest(id.toString());
-			}
+			context.getSource().getRegistryManager()
+				.getOrThrow(RegistryKeys.INSTRUMENT)
+				.getOptional(InstrumentTags.GOAT_HORNS)
+				.ifPresent(horns -> {
+					for (var entry : horns) {
+						builder.suggest(entry.getIdAsString());
+					}
+				});
 
 			return builder.buildFuture();
 		}

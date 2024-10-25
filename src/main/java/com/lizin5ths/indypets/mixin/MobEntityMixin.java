@@ -44,7 +44,7 @@ public abstract class MobEntityMixin extends LivingEntity {
 			if (player.isSneaking()) {
 				if (sneakInteract((TameableEntity) (Object) this, serverPlayer)) {
 					// Note: This blocks interactMob() so it might conflict with other mods using sneak-interact
-					cir.setReturnValue(ActionResult.success(true));
+					cir.setReturnValue(ActionResult.SUCCESS);
 				}
 			} else {
 				Config config = ServerConfig.getDefaultedPlayerConfig(player.getUuid());

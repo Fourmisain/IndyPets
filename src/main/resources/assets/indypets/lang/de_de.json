@@ -31,6 +31,8 @@
   "text.autoconfig.indypets.category.horns": "Bockshörner",
   "text.autoconfig.indypets.option.goatHornExplanation": "Bockshörner...?",
   "text.autoconfig.indypets.option.goatHornExplanation.@Tooltip": "Hier kann jedes Bockshorn als Pfeife konfiguriert werden.\n\"Umschalten\" alterniert zwischen pfeifen und entpfeifen.\n\"Pfeifen / Schleich-Entpfeifen\" pfeift im Stehen und entpfeift beim Schleichen.",
+  "text.autoconfig.indypets.option.goatHornExplanation.notInWorld": "Lade eine Welt um hier Bockhörner zu sehen!",
+  "text.autoconfig.indypets.option.goatHornExplanation.notInWorld.@Tooltip": "Bockhörner werden durch Datenpakete definiert und sind daher Welt-abhängig.",
   "text.autoconfig.indypets.option.goatHorn.DISABLED": "Deaktiviert",
   "text.autoconfig.indypets.option.goatHorn.WHISTLE": "Pfeifen",
   "text.autoconfig.indypets.option.goatHorn.UNWHISTLE": "Entpfeifen",

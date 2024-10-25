@@ -32,6 +32,8 @@
   "text.autoconfig.indypets.category.horns": "Goat Horns",
   "text.autoconfig.indypets.option.goatHornExplanation": "Goat Horns...?",
   "text.autoconfig.indypets.option.goatHornExplanation.@Tooltip": "Here each Goat Horn can be configured as a pet whistle.\n\"Toggle\" will alternate between whistling and unwhistling.\n\"Whistle / Sneak Unwhistle\" will whistle when standing and unwhistle when sneaking.",
+  "text.autoconfig.indypets.option.goatHornExplanation.notInWorld": "Load a world to see Goat Horns here!",
+  "text.autoconfig.indypets.option.goatHornExplanation.notInWorld.@Tooltip": "Goat Horns are data pack driven and thus world dependent.",
   "text.autoconfig.indypets.option.goatHornStar.@Tooltip": "Change this setting to change all Goat Horns at once.",
   "text.autoconfig.indypets.option.goatHorn.DISABLED": "Disabled",
   "text.autoconfig.indypets.option.goatHorn.WHISTLE": "Whistle",
