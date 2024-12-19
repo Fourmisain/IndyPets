@@ -1,3 +1,6 @@
+## 1.4.4
+- \[1.21.4\] fix crash when spawning particles
+
 ## 1.4.3
 
 - \[1.19.2+\] update Friends & Foes compatibility for 3.0.0+  
