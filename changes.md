@@ -1,3 +1,12 @@
+## 1.4.5
+
+- [1.20.1, 1.19.2] compatibility for Critters and Companions' Dragonfly (they won't leave their home)
+- require at least Fabric Loader 0.16.1
+
+## 1.4.4
+
+- \[1.21.4\] fix crash when spawning particles
+
 ## 1.4.3
 
 - \[1.19.2+\] update Friends & Foes compatibility for 3.0.0+  

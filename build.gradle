@@ -106,11 +106,14 @@ task finalize {
 		if (Files.exists(jar)) {
 			var jarFileUri = new URI('jar:file', jar.toUri().getSchemeSpecificPart(), jar.toUri().getFragment())
 
+			def del = (fs, pkg) -> {
+				def path = fs.getPath(pkg)
+				if (Files.exists(path)) Files.walkFileTree(path, new DeletingFileVisitor());
+			}
+
 			try (FileSystem fs = FileSystems.newFileSystem(jarFileUri, ['create': 'false'])) {
-				def p = fs.getPath("com/faboslav")
-				if (Files.exists(p)) {
-					Files.walkFileTree(fs.getPath("com/faboslav"), new DeletingFileVisitor());
-				}
+				del(fs, "com/faboslav")
+				del(fs, "com/github/eterdelta")
 			}
 		}
 	}
