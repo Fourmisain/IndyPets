@@ -22,7 +22,7 @@ import java.util.stream.Stream;
 
 public class ItemGuiProvider implements GuiProvider {
 	// Cloth Config understands null as an error, thus we use a "null object"
-	private static final Identifier NULL = IndyPets.id( "no_item");
+	private static final Identifier NULL = IndyPets.id("no_item");
 
 	public static Identifier toObject(String id) {
 		if (id.isEmpty())
@@ -30,7 +30,7 @@ public class ItemGuiProvider implements GuiProvider {
 
 		Identifier identifier = Identifier.tryParse(id);
 
-		if (!Registries.ITEM.getOrEmpty(identifier).isPresent())
+		if (!Registries.ITEM.containsId(identifier))
 			return null; // show as error
 
 		return identifier;
