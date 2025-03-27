@@ -27,7 +27,7 @@ public class IndyPetsClient implements ClientModInitializer {
 
 	public static void playLocalPlayerSound(PlayerEntity player, SoundEvent soundEvent, boolean positioned) {
 		if (positioned) {
-			player.getWorld().playSound((Entity) null, player.getX(), player.getY(), player.getZ(), soundEvent, player.getSoundCategory(), 1.0F, 1.0F);
+			player.getWorld().playSoundClient(player.getX(), player.getY(), player.getZ(), soundEvent, player.getSoundCategory(), 1.0F, 1.0F, false);
 		} else {
 			// non-positioned sound (just like music, but with players category)
 			SoundInstance sound = new PositionedSoundInstance(soundEvent.id(), SoundCategory.PLAYERS,

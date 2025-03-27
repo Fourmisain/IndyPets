@@ -56,7 +56,7 @@ public class IndyPetsUtil {
 		if (!tameable.isTamed())
 			return false;
 
-		Config config = ServerConfig.getDefaultedPlayerConfig(tameable.getOwnerReference().getUuid());
+		Config config = ServerConfig.getDefaultedPlayerConfig(tameable.getOwnerReference());
 		return !config.blocklist.isBlocked(EntityType.getId(tameable.getType()));
 	}
 
@@ -153,7 +153,7 @@ public class IndyPetsUtil {
 		// distance to home
 		float d = (float) Math.sqrt(tameable.getBlockPos().getSquaredDistance(getHomePos(tameable)));
 
-		Config config = ServerConfig.getDefaultedPlayerConfig(tameable.getOwnerReference().getUuid());
+		Config config = ServerConfig.getDefaultedPlayerConfig(tameable.getOwnerReference());
 		float start = config.homeRadius * config.innerHomePercentage;
 		float end   = config.homeRadius;
 

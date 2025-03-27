@@ -1,6 +1,7 @@
 package com.lizin5ths.indypets.mixin;
 
 import com.lizin5ths.indypets.util.Independence;
+import java.util.Optional;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.TameableEntity;
@@ -62,8 +63,11 @@ public abstract class TameableEntityMixin extends AnimalEntity implements Indepe
 		indypets$isIndependent = !nbt.getBoolean("AllowedToFollow").orElse(false);
 
 		if (nbt.contains("IndyPets$HomePos")) {
-			NbtList nbtList = nbt.getList("IndyPets$HomePos").get();
-			indypets$homePos = new BlockPos(nbtList.getInt(0).get(), nbtList.getInt(1).get(), nbtList.getInt(2).get());
+			Optional<NbtList> nbtList = nbt.getList("IndyPets$HomePos");
+			if (nbtList.isPresent()) {
+				NbtList homePos = nbtList.get();
+				indypets$homePos = new BlockPos(homePos.getInt(0).orElseThrow(), homePos.getInt(1).orElseThrow(), homePos.getInt(2).orElseThrow());
+			}
 		} else if (isTamed()) {
 			indypets$setHome(); // fallback
 		}

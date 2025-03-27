@@ -1,5 +1,7 @@
 package com.lizin5ths.indypets.config;
 
+import net.minecraft.entity.LazyEntityReference;
+import net.minecraft.entity.LivingEntity;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -19,5 +21,12 @@ public class ServerConfig {
 
 		// default to server config
 		return Config.local();
+	}
+
+	public static Config getDefaultedPlayerConfig(LazyEntityReference<LivingEntity> player) {
+		if (player == null){
+			return getDefaultedPlayerConfig((UUID) null);
+		}
+		return getDefaultedPlayerConfig(player.getUuid());
 	}
 }
