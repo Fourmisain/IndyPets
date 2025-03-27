@@ -56,13 +56,13 @@ public class IndyPetsUtil {
 		if (!tameable.isTamed())
 			return false;
 
-		Config config = ServerConfig.getDefaultedPlayerConfig(tameable.getOwnerUuid());
+		Config config = ServerConfig.getDefaultedPlayerConfig(tameable.getOwnerReference().getUuid());
 		return !config.blocklist.isBlocked(EntityType.getId(tameable.getType()));
 	}
 
 	/** Whether the player can change the independence of the entity */
 	public static boolean canInteract(ServerPlayerEntity player, @Nullable Entity entity) {
-		return isActive(entity) && player.getUuid().equals(((TameableEntity) entity).getOwnerUuid());
+		return isActive(entity) && ((TameableEntity) entity).isOwner(player);
 	}
 
 	public static void toggleIndependence(TameableEntity tameable) {
@@ -153,7 +153,7 @@ public class IndyPetsUtil {
 		// distance to home
 		float d = (float) Math.sqrt(tameable.getBlockPos().getSquaredDistance(getHomePos(tameable)));
 
-		Config config = ServerConfig.getDefaultedPlayerConfig(tameable.getOwnerUuid());
+		Config config = ServerConfig.getDefaultedPlayerConfig(tameable.getOwnerReference().getUuid());
 		float start = config.homeRadius * config.innerHomePercentage;
 		float end   = config.homeRadius;
 
