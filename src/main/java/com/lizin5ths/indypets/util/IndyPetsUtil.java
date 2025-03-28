@@ -143,6 +143,10 @@ public class IndyPetsUtil {
 		return ((Independence) tameable).indypets$getHomePos();
 	}
 
+	public static void setHome(TameableEntity tameable) {
+		((Independence) tameable).indypets$setHome();
+	}
+
 	public static boolean shouldHeadHome(MobEntity mob) {
 		if (!(mob instanceof TameableEntity tameable))
 			return false;
