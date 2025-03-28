@@ -1,6 +1,5 @@
 package com.lizin5ths.indypets.util;
 
-import com.lizin5ths.indypets.IndyPets;
 import com.lizin5ths.indypets.config.Config;
 import com.lizin5ths.indypets.config.ServerConfig;
 import net.minecraft.entity.Entity;
@@ -135,6 +134,10 @@ public class IndyPetsUtil {
 		return ((Independence) tameable).indypets$getHomePos();
 	}
 
+	public static void setHome(TameableEntity tameable) {
+		((Independence) tameable).indypets$setHome();
+	}
+
 	public static boolean shouldHeadHome(MobEntity mob) {
 		if (!(mob instanceof TameableEntity))
 			return false;
@@ -179,7 +182,6 @@ public class IndyPetsUtil {
 			return TargetFinder.findTargetTowards(mob, horizontalRange, verticalRange, Vec3d.ofBottomCenter(homePos));
 		}
 
-		IndyPets.LOGGER.warn("{} head towards {}", mob, Vec3d.ofBottomCenter(homePos));
 
 		// method_27929 is the proper findGroundTargetTowards (using only valid positions)
 		return TargetFinder.method_27929(mob, horizontalRange, verticalRange, Vec3d.ofBottomCenter(homePos));
