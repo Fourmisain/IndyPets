@@ -1,3 +1,9 @@
+## 1.4.6
+
+- port to 1.21.5 (thanks to OpenBagTwo for the help!)
+- fix parrots losing their independence when dropping from a shoulder
+- fix vanilla pets loading from chunks for the first time being independent
+
 ## 1.4.5
 
 - [1.20.1, 1.19.2] compatibility for Critters and Companions' Dragonfly (they won't leave their home)
