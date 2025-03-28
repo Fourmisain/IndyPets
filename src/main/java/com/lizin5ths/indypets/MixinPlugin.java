@@ -35,6 +35,9 @@ public class MixinPlugin implements IMixinConfigPlugin {
 		if (mixinClassName.endsWith("GlareBrainMixin") || mixinClassName.endsWith("GlareTeleportToOwnerTaskMixin") || mixinClassName.endsWith("GlareStrollTaskMixin"))
 			return testVersion("friendsandfoes", ">=3.0.0");
 
+		if (mixinClassName.endsWith("DragonflyEntityRandomFlyGoalMixin"))
+			return testVersion("crittersandcompanions", "*");
+
 		return true;
 	}
 

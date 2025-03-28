@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_${java_version}",
   "plugin": "com.lizin5ths.indypets.MixinPlugin",
   "mixins": [
+    "DragonflyEntityRandomFlyGoalMixin",
     "EscapeDangerGoalMixin",
     "FlyGoalMixin",
     "FollowMobGoalMixin",
@@ -16,6 +17,7 @@
     "MinecraftServerMixin",
     "MobEntityMixin",
     "ParrotEntityFlyOntoTreeGoalMixin",
+    "PlayerEntityMixin",
     "ServerPlayerEntityMixin",
     "SitGoalMixin",
     "TameableEntityMixin",

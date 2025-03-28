@@ -2,7 +2,7 @@ import java.nio.file.*
 import java.nio.file.attribute.BasicFileAttributes
 
 plugins {
-	id 'fabric-loom' version '1.9-SNAPSHOT'
+	id 'fabric-loom' version '1.10-SNAPSHOT'
 	id 'maven-publish'
 	id 'com.matthewprenger.cursegradle' version '1.4.0'
 	id 'com.modrinth.minotaur' version '2.+'
@@ -18,11 +18,18 @@ base {
 
 loom {
 	accessWidenerPath = file("src/main/resources/indypets.accesswidener")
+
+	runs {
+		client {
+			vmArgs "-Dmixin.debug.export=true"
+			programArgs "--username", "Test"
+		}
+	}
 }
 
 repositories {
-	maven { url "https://maven.shedaniel.me/" }
-	maven { url "https://maven.terraformersmc.com/" }
+	maven { url = "https://maven.shedaniel.me/" }
+	maven { url = "https://maven.terraformersmc.com/" }
 	exclusiveContent {
 		forRepository {
 			maven {
@@ -35,7 +42,7 @@ repositories {
 		}
 	}
 	maven {
-		url "https://maven.jamieswhiteshirt.com/libs-release"
+		url = "https://maven.jamieswhiteshirt.com/libs-release"
 		content {
 			includeGroup "com.jamieswhiteshirt"
 		}
@@ -57,19 +64,17 @@ dependencies {
 		exclude(group: "net.fabricmc.fabric-api")
 	}
 
-	modRuntimeOnly "maven.modrinth:friends-and-foes:fabric-mc1.19.4-3.+"
+	modRuntimeOnly "maven.modrinth:friends-and-foes:fabric-mc1.19.4-3.0.9"
 	modRuntimeOnly "com.jamieswhiteshirt:reach-entity-attributes:2.3.2"
 }
 
 processResources {
 	def stringProperties = providers.gradlePropertiesPrefixedBy('').get()
-	stringProperties.each { inputs.property(it.key, it.value) }
+	inputs.properties stringProperties
 
-	['fabric.mod.json', "${project.archives_base_name}.mixins.json"].each {
-		filesMatching(it) {
-			expand(stringProperties) {
-				escapeBackslash = true
-			}
+	filesMatching(['fabric.mod.json', '*.mixins.json']) {
+		expand(stringProperties) {
+			escapeBackslash = true
 		}
 	}
 }
@@ -84,8 +89,10 @@ java {
 }
 
 jar {
+	inputs.property 'archivesName', project.base.archivesName
+
 	from('LICENSE') {
-		rename { "${it}_${project.base.archivesName.get()}"}
+		rename { "${it}_${inputs.properties.archivesName}" }
 	}
 }
 
@@ -104,11 +111,14 @@ task finalize {
 		if (Files.exists(jar)) {
 			var jarFileUri = new URI('jar:file', jar.toUri().getSchemeSpecificPart(), jar.toUri().getFragment())
 
+			def del = (fs, pkg) -> {
+				def path = fs.getPath(pkg)
+				if (Files.exists(path)) Files.walkFileTree(path, new DeletingFileVisitor());
+			}
+
 			try (FileSystem fs = FileSystems.newFileSystem(jarFileUri, ['create': 'false'])) {
-				def p = fs.getPath("com/faboslav")
-				if (Files.exists(p)) {
-					Files.walkFileTree(fs.getPath("com/faboslav"), new DeletingFileVisitor());
-				}
+				del(fs, "com/faboslav")
+				del(fs, "com/github/eterdelta")
 			}
 		}
 	}

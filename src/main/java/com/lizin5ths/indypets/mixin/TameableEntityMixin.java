@@ -1,6 +1,9 @@
 package com.lizin5ths.indypets.mixin;
 
+import com.lizin5ths.indypets.IndyPets;
 import com.lizin5ths.indypets.util.Independence;
+import com.llamalad7.mixinextras.sugar.Share;
+import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.TameableEntity;
@@ -10,12 +13,16 @@ import net.minecraft.nbt.NbtInt;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.util.Objects;
+import java.util.UUID;
 
 @Mixin(TameableEntity.class)
 public abstract class TameableEntityMixin extends AnimalEntity implements Independence {
@@ -28,13 +35,30 @@ public abstract class TameableEntityMixin extends AnimalEntity implements Indepe
 		super(entityType, world);
 	}
 
-	@Inject(method = "setOwnerUuid", at = @At(value = "TAIL"))
-	protected void indypets$initFollowData(CallbackInfo ci) {
-		if (world.isClient)
+	@Shadow @Nullable
+	public UUID getOwnerUuid() { throw new AssertionError(); }
+
+	@Inject(method = "setOwnerUuid", at = @At(value = "HEAD"))
+	protected void indypets$capturePreviousOwner(CallbackInfo ci, @Share("owner") LocalRef<UUID> owner) {
+		if (getWorld().isClient())
 			return;
 
-		indypets$isIndependent = false;
-		indypets$setHome();
+		owner.set(getOwnerUuid());
+	}
+
+	@Inject(method = "setOwnerUuid", at = @At(value = "TAIL"))
+	protected void indypets$initFollowData(CallbackInfo ci, @Share("owner") LocalRef<UUID> owner) {
+		if (getWorld().isClient)
+			return;
+
+		var oldUuid = owner.get();
+		var newUuid = getOwnerUuid();
+
+		if (!Objects.equals(oldUuid, newUuid)) {
+			IndyPets.LOGGER.debug("{} changed owner from {} to {}", this, oldUuid, newUuid);
+			indypets$isIndependent = false;
+			indypets$setHome();
+		}
 	}
 
 	@Unique
@@ -59,7 +83,11 @@ public abstract class TameableEntityMixin extends AnimalEntity implements Indepe
 
 	@Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
 	private void indypets$readFollowDataFromNbt(NbtCompound nbt, CallbackInfo callbackInfo) {
-		indypets$isIndependent = !nbt.getBoolean("AllowedToFollow");
+		if (nbt.contains("AllowedToFollow")) {
+			indypets$isIndependent = !nbt.getBoolean("AllowedToFollow");
+		} else {
+			indypets$isIndependent = false;
+		}
 
 		if (nbt.contains("IndyPets$HomePos", NbtElement.LIST_TYPE)) {
 			NbtList nbtList = nbt.getList("IndyPets$HomePos", NbtElement.INT_TYPE);
@@ -87,7 +115,7 @@ public abstract class TameableEntityMixin extends AnimalEntity implements Indepe
 		return indypets$homePos;
 	}
 
-	@Unique
+	@Unique @Override
 	public void indypets$setHome() {
 		indypets$homePos = getBlockPos();
 	}
