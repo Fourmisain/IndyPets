@@ -6,4 +6,5 @@ public interface Independence {
 	boolean indypets$isIndependent();
 	void indypets$toggleIndependence();
 	BlockPos indypets$getHomePos();
+	void indypets$setHome();
 }
