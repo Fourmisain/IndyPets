@@ -3,6 +3,7 @@
 - port to 1.21.5 (thanks to OpenBagTwo for the help!)
 - fix parrots losing their independence when dropping from a shoulder
 - fix vanilla pets loading from chunks for the first time being independent
+- proper backport to 1.17
 
 ## 1.4.5
 

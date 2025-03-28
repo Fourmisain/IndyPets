@@ -3,9 +3,9 @@ package com.lizin5ths.indypets.mixin;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.LeavesBlock;
-import net.minecraft.entity.ai.goal.FlyGoal;
+import net.minecraft.entity.ai.goal.FlyOntoTreeGoal;
+import net.minecraft.entity.ai.goal.WanderAroundFarGoal;
 import net.minecraft.entity.mob.PathAwareEntity;
-import net.minecraft.entity.passive.ParrotEntity;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.tag.BlockTags;
 import net.minecraft.util.math.BlockPos;
@@ -25,8 +25,8 @@ import java.util.Random;
 
 import static com.lizin5ths.indypets.util.IndyPetsUtil.*;
 
-@Mixin(ParrotEntity.FlyOntoTreeGoal.class)
-public abstract class ParrotEntityFlyOntoTreeGoalMixin extends FlyGoal {
+@Mixin(FlyOntoTreeGoal.class)
+public abstract class ParrotEntityFlyOntoTreeGoalMixin extends WanderAroundFarGoal {
 	public ParrotEntityFlyOntoTreeGoalMixin(PathAwareEntity pathAwareEntity, double d) {
 		super(pathAwareEntity, d);
 	}
@@ -43,7 +43,7 @@ public abstract class ParrotEntityFlyOntoTreeGoalMixin extends FlyGoal {
 
 	// block positions are iterated in x, y, z order, meaning parrots will always wander northwest
 	@SuppressWarnings("unchecked")
-	@ModifyExpressionValue(method = "locateTree", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/BlockPos;iterate(IIIIII)Ljava/lang/Iterable;"))
+	@ModifyExpressionValue(method = "getTreeTarget", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/BlockPos;iterate(IIIIII)Ljava/lang/Iterable;"))
 	private Iterable<BlockPos> indypets$shuffledIterable(Iterable<BlockPos> original) {
 		int x = MathHelper.floor(mob.getX());
 		int y = MathHelper.floor(mob.getY());
@@ -105,10 +105,10 @@ public abstract class ParrotEntityFlyOntoTreeGoalMixin extends FlyGoal {
 			if (pos.equals(mob.getBlockPos()))
 				continue;
 
-			BlockState state = mob.getWorld().getBlockState(temp.set(pos, Direction.DOWN));
+			BlockState state = mob.getEntityWorld().getBlockState(temp.set(pos, Direction.DOWN));
 			boolean isTree = state.getBlock() instanceof LeavesBlock || state.isIn(BlockTags.LOGS);
 
-			if (isTree && mob.getWorld().isAir(pos) && mob.getWorld().isAir(temp.set(pos, Direction.UP))) {
+			if (isTree && mob.getEntityWorld().isAir(pos) && mob.getEntityWorld().isAir(temp.set(pos, Direction.UP))) {
 				double dist = pos.getSquaredDistance(homePos);
 				if (dist < minDist) {
 					minDist = dist;

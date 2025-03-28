@@ -74,11 +74,11 @@ public class IndyPetsUtil {
 			sendPetStatusMessage(player, tameable, singlePet);
 		} else {
 			if (isIndependent(tameable)) {
-				player.getWorld().spawnParticles(player, ParticleTypes.ANGRY_VILLAGER, true,
+				player.getServerWorld().spawnParticles(player, ParticleTypes.ANGRY_VILLAGER, true,
 					tameable.getX(), tameable.getBodyY(0.5), tameable.getZ(),
 					7, 0.4, 0.4, 0.4, 0.3);
 			} else {
-				player.getWorld().spawnParticles(player, ParticleTypes.HAPPY_VILLAGER, true,
+				player.getServerWorld().spawnParticles(player, ParticleTypes.HAPPY_VILLAGER, true,
 					tameable.getX(), tameable.getBodyY(0.5), tameable.getZ(),
 					11, 0.5, 0.5, 0.5, 2);
 			}
@@ -176,7 +176,7 @@ public class IndyPetsUtil {
 		BlockPos homePos = getHomePos((TameableEntity) mob);
 
 		if (ignorePenality)
-			return NoPenaltyTargeting.findTo(mob, horizontalRange, verticalRange, Vec3d.ofBottomCenter(homePos), Math.PI / 2);
+			return NoPenaltyTargeting.find(mob, horizontalRange, verticalRange, Vec3d.ofBottomCenter(homePos), Math.PI / 2);
 
 		return FuzzyTargeting.findTo(mob, horizontalRange, verticalRange, Vec3d.ofBottomCenter(homePos));
 	}

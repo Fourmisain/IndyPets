@@ -40,7 +40,7 @@ public abstract class TameableEntityMixin extends AnimalEntity implements Indepe
 
 	@Inject(method = "setOwnerUuid", at = @At(value = "HEAD"))
 	protected void indypets$capturePreviousOwner(CallbackInfo ci, @Share("owner") LocalRef<UUID> owner) {
-		if (getWorld().isClient())
+		if (getEntityWorld().isClient())
 			return;
 
 		owner.set(getOwnerUuid());
@@ -48,7 +48,7 @@ public abstract class TameableEntityMixin extends AnimalEntity implements Indepe
 
 	@Inject(method = "setOwnerUuid", at = @At(value = "TAIL"))
 	protected void indypets$initFollowData(CallbackInfo ci, @Share("owner") LocalRef<UUID> owner) {
-		if (getWorld().isClient)
+		if (getEntityWorld().isClient)
 			return;
 
 		var oldUuid = owner.get();

@@ -6,7 +6,6 @@
   "mixins": [
     "CatEntityMixin",
     "EscapeDangerGoalMixin",
-    "FlyGoalMixin",
     "FollowMobGoalMixin",
     "FollowOwnerGoalMixin",
     "MinecraftServerMixin",

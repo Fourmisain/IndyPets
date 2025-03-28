@@ -1,6 +1,6 @@
 package com.lizin5ths.indypets.mixin;
 
-import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import net.minecraft.entity.ai.goal.EscapeDangerGoal;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.passive.TameableEntity;
@@ -16,7 +16,14 @@ public abstract class EscapeDangerGoalMixin {
 	@Shadow @Final
 	protected PathAwareEntity mob;
 
-	@ModifyReturnValue(method = "isInDanger", at = @At("RETURN"))
+	@ModifyExpressionValue(
+		method = "canStart",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/entity/mob/PathAwareEntity;isOnFire()Z",
+			ordinal = 0
+		)
+	)
 	public boolean indypets$petIsAboutToDrown(boolean original) {
 		if (mob instanceof TameableEntity tameable && isIndependent(tameable) && mob.getAir() <= 100) {
 			return true;

@@ -34,6 +34,6 @@
 		"fabricloader": ">=0.16.1",
 		"fabric": "*",
 		"minecraft": "${game_version_range}",
-		"cloth-config": "*"
+		"cloth-config2": "*"
 	}
 }

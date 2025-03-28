@@ -54,7 +54,7 @@ public class Networking {
 			int entityId = buf.readVarInt();
 
 			server.execute(() -> {
-				Entity entity = player.getWorld().getEntityById(entityId);
+				Entity entity = player.getEntityWorld().getEntityById(entityId);
 
 				if (canInteract(player, entity)) {
 					TameableEntity tameable = (TameableEntity) entity;
