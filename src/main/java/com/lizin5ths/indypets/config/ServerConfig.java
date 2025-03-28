@@ -23,10 +23,7 @@ public class ServerConfig {
 		return Config.local();
 	}
 
-	public static Config getDefaultedPlayerConfig(LazyEntityReference<LivingEntity> player) {
-		if (player == null){
-			return getDefaultedPlayerConfig((UUID) null);
-		}
-		return getDefaultedPlayerConfig(player.getUuid());
+	public static Config getDefaultedPlayerConfig(@Nullable LazyEntityReference<LivingEntity> player) {
+		return getDefaultedPlayerConfig(player != null ? player.getUuid() : null);
 	}
 }

@@ -18,6 +18,13 @@ base {
 
 loom {
 	accessWidenerPath = file("src/main/resources/indypets.accesswidener")
+
+	runs {
+		client {
+			vmArgs "-Dmixin.debug.export=true"
+			programArgs "--username", "Test"
+		}
+	}
 }
 
 repositories {
