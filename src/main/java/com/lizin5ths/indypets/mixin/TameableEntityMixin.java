@@ -1,6 +1,7 @@
 package com.lizin5ths.indypets.mixin;
 
 import com.lizin5ths.indypets.util.Independence;
+import java.util.Optional;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.TameableEntity;
@@ -28,7 +29,7 @@ public abstract class TameableEntityMixin extends AnimalEntity implements Indepe
 		super(entityType, world);
 	}
 
-	@Inject(method = "setOwnerUuid", at = @At(value = "TAIL"))
+	@Inject(method = "setOwner", at = @At(value = "TAIL"))
 	protected void indypets$initFollowData(CallbackInfo ci) {
 		if (getWorld().isClient())
 			return;
@@ -59,11 +60,14 @@ public abstract class TameableEntityMixin extends AnimalEntity implements Indepe
 
 	@Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
 	private void indypets$readFollowDataFromNbt(NbtCompound nbt, CallbackInfo callbackInfo) {
-		indypets$isIndependent = !nbt.getBoolean("AllowedToFollow");
+		indypets$isIndependent = !nbt.getBoolean("AllowedToFollow").orElse(false);
 
-		if (nbt.contains("IndyPets$HomePos", NbtElement.LIST_TYPE)) {
-			NbtList nbtList = nbt.getList("IndyPets$HomePos", NbtElement.INT_TYPE);
-			indypets$homePos = new BlockPos(nbtList.getInt(0), nbtList.getInt(1), nbtList.getInt(2));
+		if (nbt.contains("IndyPets$HomePos")) {
+			Optional<NbtList> nbtList = nbt.getList("IndyPets$HomePos");
+			if (nbtList.isPresent()) {
+				NbtList homePos = nbtList.get();
+				indypets$homePos = new BlockPos(homePos.getInt(0).orElseThrow(), homePos.getInt(1).orElseThrow(), homePos.getInt(2).orElseThrow());
+			}
 		} else if (isTamed()) {
 			indypets$setHome(); // fallback
 		}
