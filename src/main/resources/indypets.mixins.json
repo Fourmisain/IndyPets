@@ -12,6 +12,7 @@
     "MinecraftServerMixin",
     "MobEntityMixin",
     "ParrotEntityFlyOntoTreeGoalMixin",
+    "PlayerEntityMixin",
     "ServerPlayerEntityMixin",
     "SitGoalMixin",
     "TameableEntityMixin",
