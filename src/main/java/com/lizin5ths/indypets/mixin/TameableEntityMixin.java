@@ -64,7 +64,7 @@ public abstract class TameableEntityMixin extends AnimalEntity implements Indepe
 
 	@Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
 	private void indypets$readFollowDataFromNbt(NbtCompound nbt, CallbackInfo callbackInfo) {
-		indypets$isIndependent = !nbt.getBoolean("AllowedToFollow").orElse(false);
+		indypets$isIndependent = !nbt.getBoolean("AllowedToFollow").orElse(true);
 
 		Optional<NbtList> nbtList = nbt.getList("IndyPets$HomePos");
 		if (nbtList.isPresent()) {
