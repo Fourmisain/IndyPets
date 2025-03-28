@@ -42,6 +42,7 @@ public abstract class ParrotEntityFlyOntoTreeGoalMixin extends FlyGoal {
 	}
 
 	// block positions are iterated in x, y, z order, meaning parrots will always wander northwest
+	@SuppressWarnings("unchecked")
 	@ModifyExpressionValue(method = "locateTree", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/BlockPos;iterate(IIIIII)Ljava/lang/Iterable;"))
 	private Iterable<BlockPos> indypets$shuffledIterable(Iterable<BlockPos> original) {
 		int x = MathHelper.floor(mob.getX());
@@ -60,7 +61,6 @@ public abstract class ParrotEntityFlyOntoTreeGoalMixin extends FlyGoal {
 
 		Util.shuffle(indypets$positions, mob.getRandom());
 
-		//noinspection unchecked
 		return (List<BlockPos>) (List<?>) indypets$positions;
 	}
 
