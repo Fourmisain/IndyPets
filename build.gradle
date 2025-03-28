@@ -2,7 +2,7 @@ import java.nio.file.*
 import java.nio.file.attribute.BasicFileAttributes
 
 plugins {
-	id 'fabric-loom' version '1.9-SNAPSHOT'
+	id 'fabric-loom' version '1.10-SNAPSHOT'
 	id 'maven-publish'
 	id 'com.matthewprenger.cursegradle' version '1.4.0'
 	id 'com.modrinth.minotaur' version '2.+'
@@ -18,11 +18,18 @@ base {
 
 loom {
 	accessWidenerPath = file("src/main/resources/indypets.accesswidener")
+
+	runs {
+		client {
+			vmArgs "-Dmixin.debug.export=true"
+			programArgs "--username", "Test"
+		}
+	}
 }
 
 repositories {
-	maven { url "https://maven.shedaniel.me/" }
-	maven { url "https://maven.terraformersmc.com/" }
+	maven { url = "https://maven.shedaniel.me/" }
+	maven { url = "https://maven.terraformersmc.com/" }
 	exclusiveContent {
 		forRepository {
 			maven {
@@ -51,18 +58,16 @@ dependencies {
 		exclude(group: "net.fabricmc.fabric-api")
 	}
 
-	modRuntimeOnly "maven.modrinth:friends-and-foes:fabric-mc1.20.6-3.+"
+	modRuntimeOnly "maven.modrinth:friends-and-foes:fabric-mc1.20.6-3.0.9"
 }
 
 processResources {
 	def stringProperties = providers.gradlePropertiesPrefixedBy('').get()
-	stringProperties.each { inputs.property(it.key, it.value) }
+	inputs.properties stringProperties
 
-	['fabric.mod.json', "${project.archives_base_name}.mixins.json"].each {
-		filesMatching(it) {
-			expand(stringProperties) {
-				escapeBackslash = true
-			}
+	filesMatching(['fabric.mod.json', '*.mixins.json']) {
+		expand(stringProperties) {
+			escapeBackslash = true
 		}
 	}
 }
@@ -77,8 +82,10 @@ java {
 }
 
 jar {
+	inputs.property 'archivesName', project.base.archivesName
+
 	from('LICENSE') {
-		rename { "${it}_${project.base.archivesName.get()}"}
+		rename { "${it}_${inputs.properties.archivesName}" }
 	}
 }
 
