@@ -45,6 +45,8 @@ public abstract class TameableEntityMixin extends AnimalEntity implements Indepe
 		owner.set(getOwnerUuid());
 	}
 
+	// in 1.21.4 and below, this will be called from readCustomDataFromNbt, which is no issue since we're going to
+	// overwrite isIndependent and homePos later
 	@Inject(method = "setOwnerUuid", at = @At(value = "TAIL"))
 	protected void indypets$initFollowData(CallbackInfo ci, @Share("owner") LocalRef<UUID> owner) {
 		if (getEntityWorld().isClient)
