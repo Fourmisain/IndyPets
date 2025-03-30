@@ -1,3 +1,7 @@
+## 1.4.7
+
+- fix right click interact changing sitting/independence when e.g. feeding a pet
+
 ## 1.4.6
 
 - port to 1.21.5 (thanks to OpenBagTwo for the help!)

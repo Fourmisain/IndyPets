@@ -74,8 +74,12 @@ public abstract class MobEntityMixin extends LivingEntity {
 		if (isInteracting.get()) {
 			TameableEntity tameable = (TameableEntity) (Object) this;
 
-			cycleState(wasSitting.get(), tameable);
-			showPetStatus(serverPlayer, tameable, true);
+			if (wasSitting.get() != tameable.isSitting()) {
+				// TODO this might have unwanted side effects with some mods
+				// retroactively change state
+				cycleState(wasSitting.get(), tameable);
+				showPetStatus(serverPlayer, tameable, true);
+			}
 		}
 	}
 }
