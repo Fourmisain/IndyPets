@@ -9,9 +9,8 @@ import net.minecraft.entity.LazyEntityReference;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.TameableEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtInt;
-import net.minecraft.nbt.NbtList;
+import net.minecraft.storage.ReadView;
+import net.minecraft.storage.WriteView;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
@@ -75,34 +74,22 @@ public abstract class TameableEntityMixin extends AnimalEntity implements Indepe
 		}
 	}
 
-	@Unique
-	private static NbtList toNbtList(int... values) {
-		NbtList nbtList = new NbtList();
-
-		for (int i : values) {
-			nbtList.add(NbtInt.of(i));
-		}
-
-		return nbtList;
-	}
-
-	@Inject(method = "writeCustomDataToNbt", at = @At("HEAD"))
-	private void indypets$writeFollowDataToNbt(NbtCompound nbt, CallbackInfo callbackInfo) {
-		nbt.putBoolean("AllowedToFollow", !indypets$isIndependent);
+	@Inject(method = "writeCustomData", at = @At("HEAD"))
+	private void indypets$writeFollowDataToNbt(WriteView view, CallbackInfo callbackInfo) {
+		view.putBoolean("AllowedToFollow", !indypets$isIndependent);
 
 		if (indypets$homePos != null) {
-			nbt.put("IndyPets$HomePos", toNbtList(indypets$homePos.getX(), indypets$homePos.getY(), indypets$homePos.getZ()));
+			view.putNullable("IndyPets$HomePos", BlockPos.CODEC, indypets$homePos);
 		}
 	}
 
-	@Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
-	private void indypets$readFollowDataFromNbt(NbtCompound nbt, CallbackInfo callbackInfo) {
-		indypets$isIndependent = !nbt.getBoolean("AllowedToFollow").orElse(true);
+	@Inject(method = "readCustomData", at = @At("TAIL"))
+	private void indypets$readFollowDataFromNbt(ReadView view, CallbackInfo callbackInfo) {
+		indypets$isIndependent = !view.getBoolean("AllowedToFollow", true);
 
-		Optional<NbtList> nbtList = nbt.getList("IndyPets$HomePos");
-		if (nbtList.isPresent()) {
-			NbtList homePos = nbtList.get();
-			indypets$homePos = new BlockPos(homePos.getInt(0).orElseThrow(), homePos.getInt(1).orElseThrow(), homePos.getInt(2).orElseThrow());
+		Optional<BlockPos> homePos = view.read("IndyPets$HomePos", BlockPos.CODEC);
+		if (homePos.isPresent()) {
+			indypets$homePos = homePos.get();
 		} else if (isTamed()) {
 			indypets$setHome(); // fallback
 		}

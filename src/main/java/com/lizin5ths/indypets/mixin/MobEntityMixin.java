@@ -47,7 +47,7 @@ public abstract class MobEntityMixin extends LivingEntity {
 					cir.setReturnValue(ActionResult.SUCCESS);
 				}
 			} else {
-				Config config = ServerConfig.getDefaultedPlayerConfig(player.getUuid());
+				com.lizin5ths.indypets.config.Config config = ServerConfig.getDefaultedPlayerConfig(player.getUuid());
 				if (config.regularInteract) {
 					// continue in method below
 					isInteracting.set(true);
