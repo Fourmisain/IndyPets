@@ -86,10 +86,10 @@ public class Keybindings {
 			}
 
 			if (shouldWhistle) {
-				client.getNetworkHandler().sendCommand("indypets whistle");
+				client.getNetworkHandler().sendChatCommand("indypets whistle");
 				IndyPetsClient.playLocalPlayerSound(client.player, WHISTLE, Config.local().positionedWhistleSound);
 			} else {
-				client.getNetworkHandler().sendCommand("indypets unwhistle");
+				client.getNetworkHandler().sendChatCommand("indypets unwhistle");
 				IndyPetsClient.playLocalPlayerSound(client.player, UNWHISTLE, Config.local().positionedWhistleSound);
 			}
 		});

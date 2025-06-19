@@ -84,11 +84,11 @@ public class IndyPetsUtil {
 			sendPetStatusMessage(player, tameable, singlePet);
 		} else {
 			if (isIndependent(tameable)) {
-				player.getServerWorld().spawnParticles(player, ParticleTypes.ANGRY_VILLAGER, true, true,
+				player.getWorld().spawnParticles(player, ParticleTypes.ANGRY_VILLAGER, true, true,
 					tameable.getX(), tameable.getBodyY(0.5), tameable.getZ(),
 					7, 0.4, 0.4, 0.4, 0.3);
 			} else {
-				player.getServerWorld().spawnParticles(player, ParticleTypes.HAPPY_VILLAGER, true, true,
+				player.getWorld().spawnParticles(player, ParticleTypes.HAPPY_VILLAGER, true, true,
 					tameable.getX(), tameable.getBodyY(0.5), tameable.getZ(),
 					11, 0.5, 0.5, 0.5, 2);
 			}
@@ -152,6 +152,10 @@ public class IndyPetsUtil {
 			return false;
 
 		if (!isActiveIndependent(tameable))
+			return false;
+
+		// vanilla homes have priority over IndyPets homes
+		if (mob.hasPositionTarget())
 			return false;
 
 		// distance to home
