@@ -38,7 +38,7 @@
   "text.autoconfig.indypets.option.goatHorn.UNWHISTLE": "不吹口哨",
   "text.autoconfig.indypets.option.goatHorn.TOGGLE": "切换",
   "text.autoconfig.indypets.option.goatHorn.WHISTLE_OR_SNEAK_UNWHISTLE": "吹口哨 / 潜行不吹口哨",
-  "key.categories.indypets": "独立宠物",
+  "key.category.indypets.indypets": "独立宠物",
   "key.indypets.interact": "互动",
   "key.indypets.whistle": "吹口哨",
   "key.indypets.unwhistle": "不吹口哨",

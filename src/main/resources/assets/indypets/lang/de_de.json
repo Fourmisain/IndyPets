@@ -38,7 +38,7 @@
   "text.autoconfig.indypets.option.goatHorn.UNWHISTLE": "Entpfeifen",
   "text.autoconfig.indypets.option.goatHorn.TOGGLE": "Umschalten",
   "text.autoconfig.indypets.option.goatHorn.WHISTLE_OR_SNEAK_UNWHISTLE": "Pfeifen / Schleich-Entpfeifen",
-  "key.categories.indypets": "Independent Pets",
+  "key.category.indypets.indypets": "Independent Pets",
   "key.indypets.interact": "Interagieren",
   "key.indypets.whistle": "Pfeifen",
   "key.indypets.unwhistle": "Entpfeifen",

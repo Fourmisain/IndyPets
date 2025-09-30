@@ -98,10 +98,10 @@ public abstract class ParrotEntityFlyOntoTreeGoalMixin extends FlyGoal {
 			if (pos.equals(mob.getBlockPos()))
 				continue;
 
-			BlockState state = mob.getWorld().getBlockState(temp.set(pos, Direction.DOWN));
+			BlockState state = mob.getEntityWorld().getBlockState(temp.set(pos, Direction.DOWN));
 			boolean isTree = state.getBlock() instanceof LeavesBlock || state.isIn(BlockTags.LOGS);
 
-			if (isTree && mob.getWorld().isAir(pos) && mob.getWorld().isAir(temp.set(pos, Direction.UP))) {
+			if (isTree && mob.getEntityWorld().isAir(pos) && mob.getEntityWorld().isAir(temp.set(pos, Direction.UP))) {
 				double dist = pos.getSquaredDistance(homePos);
 				if (dist < minDist) {
 					minDist = dist;

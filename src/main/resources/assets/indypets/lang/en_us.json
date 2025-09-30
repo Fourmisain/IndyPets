@@ -40,7 +40,7 @@
   "text.autoconfig.indypets.option.goatHorn.UNWHISTLE": "Unwhistle",
   "text.autoconfig.indypets.option.goatHorn.TOGGLE": "Toggle",
   "text.autoconfig.indypets.option.goatHorn.WHISTLE_OR_SNEAK_UNWHISTLE": "Whistle / Sneak Unwhistle",
-  "key.categories.indypets": "Independent Pets",
+  "key.category.indypets.indypets": "Independent Pets",
   "key.indypets.interact": "Interact",
   "key.indypets.whistle": "Whistle",
   "key.indypets.unwhistle": "Unwhistle",

@@ -62,7 +62,7 @@ public class Commands {
 
 			// suggest ids of owned, nearby pets that can be affected
 			for (Entity entity : world.getOtherEntities(null,
-					new Box(player.getPos(), player.getPos()).expand(WHISTLE_RADIUS),
+					new Box(player.getEntityPos(), player.getEntityPos()).expand(WHISTLE_RADIUS),
 					entity -> canInteract(player, entity) && independent == isIndependent((TameableEntity) entity))) {
 				suggestions.add(Registries.ENTITY_TYPE.getId(entity.getType()));
 			}
@@ -107,7 +107,7 @@ public class Commands {
 
 		public void run(ServerWorld world, ServerPlayerEntity player, Identifier targets) {
 			for (Entity entity : world.getOtherEntities(null,
-					new Box(player.getPos(), player.getPos()).expand(WHISTLE_RADIUS),
+					new Box(player.getEntityPos(), player.getEntityPos()).expand(WHISTLE_RADIUS),
 					entity -> {
 						boolean canWhistle = canInteract(player, entity) && unwhistle == !isIndependent((TameableEntity) entity);
 

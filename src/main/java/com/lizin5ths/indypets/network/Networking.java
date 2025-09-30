@@ -40,7 +40,7 @@ public class Networking {
 	public static void init() {
 		PayloadTypeRegistry.configurationC2S().register(PlayerConfigPayload.ID, PlayerConfigPayload.CODEC);
 		ServerConfigurationNetworking.registerGlobalReceiver(PlayerConfigPayload.ID, (payload, context) -> {
-			UUID playerUuid = ((ServerConfigurationNetworkHandlerAccessor) context.networkHandler()).getGameProfile().getId();
+			UUID playerUuid = ((ServerConfigurationNetworkHandlerAccessor) context.networkHandler()).getGameProfile().id();
 			MinecraftServer server = context.server();
 
 			if (server != null) {
@@ -68,11 +68,11 @@ public class Networking {
 		PayloadTypeRegistry.playC2S().register(PetInteractPayload.ID, PetInteractPayload.CODEC);
 		ServerPlayNetworking.registerGlobalReceiver(PetInteractPayload.ID, (payload, context) -> {
 			ServerPlayerEntity player = context.player();
-			MinecraftServer server = player.getServer();
+			MinecraftServer server = context.server();
 
 			if (server != null) {
 				server.execute(() -> {
-					Entity entity = player.getWorld().getEntityById(payload.entityId());
+					Entity entity = player.getEntityWorld().getEntityById(payload.entityId());
 
 					if (canInteract(player, entity)) {
 						TameableEntity tameable = (TameableEntity) entity;

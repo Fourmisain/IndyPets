@@ -36,7 +36,7 @@ public abstract class MobEntityMixin extends LivingEntity {
 	)
 	public final void indypets$tryChangeFollowing(PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResult> cir,
 			@Share("isInteracting") LocalBooleanRef isInteracting, @Share("wasSitting") LocalBooleanRef wasSitting) {
-		if (getWorld().isClient() || !(player instanceof ServerPlayerEntity serverPlayer))
+		if (getEntityWorld().isClient() || !(player instanceof ServerPlayerEntity serverPlayer))
 			return;
 
 		if (hand == Hand.MAIN_HAND && canInteract(serverPlayer, this)) {
@@ -67,7 +67,7 @@ public abstract class MobEntityMixin extends LivingEntity {
 	)
 	public final void indypets$tryChangeFollowingAfter(PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResult> cir,
 			@Share("isInteracting") LocalBooleanRef isInteracting, @Share("wasSitting") LocalBooleanRef wasSitting) {
-		if (getWorld().isClient() || !(player instanceof ServerPlayerEntity serverPlayer))
+		if (getEntityWorld().isClient() || !(player instanceof ServerPlayerEntity serverPlayer))
 			return;
 
 		if (isInteracting.get()) {

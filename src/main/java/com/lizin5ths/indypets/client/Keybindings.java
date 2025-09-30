@@ -1,5 +1,6 @@
 package com.lizin5ths.indypets.client;
 
+import com.lizin5ths.indypets.IndyPets;
 import com.lizin5ths.indypets.IndyPetsClient;
 import com.lizin5ths.indypets.config.Config;
 import com.lizin5ths.indypets.mixin.access.KeyBindingAccessor;
@@ -16,29 +17,14 @@ import static com.lizin5ths.indypets.IndyPetsClient.UNWHISTLE;
 import static com.lizin5ths.indypets.IndyPetsClient.WHISTLE;
 
 public class Keybindings {
-	public static class WhistleKeyBinding extends KeyBinding {
-		public WhistleKeyBinding(String translationKey) {
-			super(translationKey, GLFW.GLFW_KEY_J, "key.categories.indypets");
-		}
-
-		@Override
-		public boolean equals(KeyBinding other) {
-			// lie about whistle keys being equal (using the same key) to dodge the duplicate check
-			if (this == WHISTLE_KEY && other == UNWHISTLE_KEY
-				|| this == UNWHISTLE_KEY && other == WHISTLE_KEY)
-				return false;
-
-			return super.equals(other);
-		}
-	}
-
 	public static InputUtil.Key getBoundKey(KeyBinding keyBinding) {
 		return ((KeyBindingAccessor) keyBinding).getBoundKey();
 	}
 
-	public static final KeyBinding        INTERACT_KEY  = new KeyBinding("key.indypets.interact", GLFW.GLFW_KEY_H, "key.categories.indypets");
-	public static final WhistleKeyBinding WHISTLE_KEY   = new WhistleKeyBinding("key.indypets.whistle");
-	public static final WhistleKeyBinding UNWHISTLE_KEY = new WhistleKeyBinding("key.indypets.unwhistle");
+	public static final KeyBinding.Category CATEGORY = KeyBinding.Category.create(IndyPets.id("indypets"));
+	public static final KeyBinding INTERACT_KEY  = new KeyBinding("key.indypets.interact",  GLFW.GLFW_KEY_H, CATEGORY);
+	public static final KeyBinding WHISTLE_KEY   = new KeyBinding("key.indypets.whistle",   GLFW.GLFW_KEY_J, CATEGORY);
+	public static final KeyBinding UNWHISTLE_KEY = new KeyBinding("key.indypets.unwhistle", GLFW.GLFW_KEY_J, CATEGORY);
 
 	private static boolean whistleToggle = false;
 

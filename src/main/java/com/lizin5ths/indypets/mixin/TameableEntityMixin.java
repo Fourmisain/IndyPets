@@ -44,7 +44,7 @@ public abstract class TameableEntityMixin extends AnimalEntity implements Indepe
 		at = @At(value = "HEAD")
 	)
 	protected void indypets$capturePreviousOwner(CallbackInfo ci, @Share("ownerRef") LocalRef<LazyEntityReference<LivingEntity>> owner) {
-		if (getWorld().isClient())
+		if (getEntityWorld().isClient())
 			return;
 
 		owner.set(getOwnerReference());
@@ -58,7 +58,7 @@ public abstract class TameableEntityMixin extends AnimalEntity implements Indepe
 		at = @At(value = "TAIL")
 	)
 	protected void indypets$initFollowData(CallbackInfo ci, @Share("ownerRef") LocalRef<LazyEntityReference<LivingEntity>> owner) {
-		if (getWorld().isClient())
+		if (getEntityWorld().isClient())
 			return;
 
 		var oldRef = owner.get();

@@ -24,7 +24,7 @@ public abstract class FlyGoalMixin extends WanderAroundFarGoal {
 		if (shouldHeadHome(mob)) {
 			BlockPos homePos = getHomePos((TameableEntity) mob);
 
-			return homePos.toCenterPos().subtract(mob.getPos());
+			return homePos.toCenterPos().subtract(mob.getEntityPos());
 		}
 
 		return original;

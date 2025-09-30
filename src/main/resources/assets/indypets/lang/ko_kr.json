@@ -13,7 +13,7 @@
   "text.autoconfig.indypets.option.blocklist.error": "유효하지 않은 차단 리스트 항목",
   "text.autoconfig.indypets.option.interactItem": "상호작용에 필요한 아이템",
   "text.autoconfig.indypets.option.interactItem.@Tooltip": "필요한 아이템을 없애려면 빈칸으로 두세요.",
-  "key.categories.indypets": "Independent Pets",
+  "key.category.indypets.indypets": "Independent Pets",
   "key.indypets.whistle": "휘파람 불기",
   "key.indypets.unwhistle": "휘파람 그만 불기",
   "subtitles.indypets.whistle": "플레이어가 휘파람 부는 소리",
