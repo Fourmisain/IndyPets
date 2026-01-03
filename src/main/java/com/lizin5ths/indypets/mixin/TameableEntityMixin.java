@@ -2,6 +2,7 @@ package com.lizin5ths.indypets.mixin;
 
 import com.lizin5ths.indypets.IndyPets;
 import com.lizin5ths.indypets.util.Independence;
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.minecraft.entity.EntityType;
@@ -24,6 +25,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.Objects;
 import java.util.Optional;
 
+import static com.lizin5ths.indypets.util.IndyPetsUtil.isActiveIndependent;
+
 @Mixin(TameableEntity.class)
 public abstract class TameableEntityMixin extends AnimalEntity implements Independence {
 	@Shadow public abstract boolean isTamed();
@@ -37,6 +40,14 @@ public abstract class TameableEntityMixin extends AnimalEntity implements Indepe
 
 	@Shadow
 	public LazyEntityReference<LivingEntity> getOwnerReference() { throw new AssertionError(); }
+
+	@ModifyReturnValue(method = "shouldTryTeleportToOwner", at = @At(value = "RETURN"))
+	protected boolean indypets$disableTeleporting(boolean original) {
+		if (isActiveIndependent(this))
+			return false;
+
+		return original;
+	}
 
 	@Inject(
 		method = {
