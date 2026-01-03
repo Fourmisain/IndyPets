@@ -1,3 +1,13 @@
+## 1.4.10
+
+- [1.21+] fix independent pets being able to teleport to their owner when they are panicking
+
+Babyproof their homes!
+
+## 1.4.9
+
+- port to 1.21.9
+
 ## 1.4.8
 
 - port to 1.21.6
