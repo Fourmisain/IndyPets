@@ -1,3 +1,23 @@
+## 1.4.10
+
+- [1.21+] fix independent pets being able to teleport to their owner when they are panicking
+
+Babyproof their homes!
+
+## 1.4.9
+
+- port to 1.21.9
+
+## 1.4.8
+
+- port to 1.21.6
+
+note: Vanilla added a "home" feature to all mobs (via the `home_pos`, `home_radius` fields).  
+  
+These homes have some inherent limitations and issues. They are more temporary (e.g. leashing a mob sets a home, unleashing unsets the home) and mobs are not allowed to move outside their homes, which also means that mobs can get stuck if they somehow end up outside of it.  
+  
+Due to that, IndyPets will keep using it's own home system like before, but will give priority to the vanilla homes if they are set.
+
 ## 1.4.7
 
 - fix right click interact changing sitting/independence when e.g. feeding a pet
