@@ -1,6 +1,5 @@
 package com.lizin5ths.indypets.mixin;
 
-import com.lizin5ths.indypets.config.Config;
 import com.lizin5ths.indypets.config.ServerConfig;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef;
@@ -47,7 +46,7 @@ public abstract class MobEntityMixin extends LivingEntity {
 					cir.setReturnValue(ActionResult.success(true));
 				}
 			} else {
-				Config config = ServerConfig.getDefaultedPlayerConfig(player.getUuid());
+				var config = ServerConfig.getDefaultedPlayerConfig(player.getUuid());
 				if (config.regularInteract) {
 					// continue in method below
 					isInteracting.set(true);
