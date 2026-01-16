@@ -25,6 +25,7 @@
   "text.autoconfig.indypets.option.positionedWhistleSound.@Tooltip": "Funktioniert mit Sound Physics Remastered, der Ton bewegt sich aber nicht mit dem Spieler.",
   "text.autoconfig.indypets.option.homeRadius": "Zuhause-Radius",
   "text.autoconfig.indypets.option.homeRadius.@Tooltip": "Tiere können sich innerhalb dieses Blockradius um ihr\nZuhause herum bewegen.\n\"Zuhause\" ist wo das Tier zuletzt unabhängig gesetzt wurde.",
+  "text.autoconfig.indypets.option.homeRadius": "Pfeiff-Radius.",
   "text.autoconfig.indypets.option.innerHomePercentage": "Inneres Zuhause",
   "text.autoconfig.indypets.option.innerHomePercentage.@Tooltip": "Definiert effektiv einen inneren Radius.\nJe weiter Tiere außerhalb dessen sind,\numso eher kehren sie wieder um.\n\n100%: Tiere kehren nur um, wenn sie ihr Zuhause verlassen\n0%: Tiere können immer denken \"Ich sollte umkehren\"",
   "key.categories.indypets": "Independent Pets",
