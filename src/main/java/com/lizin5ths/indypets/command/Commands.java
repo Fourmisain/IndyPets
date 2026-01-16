@@ -39,8 +39,6 @@ import static net.minecraft.server.command.CommandManager.argument;
 import static net.minecraft.server.command.CommandManager.literal;
 
 public class Commands {
-	public static final int WHISTLE_RADIUS = 96;
-
 	private static class WhistleSuggestionProvider implements SuggestionProvider<ServerCommandSource> {
 		public static final WhistleSuggestionProvider INDEPENDENT = new WhistleSuggestionProvider(true);
 		public static final WhistleSuggestionProvider FOLLOWING = new WhistleSuggestionProvider(false);
@@ -58,9 +56,11 @@ public class Commands {
 
 			List<Identifier> suggestions = new ArrayList<>();
 
+			Config config = ServerConfig.getDefaultedPlayerConfig(player.getUuid());
+
 			// suggest ids of owned, nearby pets that can be affected
 			for (Entity entity : world.getOtherEntities(null,
-					new Box(player.getPos(), player.getPos()).expand(WHISTLE_RADIUS),
+					new Box(player.getPos(), player.getPos()).expand(config.whistleRadius),
 					entity -> canInteract(player, entity) && independent == isIndependent((TameableEntity) entity))) {
 				suggestions.add(Registries.ENTITY_TYPE.getId(entity.getType()));
 			}
@@ -104,8 +104,10 @@ public class Commands {
 		}
 
 		public void run(ServerWorld world, ServerPlayerEntity player, Identifier targets) {
+			Config config = ServerConfig.getDefaultedPlayerConfig(player.getUuid());
+
 			for (Entity entity : world.getOtherEntities(null,
-					new Box(player.getPos(), player.getPos()).expand(WHISTLE_RADIUS),
+					new Box(player.getPos(), player.getPos()).expand(config.whistleRadius),
 					entity -> {
 						boolean canWhistle = canInteract(player, entity) && unwhistle == !isIndependent((TameableEntity) entity);
 
@@ -225,6 +227,7 @@ public class Commands {
 			player.sendMessage(Text.literal("sneakInteract: " + config.sneakInteract));
 			player.sendMessage(Text.literal("silentMode: " + config.silentMode));
 			player.sendMessage(Text.literal("homeRadius: " + config.homeRadius));
+			player.sendMessage(Text.literal("whistleRadius: " + config.whistleRadius));
 
 			return 0;
 		}
@@ -255,6 +258,7 @@ public class Commands {
 				case "regularInteract" -> "Cycle a pet's state between sitting, following and independent by regular interact (right click). Note that e.g. parrots cannot be interacted with when flying.";
 				case "sneakInteract" -> "Change a pet's state between following and independent by sneak interact (shift + right click)";
 				case "homeRadius" -> "Pets can roam within this block radius of their home before turning back.\"Home\" is where the pet was last set independent.";
+				case "whistleRadius" -> "How many blocks the whistle reaches.";
 				default -> throw new SimpleCommandExceptionType(new LiteralMessage("no help for " + input)).create();
 			};
 
@@ -309,6 +313,12 @@ public class Commands {
 									if (!(0 <= value && value <= 128)) throw new SimpleCommandExceptionType(new LiteralMessage("needs to be between 0 and 128")).create();
 									config.homeRadius = value;
 								}))))
+						.then(CommandManager.literal("whistleRadius")
+							.then(argument("4 - 144", integer())
+								.executes(new SetConfigOptionCommand<Integer>((config, value) -> {
+									if (!(4 <= value && value <= 144)) throw new SimpleCommandExceptionType(new LiteralMessage("needs to be between 4 and 144")).create();
+									config.whistleRadius = value;
+								}))))
 					)
 					.then(CommandManager.literal("help")
 						.then(CommandManager.literal("silentMode")
@@ -318,6 +328,8 @@ public class Commands {
 						.then(CommandManager.literal("sneakInteract")
 							.executes(new HelpCommand()))
 						.then(CommandManager.literal("homeRadius")
+							.executes(new HelpCommand()))
+						.then(CommandManager.literal("whistleRadius")
 							.executes(new HelpCommand()))
 					)
 					.then(CommandManager.literal("get")
