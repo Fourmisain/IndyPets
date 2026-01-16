@@ -1,3 +1,7 @@
+## 1.4.11
+
+- add "Whistle Radius" config option
+
 ## 1.4.10
 
 - [1.21+] fix independent pets being able to teleport to their owner when they are panicking
