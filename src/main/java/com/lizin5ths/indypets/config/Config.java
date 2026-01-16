@@ -53,6 +53,7 @@ public class Config implements ConfigData {
 		config.sneakInteract = other.sneakInteract;
 		config.silentMode = other.silentMode;
 		config.homeRadius = other.homeRadius;
+		config.whistleRadius = other.whistleRadius;
 		config.hornState = other.hornState;
 		config.hornConfig = new HashMap<>(other.hornConfig);
 		return config;
@@ -82,6 +83,9 @@ public class Config implements ConfigData {
 	@ConfigEntry.BoundedDiscrete(max = 128)
 	public int homeRadius = 80;
 	public float innerHomePercentage = INNER_HOME_PERCENTAGE_DEFAULT;
+
+	@ConfigEntry.BoundedDiscrete(min = 4, max = 144)
+	public int whistleRadius = 96;
 
 	@ConfigEntry.Gui.Tooltip
 	public Blocklist blocklist = Blocklist.getDefault();
