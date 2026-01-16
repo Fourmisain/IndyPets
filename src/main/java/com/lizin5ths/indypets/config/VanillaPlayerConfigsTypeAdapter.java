@@ -40,6 +40,7 @@ public class VanillaPlayerConfigsTypeAdapter implements TypeAdapterFactory {
 					out.name("sneakInteract").value(config.sneakInteract);
 					out.name("silentMode").value(config.silentMode);
 					out.name("homeRadius").value(config.homeRadius);
+					out.name("whistleRadius").value(config.whistleRadius);
 
 					out.endObject();
 				}
