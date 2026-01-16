@@ -1,6 +1,5 @@
 package com.lizin5ths.indypets.mixin;
 
-import com.lizin5ths.indypets.IndyPets;
 import com.lizin5ths.indypets.config.ServerConfig;
 import com.lizin5ths.indypets.util.IndyPetsUtil;
 import com.mojang.authlib.GameProfile;

@@ -2,7 +2,6 @@ package com.lizin5ths.indypets.mixin;
 
 import com.lizin5ths.indypets.IndyPets;
 import com.lizin5ths.indypets.util.Independence;
-import com.lizin5ths.indypets.util.IndyPetsUtil;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
