@@ -2,7 +2,7 @@ import java.nio.file.*
 import java.nio.file.attribute.BasicFileAttributes
 
 plugins {
-	id 'fabric-loom' version '1.10-SNAPSHOT'
+	id 'fabric-loom' version "${loom_version}"
 	id 'maven-publish'
 	id 'com.matthewprenger.cursegradle' version '1.4.0'
 	id 'com.modrinth.minotaur' version '2.+'
@@ -167,47 +167,45 @@ modrinth {
 tasks.modrinth.dependsOn("build") // ensure finalizer to delete "header files" runs
 
 curseforge {
-	def CURSEFORGE_TOKEN = System.getenv('CURSEFORGE_TOKEN')
-	if (CURSEFORGE_TOKEN != null) {
-		apiKey = CURSEFORGE_TOKEN
-		project {
-			id = project.curseforge_id
-			releaseType = 'release'
-			changelogType = 'markdown'
-			changelog = changesMd
+	def token = System.getenv("CURSEFORGE_TOKEN")
+	if (token != null) {
+		apiKey = token
+	}
 
-			addGameVersion 'Fabric'
-			gameVersionList.each{ addGameVersion(it) }
+	project {
+		id = project.curseforge_id
+		releaseType = 'release'
+		changelogType = 'markdown'
+		changelog = changesMd
 
-			relations {
-				toList(project.curseforge_dependencies).each{ requiredDependency(it) }
-			}
-			mainArtifact(remapJar.archiveFile.get().asFile) {
-				displayName = "IndyPets ${project.mod_version} [${versionRange(gameVersionList)}]"
-			}
-			afterEvaluate {
-				uploadTask.dependsOn('build')
-			}
+		addGameVersion 'Fabric'
+		gameVersionList.each{ addGameVersion(it) }
+
+		relations {
+			toList(project.curseforge_dependencies).each{ requiredDependency(it) }
 		}
-		options {
-			forgeGradleIntegration = false
-			javaVersionAutoDetect = false
+		mainArtifact(remapJar.archiveFile.get().asFile) {
+			displayName = "IndyPets ${project.mod_version} [${versionRange(gameVersionList)}]"
 		}
+		afterEvaluate {
+			uploadTask.dependsOn('build')
+		}
+	}
+	options {
+		forgeGradleIntegration = false
+		javaVersionAutoDetect = false
 	}
 }
 
 minepkg {
-	def MINEPKG_TOKEN = System.getenv("MINEPKG_TOKEN")
-	if (MINEPKG_TOKEN != null) {
-		apiKey = MINEPKG_TOKEN
-		artifact = remapJar
-		platform = 'fabric'
-		name = project.minepkg_id
-		version = project.mod_version + "+" + project.minecraft_version
-		license = "MIT"
-		minecraftVersionRange = project.game_version_range
-		toList(project.minepkg_dependencies).each{ require(it) }
-	}
+	apiKey = System.getenv("MINEPKG_TOKEN")
+	artifact = remapJar
+	platform = 'fabric'
+	name = project.minepkg_id
+	version = project.mod_version + "+" + project.minecraft_version
+	license = "MIT"
+	minecraftVersionRange = project.game_version_range
+	toList(project.minepkg_dependencies).each{ require(it) }
 }
 
 static String versionRange(List<String> gameVersions) {
