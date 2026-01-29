@@ -1,3 +1,8 @@
+## 1.4.12
+
+- compatibility with Followers Teleport Too: independent pets won't teleport with the player
+- \[1.19.2+\] Friends & Foes compatibility: support 4.0.0+ (3.0.0+ still supported as well)
+
 ## 1.4.11
 
 - add "Whistle Radius" config option
