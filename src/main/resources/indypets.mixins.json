@@ -3,6 +3,7 @@
   "minVersion": "0.8",
   "package": "com.lizin5ths.indypets.mixin",
   "compatibilityLevel": "JAVA_${java_version}",
+  "plugin": "com.lizin5ths.indypets.MixinPlugin",
   "mixins": [
     "CatEntityMixin",
     "EscapeDangerGoalMixin",
@@ -16,6 +17,7 @@
     "ServerPlayerEntityMixin",
     "SitGoalMixin",
     "TameableEntityMixin",
+    "TeleportEventMixin",
     "WanderAroundFarGoalMixin",
     "WanderAroundGoalMixin",
     "access.WanderAroundGoalAccessor"
