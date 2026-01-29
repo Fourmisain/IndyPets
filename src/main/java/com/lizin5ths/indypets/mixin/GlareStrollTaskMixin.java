@@ -14,7 +14,7 @@ import static com.lizin5ths.indypets.util.IndyPetsUtil.shouldHeadHome;
 
 @Mixin(GlareStrollTask.class)
 public abstract class GlareStrollTaskMixin {
-	@Inject(method = "run", at = @At("HEAD"), cancellable = true, require = 0)
+	@Inject(method = {"run", "start"}, at = @At("HEAD"), cancellable = true, require = 0)
 	public void indypets$dontStrayFromHome(ServerWorld world, GlareEntity glare, long time, CallbackInfo ci) {
 		if (shouldHeadHome(glare)) {
 			Path pathHome = glare.getNavigation().findPathTo(getHomePos(glare), 1, 12);

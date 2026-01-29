@@ -1,10 +1,7 @@
 package com.lizin5ths.indypets.mixin;
 
-import com.faboslav.friendsandfoes.common.entity.GlareEntity;
 import com.faboslav.friendsandfoes.common.entity.ai.brain.GlareBrain;
-import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.brain.Brain;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
@@ -24,7 +21,7 @@ public abstract class GlareBrainMixin {
 		index = 1,
 		require = 0
 	)
-	private static Predicate<LivingEntity> indyPets$dontFollowWhenIndependent(Predicate<LivingEntity> predicate, @Local(ordinal = 0, argsOnly = true) Brain<GlareEntity> brain) {
+	private static Predicate<LivingEntity> indyPets$dontFollowWhenIndependent(Predicate<LivingEntity> predicate) {
 		return glare -> {
 			if (isActiveIndependent(glare)) {
 				// to stop the current movement, the brain needs to forget walk/look targets
