@@ -14,6 +14,10 @@ import java.util.Optional;
 import java.util.Set;
 
 public class MixinPlugin implements IMixinConfigPlugin {
+	public static boolean test(String modId) {
+		return FabricLoader.getInstance().isModLoaded(modId);
+	}
+
 	public static boolean testVersion(String modId, String versionRange) {
 		try {
 			Optional<ModContainer> container = FabricLoader.getInstance().getModContainer(modId);
@@ -37,6 +41,9 @@ public class MixinPlugin implements IMixinConfigPlugin {
 
 		if (mixinClassName.endsWith("DragonflyEntityRandomFlyGoalMixin"))
 			return testVersion("crittersandcompanions", "*");
+
+		if (mixinClassName.endsWith("TeleportEventMixin"))
+			return test("followersteleporttoo");
 
 		return true;
 	}
