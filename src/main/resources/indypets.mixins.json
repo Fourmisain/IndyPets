@@ -20,6 +20,7 @@
     "ServerPlayerEntityMixin",
     "SitGoalMixin",
     "TameableEntityMixin",
+    "TeleportEventMixin",
     "WanderAroundFarGoalMixin",
     "WanderAroundGoalMixin",
     "access.ServerConfigurationNetworkHandlerAccessor",
