@@ -1,3 +1,11 @@
+## 1.5.0
+
+This is a large refactor of the mod to support sui-ke's Fox Friend and potentially other mods adding custom follow mechanics in the future.
+
+Due to the scale of it, I don't plan on backporting this.
+
+As always, report any bugs you find!
+
 ## 1.4.12
 
 - compatibility with Followers Teleport Too: independent pets won't teleport with the player
@@ -16,7 +24,6 @@ Babyproof their homes!
 ## 1.4.9
 
 - port to 1.21.9
-
 
 ## 1.4.8
 
