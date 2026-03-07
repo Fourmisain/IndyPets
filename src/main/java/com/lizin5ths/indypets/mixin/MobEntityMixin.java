@@ -1,26 +1,35 @@
 package com.lizin5ths.indypets.mixin;
 
+import com.lizin5ths.indypets.IndyPets;
 import com.lizin5ths.indypets.config.ServerConfig;
+import com.lizin5ths.indypets.util.IndependentPet;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.storage.ReadView;
+import net.minecraft.storage.WriteView;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import static com.lizin5ths.indypets.util.IndyPetsUtil.*;
 
 @Mixin(MobEntity.class)
-public abstract class MobEntityMixin extends LivingEntity {
+public abstract class MobEntityMixin extends LivingEntity implements IndependentPet {
+	@Unique boolean indypets$isIndependent = false;
+	@Unique BlockPos indypets$homePos;
+
 	protected MobEntityMixin(EntityType<? extends LivingEntity> entityType, World world) {
 		super(entityType, world);
 	}
@@ -41,7 +50,7 @@ public abstract class MobEntityMixin extends LivingEntity {
 
 		if (hand == Hand.MAIN_HAND && canInteract(serverPlayer, this)) {
 			if (player.isSneaking()) {
-				if (sneakInteract((TameableEntity) (Object) this, serverPlayer)) {
+				if (sneakInteract(this, serverPlayer)) {
 					// Note: This blocks interactMob() so it might conflict with other mods using sneak-interact
 					cir.setReturnValue(ActionResult.SUCCESS);
 				}
@@ -50,7 +59,7 @@ public abstract class MobEntityMixin extends LivingEntity {
 				if (config.regularInteract) {
 					// continue in method below
 					isInteracting.set(true);
-					wasSitting.set(((TameableEntity) (Object) this).isSitting());
+					wasSitting.set(isSitting(this));
 				}
 			}
 		}
@@ -71,14 +80,54 @@ public abstract class MobEntityMixin extends LivingEntity {
 			return;
 
 		if (isInteracting.get()) {
-			TameableEntity tameable = (TameableEntity) (Object) this;
-
-			if (wasSitting.get() != tameable.isSitting()) {
+			if (wasSitting.get() != isSitting(this)) {
 				// TODO this might have unwanted side effects with some mods
 				// retroactively change state
-				cycleState(wasSitting.get(), tameable);
-				showPetStatus(serverPlayer, tameable, true);
+				cycleState(wasSitting.get(), this);
+				showPetStatus(serverPlayer, this, true);
 			}
 		}
+	}
+
+	@Inject(method = "writeCustomData", at = @At("HEAD"))
+	private void indypets$writeFollowData(WriteView view, CallbackInfo ci) {
+		if (!isSupported(this))
+			return;
+
+		view.putBoolean("AllowedToFollow", !indypets$isIndependent);
+		if (indypets$homePos != null) {
+			view.put("IndyPets$HomePos", BlockPos.CODEC, indypets$homePos);
+		}
+	}
+
+	@Inject(method = "readCustomData", at = @At("TAIL"))
+	private void indypets$readFollowData(ReadView view, CallbackInfo ci) {
+		if (!isSupported(this))
+			return;
+
+		indypets$isIndependent = !view.getBoolean("AllowedToFollow", true);
+		indypets$homePos = view.read("IndyPets$HomePos", BlockPos.CODEC)
+			.orElseGet(this::getBlockPos); // fallback
+	}
+
+	@Unique @Override
+	public boolean indypets$isIndependent() {
+		return indypets$isIndependent;
+	}
+
+	@Unique @Override
+	public void indypets$setIndependent(boolean value) {
+		indypets$isIndependent = value;
+	}
+
+	@Unique @Override
+	public BlockPos indypets$getHomePos() {
+		return indypets$homePos;
+	}
+
+	@Unique @Override
+	public void indypets$setHome() {
+		indypets$homePos = getBlockPos();
+		IndyPets.LOGGER.debug("set home of {}", this);
 	}
 }

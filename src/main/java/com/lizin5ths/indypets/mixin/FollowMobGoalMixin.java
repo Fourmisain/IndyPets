@@ -16,7 +16,7 @@ public abstract class FollowMobGoalMixin {
 	@Shadow @Final private MobEntity mob;
 
 	@Inject(method = {"canStart", "shouldContinue"}, at = @At("HEAD"), cancellable = true)
-	public void indyPets$stopFollowing(CallbackInfoReturnable<Boolean> cir) {
+	public void indypets$stopFollowing(CallbackInfoReturnable<Boolean> cir) {
 		if (shouldHeadHome(mob)) {
 			cir.setReturnValue(false);
 		}

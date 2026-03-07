@@ -1,4 +1,4 @@
-package com.lizin5ths.indypets.mixin;
+package com.lizin5ths.indypets.mixin.compat.friendsandfoes;
 
 import com.faboslav.friendsandfoes.common.entity.GlareEntity;
 import com.faboslav.friendsandfoes.common.entity.ai.brain.task.glare.GlareStrollTask;

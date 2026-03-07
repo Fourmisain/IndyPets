@@ -12,7 +12,6 @@ import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.ConfigHolder;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
-import me.shedaniel.autoconfig.gui.registry.GuiRegistry;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -136,7 +135,7 @@ public class Config implements ConfigData {
 
 	@Environment(EnvType.CLIENT)
 	public static void clientInit() {
-		GuiRegistry guiRegistry = AutoConfig.getGuiRegistry(Config.class);
+		var guiRegistry = AutoConfig.getGuiRegistry(Config.class);
 		guiRegistry.registerPredicateProvider(new BlocklistGuiProvider(), field -> field.getType().equals(Blocklist.class));
 		guiRegistry.registerPredicateProvider(new ItemGuiProvider(), field -> field.getName().equals("interactItem"));
 		guiRegistry.registerPredicateProvider(new InnerHomeGuiProvider(), field -> field.getName().equals("innerHomePercentage"));

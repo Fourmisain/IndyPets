@@ -28,7 +28,7 @@ public class HornConfigGuiProvider implements GuiProvider {
 	@Override
 	public List<AbstractConfigListEntry> get(String i13n, Field field, Object _config, Object defaults, GuiRegistryAccess registry) {
 		try {
-			Config config = (Config) _config;
+			var config = (Config) _config;
 			List<AbstractConfigListEntry> entries = new ArrayList<>();
 
 			entries.add(

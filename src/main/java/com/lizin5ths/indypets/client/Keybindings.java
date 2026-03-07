@@ -9,12 +9,12 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
-import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.util.Hand;
 import org.lwjgl.glfw.GLFW;
 
 import static com.lizin5ths.indypets.IndyPetsClient.UNWHISTLE;
 import static com.lizin5ths.indypets.IndyPetsClient.WHISTLE;
+import static com.lizin5ths.indypets.util.IndyPetsUtil.isSupported;
 
 public class Keybindings {
 	public static InputUtil.Key getBoundKey(KeyBinding keyBinding) {
@@ -28,6 +28,7 @@ public class Keybindings {
 
 	private static boolean whistleToggle = false;
 
+	@SuppressWarnings("DataFlowIssue")
 	public static void init() {
 		KeyBindingHelper.registerKeyBinding(INTERACT_KEY);
 		KeyBindingHelper.registerKeyBinding(WHISTLE_KEY);
@@ -37,8 +38,8 @@ public class Keybindings {
 			if (client.player == null) return;
 
 			while (INTERACT_KEY.wasPressed()) {
-				if (client.targetedEntity instanceof TameableEntity tameable) {
-					Networking.sendPetInteract(tameable); // note: is checked server-side
+				if (isSupported(client.targetedEntity)) {
+					Networking.sendPetInteract(client.targetedEntity); // note: is checked server-side
 					client.player.swingHand(Hand.MAIN_HAND); // give some visual feedback
 				}
 			}

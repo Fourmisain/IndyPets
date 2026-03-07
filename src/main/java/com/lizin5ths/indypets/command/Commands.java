@@ -17,7 +17,6 @@ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.argument.IdentifierArgumentType;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.InstrumentTags;
@@ -63,7 +62,7 @@ public class Commands {
 			// suggest ids of owned, nearby pets that can be affected
 			for (Entity entity : world.getOtherEntities(null,
 					new Box(player.getEntityPos(), player.getEntityPos()).expand(config.whistleRadius),
-					entity -> canInteract(player, entity) && independent == isIndependent((TameableEntity) entity))) {
+					entity -> canInteract(player, entity) && independent == isIndependent(entity))) {
 				suggestions.add(Registries.ENTITY_TYPE.getId(entity.getType()));
 			}
 
@@ -111,7 +110,7 @@ public class Commands {
 			for (Entity entity : world.getOtherEntities(null,
 					new Box(player.getEntityPos(), player.getEntityPos()).expand(config.whistleRadius),
 					entity -> {
-						boolean canWhistle = canInteract(player, entity) && unwhistle == !isIndependent((TameableEntity) entity);
+						boolean canWhistle = canInteract(player, entity) && unwhistle == !isIndependent(entity);
 
 						if (targeted) {
 							return canWhistle && entity.getType().equals(Registries.ENTITY_TYPE.get(targets));
@@ -119,10 +118,8 @@ public class Commands {
 							return canWhistle;
 						}
 					})) {
-				TameableEntity tameable = (TameableEntity) entity;
-
-				toggleIndependence(tameable);
-				showPetStatus(player, tameable, false);
+				toggleIndependence(entity);
+				showPetStatus(player, entity, false);
 			}
 		}
 	}
@@ -211,7 +208,7 @@ public class Commands {
 
 			Config config = Config.vanilla(player.getUuid());
 
-			if (config.hornConfig.entrySet().isEmpty()) {
+			if (config.hornConfig.isEmpty()) {
 				player.sendMessage(Text.literal("no horns are set"));
 			} else {
 				for (var entry : config.hornConfig.entrySet()) {

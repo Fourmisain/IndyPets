@@ -9,9 +9,6 @@
     "FlyGoalMixin",
     "FollowMobGoalMixin",
     "FollowOwnerGoalMixin",
-    "GlareBrainMixin",
-    "GlareStrollTaskMixin",
-    "GlareTeleportToOwnerTaskMixin",
     "GoatHornItemMixin",
     "MinecraftServerMixin",
     "MobEntityMixin",
@@ -19,11 +16,17 @@
     "ServerPlayerEntityMixin",
     "SitGoalMixin",
     "TameableEntityMixin",
-    "TeleportEventMixin",
     "WanderAroundFarGoalMixin",
     "WanderAroundGoalMixin",
     "access.ServerConfigurationNetworkHandlerAccessor",
-    "access.WanderAroundGoalAccessor"
+    "access.WanderAroundGoalAccessor",
+    "compat.followersteleporttoo.TeleportEventMixin",
+    "compat.friendsandfoes.GlareBrainMixin",
+    "compat.friendsandfoes.GlareStrollTaskMixin",
+    "compat.friendsandfoes.GlareTeleportToOwnerTaskMixin",
+    "compat.suikefoxfriend.FoxEntityMixinMixin",
+    "compat.suikefoxfriend.FoxFollowOwnerGoalMixin",
+    "compat.suikefoxfriend.ServerEntityManagerMixinMixin"
   ],
   "client": [
     "access.KeyBindingAccessor"

@@ -12,7 +12,6 @@ import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerConfigurationNetworking;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 
@@ -33,10 +32,11 @@ public class Networking {
 		}
 	}
 
-	public static void sendPetInteract(TameableEntity entity) throws IllegalStateException {
+	public static void sendPetInteract(Entity entity) throws IllegalStateException {
 		ClientPlayNetworking.send(new PetInteractPayload(entity.getId()));
 	}
 
+	@SuppressWarnings({"resource", "DataFlowIssue"})
 	public static void init() {
 		PayloadTypeRegistry.configurationC2S().register(PlayerConfigPayload.ID, PlayerConfigPayload.CODEC);
 		ServerConfigurationNetworking.registerGlobalReceiver(PlayerConfigPayload.ID, (payload, context) -> {
@@ -75,9 +75,8 @@ public class Networking {
 					Entity entity = player.getEntityWorld().getEntityById(payload.entityId());
 
 					if (canInteract(player, entity)) {
-						TameableEntity tameable = (TameableEntity) entity;
-						toggleIndependence(tameable);
-						showPetStatus(player, tameable, true);
+						toggleIndependence(entity);
+						showPetStatus(player, entity, true);
 					}
 				});
 			}

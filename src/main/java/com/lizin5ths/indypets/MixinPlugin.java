@@ -36,11 +36,14 @@ public class MixinPlugin implements IMixinConfigPlugin {
 
 	@Override
 	public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-		if (mixinClassName.endsWith("GlareBrainMixin") || mixinClassName.endsWith("GlareTeleportToOwnerTaskMixin") || mixinClassName.endsWith("GlareStrollTaskMixin"))
-			return testVersion("friendsandfoes", ">=3.0.0");
+		String[] split = mixinClassName.split("\\.");
+		boolean compat = split[split.length - 3].equals("compat");
+		String  modId  = split[split.length - 2];
 
-		if (mixinClassName.endsWith("TeleportEventMixin"))
-			return test("followersteleporttoo");
+		if (compat) {
+			if (modId.equals("friendsandfoes")) return testVersion(modId, ">=3.0.0");
+			return test(modId);
+		}
 
 		return true;
 	}

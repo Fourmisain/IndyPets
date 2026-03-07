@@ -10,7 +10,7 @@ public class Blocklist {
 	public final Set<String> modBlocklist = new LinkedHashSet<>(); // specific mods
 
 	public static Blocklist getDefault() {
-		Blocklist blocklist = new Blocklist();
+		var blocklist = new Blocklist();
 
 		// capybaras change between sitting/standing by sneak-interacting with a stick
 //		blocklist.idBlocklist.add(Identifier.of("capybara", "capybara"));
@@ -25,7 +25,10 @@ public class Blocklist {
 	}
 
 	public static Blocklist getInteractDefault() {
-		Blocklist blocklist = new Blocklist();
+		var blocklist = new Blocklist();
+
+		// Fox Friend's sneak interact gives/takes items to/from the fox
+		blocklist.idBlocklist.add(Identifier.ofVanilla("fox"));
 
 		// Cobblemon have a custom sneak interact menu that would be blocked by this mod
 		blocklist.modBlocklist.add("cobblemon");

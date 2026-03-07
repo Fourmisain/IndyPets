@@ -1,7 +1,5 @@
 package com.lizin5ths.indypets.config;
 
-import net.minecraft.entity.LazyEntityReference;
-import net.minecraft.entity.LivingEntity;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -12,7 +10,7 @@ public class ServerConfig {
 
 	public static Config getDefaultedPlayerConfig(@Nullable UUID playerUuid) {
 		// use client-sent config if possible
-		Config config = RECEIVED_PLAYER_CONFIGS.get(playerUuid);
+		var config = RECEIVED_PLAYER_CONFIGS.get(playerUuid);
 		if (config != null) return config;
 
 		// use server-stored config if possible
@@ -21,9 +19,5 @@ public class ServerConfig {
 
 		// default to server config
 		return Config.local();
-	}
-
-	public static Config getDefaultedPlayerConfig(@Nullable LazyEntityReference<LivingEntity> player) {
-		return getDefaultedPlayerConfig(player != null ? player.getUuid() : null);
 	}
 }

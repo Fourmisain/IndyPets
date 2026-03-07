@@ -6,7 +6,6 @@ import net.minecraft.block.LeavesBlock;
 import net.minecraft.entity.ai.goal.FlyGoal;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.passive.ParrotEntity;
-import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
@@ -81,10 +80,10 @@ public abstract class ParrotEntityFlyOntoTreeGoalMixin extends FlyGoal {
 
 	@Unique @Nullable
 	private Vec3d indypets$findTreeClosestToHome() {
-		BlockPos homePos = getHomePos((TameableEntity) mob);
-		BlockPos.Mutable temp = new BlockPos.Mutable();
+		BlockPos homePos = getHomePos(mob);
+		var temp = new BlockPos.Mutable();
 
-		BlockPos.Mutable closest = new BlockPos.Mutable();
+		var closest = new BlockPos.Mutable();
 		double minDist = Double.POSITIVE_INFINITY;
 
 		for (BlockPos pos : BlockPos.iterate(
