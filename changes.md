@@ -1,3 +1,7 @@
+## 1.5.1
+
+- update Fox Friend compatibility for 6.0.3 (not backwards compatible; update Fox Friend!)
+
 ## 1.5.0
 
 This is a large refactor of the mod to support sui-ke's Fox Friend and potentially other mods adding custom follow mechanics in the future.
