@@ -18,13 +18,13 @@ import static com.lizin5ths.indypets.util.IndyPetsUtil.resetFollowData;
 
 @SuppressWarnings("ConstantValue")
 @Mixin(value = FoxEntity.class, priority = 1500)
-public abstract class FoxEntityMixinMixin  extends AnimalEntity implements IFoxTamed {
+public abstract class FoxEntityMixinMixin extends AnimalEntity implements IFoxTamed {
 	protected FoxEntityMixinMixin(EntityType<? extends AnimalEntity> entityType, World world) {
 		super(entityType, world);
 	}
 
 	@TargetHandler(
-		mixin = "suike.suikefoxfriend.mixin.FoxEntityMixin",
+		mixin = "suike.suikefoxfriend.mixin.FoxMixin",
 		name = "playerTamedFox"
 	)
 	@Inject(method = "@MixinSquared:Handler", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/passive/FoxEntity;setPersistent()V"))
@@ -33,7 +33,7 @@ public abstract class FoxEntityMixinMixin  extends AnimalEntity implements IFoxT
 	}
 
 	@TargetHandler(
-		mixin = "suike.suikefoxfriend.mixin.FoxEntityMixin",
+		mixin = "suike.suikefoxfriend.mixin.FoxMixin",
 		name = "onTick"
 	)
 	@ModifyExpressionValue(method = "@MixinSquared:Handler", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/passive/FoxEntity;isWaiting()Z", ordinal = 0))
@@ -42,7 +42,7 @@ public abstract class FoxEntityMixinMixin  extends AnimalEntity implements IFoxT
 	}
 
 	@TargetHandler(
-		mixin = "suike.suikefoxfriend.mixin.FoxEntityMixin",
+		mixin = "suike.suikefoxfriend.mixin.FoxMixin",
 		name = "onTick"
 	)
 	@ModifyExpressionValue(method = "@MixinSquared:Handler", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/passive/FoxEntity;isWaiting()Z", ordinal = 1))

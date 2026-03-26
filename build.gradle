@@ -83,7 +83,7 @@ dependencies {
 
 	include(implementation(annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-fabric:${project.mixin_squared_version}")))
 
-	modCompileOnly "maven.modrinth:fox-friend:6D73YZKw" // 6.0.2 for 1.21.11
+	modImplementation "maven.modrinth:fox-friend:jM6B1rUY" // 6.0.3 for 1.21.11
 	modImplementation "maven.modrinth:followers-teleport-too:1.21.9-2.7-fabric+forge+neo"
 	modRuntimeOnly "maven.modrinth:collective:1.21.9-8.9-fabric+forge+neo"
 //	modRuntimeOnly "maven.modrinth:friends-and-foes:fabric-4.0.19+mc1.21.10"

@@ -14,8 +14,8 @@ import static com.lizin5ths.indypets.util.IndyPetsUtil.isActiveIndependent;
 @Mixin(value = ServerEntityManager.class, priority = 1500)
 public abstract class ServerEntityManagerMixinMixin {
 	@TargetHandler(
-		mixin = "suike.suikefoxfriend.mixin.ServerEntityManagerMixin",
-		name = "onUnload"
+		mixin = "suike.suikefoxfriend.mixin.PersistentEntitySectionManagerMixin",
+		name = "onUnloadEntity"
 	)
 	@ModifyExpressionValue(method = "@MixinSquared:Handler", at = @At(value = "INVOKE", target = "Lsuike/suikefoxfriend/api/IFoxTamed;isWaiting()Z"))
 	public boolean indypets$dontTeleportWhenIndependent(boolean original, @Local(argsOnly = true) EntityLike entity) {
