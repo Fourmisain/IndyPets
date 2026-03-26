@@ -1,9 +1,9 @@
 package com.lizin5ths.indypets.mixin;
 
 import com.lizin5ths.indypets.mixin.access.WanderAroundGoalAccessor;
-import net.minecraft.entity.ai.goal.WanderAroundGoal;
-import net.minecraft.entity.mob.PathAwareEntity;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
+import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -13,12 +13,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import static com.lizin5ths.indypets.util.IndyPetsUtil.*;
 
-@Mixin(WanderAroundGoal.class)
+@Mixin(RandomStrollGoal.class)
 public abstract class WanderAroundGoalMixin {
 	@Shadow @Final
-	protected PathAwareEntity mob;
+	protected PathfinderMob mob;
 
-	@Inject(method = "canStart", at = @At("HEAD"))
+	@Inject(method = "canUse", at = @At("HEAD"))
 	public void indypets$countTamedPetsAsPersistent(CallbackInfoReturnable<Boolean> cir) {
 		// WanderAroundGoal will only start if the mob's despawn timer isn't too high or if the mob is persistent
 		// Tamed cats are persistent but wolves are not (despite them not despawning), hence they will stop
@@ -26,13 +26,13 @@ public abstract class WanderAroundGoalMixin {
 
 		// This will override the timer check for all tamed mobs, making them wander around even without player presence
 		if (isSupported(mob) && isTamed(mob)) {
-			((WanderAroundGoalAccessor) this).setCanDespawn(false);
+			((WanderAroundGoalAccessor) this).setCheckNoActionTime(false);
 		}
 	}
 
 	// vanilla pets only have a 1 in 1000 chance to use this, but just in case we shall too (using NoPenaltyTargeting too)
-	@Inject(method = "getWanderTarget", at = @At("HEAD"), cancellable = true)
-	protected void indypets$dontStrayFromHome(CallbackInfoReturnable<Vec3d> cir) {
+	@Inject(method = "getPosition", at = @At("HEAD"), cancellable = true)
+	protected void indypets$dontStrayFromHome(CallbackInfoReturnable<Vec3> cir) {
 		if (shouldHeadHome(mob)) {
 			cir.setReturnValue(findTowardsHome(mob, true));
 		}

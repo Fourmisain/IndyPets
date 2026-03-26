@@ -2,8 +2,8 @@ package com.lizin5ths.indypets.util;
 
 import com.lizin5ths.indypets.IndyPets;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 import suike.suikefoxfriend.api.IFoxTamed;
 
@@ -33,7 +33,7 @@ public class FoxFriendCompat {
 		return ((IFoxTamed) entity).getOwnerUuid();
 	}
 
-	public static boolean isOwner(Entity entity, PlayerEntity player) {
+	public static boolean isOwner(Entity entity, Player player) {
 		return ((IFoxTamed) entity).isOwner(player);
 	}
 

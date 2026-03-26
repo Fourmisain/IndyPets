@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(MinecraftServer.class)
 public abstract class MinecraftServerMixin {
-	@Inject(method = "shutdown", at = @At("HEAD"))
+	@Inject(method = "stopServer", at = @At("HEAD"))
 	public void indypets$saveConfig(CallbackInfo ci) {
 		Config.save();
 	}

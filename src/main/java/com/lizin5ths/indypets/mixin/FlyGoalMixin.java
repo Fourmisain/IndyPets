@@ -1,29 +1,29 @@
 package com.lizin5ths.indypets.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import net.minecraft.entity.ai.goal.FlyGoal;
-import net.minecraft.entity.ai.goal.WanderAroundFarGoal;
-import net.minecraft.entity.mob.PathAwareEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomFlyingGoal;
+import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
+import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 import static com.lizin5ths.indypets.util.IndyPetsUtil.getHomePos;
 import static com.lizin5ths.indypets.util.IndyPetsUtil.shouldHeadHome;
 
-@Mixin(FlyGoal.class)
-public abstract class FlyGoalMixin extends WanderAroundFarGoal {
-	public FlyGoalMixin(PathAwareEntity pathAwareEntity, double d) {
+@Mixin(WaterAvoidingRandomFlyingGoal.class)
+public abstract class FlyGoalMixin extends WaterAvoidingRandomStrollGoal {
+	public FlyGoalMixin(PathfinderMob pathAwareEntity, double d) {
 		super(pathAwareEntity, d);
 	}
 
-	@ModifyExpressionValue(method = "getWanderTarget", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/mob/PathAwareEntity;getRotationVec(F)Lnet/minecraft/util/math/Vec3d;"))
-	protected Vec3d indypets$dontStrayFromHome(Vec3d original) {
+	@ModifyExpressionValue(method = "getPosition", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/PathfinderMob;getViewVector(F)Lnet/minecraft/world/phys/Vec3;"))
+	protected Vec3 indypets$dontStrayFromHome(Vec3 original) {
 		if (shouldHeadHome(mob)) {
 			BlockPos homePos = getHomePos(mob);
 
-			return homePos.toCenterPos().subtract(mob.getEntityPos());
+			return homePos.getCenter().subtract(mob.position());
 		}
 
 		return original;

@@ -1,8 +1,8 @@
 package com.lizin5ths.indypets.config;
 
-import net.minecraft.util.StringIdentifiable;
+import net.minecraft.util.StringRepresentable;
 
-public enum HornSetting implements StringIdentifiable {
+public enum HornSetting implements StringRepresentable {
 	DISABLED("disabled"),
 	WHISTLE("whistle"),
 	UNWHISTLE("unwhistle"),
@@ -16,7 +16,7 @@ public enum HornSetting implements StringIdentifiable {
 	}
 
 	@Override
-	public String asString() {
+	public String getSerializedName() {
 		return id;
 	}
 }

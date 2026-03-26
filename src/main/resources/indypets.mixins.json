@@ -24,9 +24,9 @@
     "compat.friendsandfoes.GlareBrainMixin",
     "compat.friendsandfoes.GlareStrollTaskMixin",
     "compat.friendsandfoes.GlareTeleportToOwnerTaskMixin",
-    "compat.suikefoxfriend.FoxEntityMixinMixin",
+    "compat.suikefoxfriend.FoxMixinMixin",
     "compat.suikefoxfriend.FoxFollowOwnerGoalMixin",
-    "compat.suikefoxfriend.ServerEntityManagerMixinMixin"
+    "compat.suikefoxfriend.PersistentEntitySectionManagerMixinMixin"
   ],
   "client": [
     "access.KeyBindingAccessor"

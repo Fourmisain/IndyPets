@@ -15,9 +15,8 @@ import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Identifier;
-
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.InteractionResult;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -145,7 +144,7 @@ public class Config implements ConfigData {
 			try {
 				Networking.sendClientConfig();
 			} catch (IllegalStateException ignored) { }
-			return ActionResult.PASS;
+			return InteractionResult.PASS;
 		});
 	}
 }

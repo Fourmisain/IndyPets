@@ -1,9 +1,8 @@
 package com.lizin5ths.indypets.config;
 
-import net.minecraft.util.Identifier;
-
 import java.util.LinkedHashSet;
 import java.util.Set;
+import net.minecraft.resources.Identifier;
 
 public class Blocklist {
 	public final Set<Identifier> idBlocklist = new LinkedHashSet<>(); // specific pets
@@ -16,7 +15,7 @@ public class Blocklist {
 //		blocklist.idBlocklist.add(Identifier.of("capybara", "capybara"));
 
 		// snails don't have follow state
-		blocklist.idBlocklist.add(Identifier.of("lovely_snails", "snail"));
+		blocklist.idBlocklist.add(Identifier.fromNamespaceAndPath("lovely_snails", "snail"));
 
 		// mounts by default don't follow their owner and some have sneak-interactions
 		blocklist.modBlocklist.add("mythicmounts");
@@ -28,7 +27,7 @@ public class Blocklist {
 		var blocklist = new Blocklist();
 
 		// Fox Friend's sneak interact gives/takes items to/from the fox
-		blocklist.idBlocklist.add(Identifier.ofVanilla("fox"));
+		blocklist.idBlocklist.add(Identifier.withDefaultNamespace("fox"));
 
 		// Cobblemon have a custom sneak interact menu that would be blocked by this mod
 		blocklist.modBlocklist.add("cobblemon");

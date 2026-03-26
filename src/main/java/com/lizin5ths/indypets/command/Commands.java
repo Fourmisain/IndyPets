@@ -14,20 +14,18 @@ import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.argument.IdentifierArgumentType;
-import net.minecraft.entity.Entity;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.tag.InstrumentTags;
-import net.minecraft.server.command.CommandManager;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Box;
-
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.commands.arguments.IdentifierArgument;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.InstrumentTags;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.phys.AABB;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -36,11 +34,11 @@ import java.util.concurrent.CompletableFuture;
 import static com.lizin5ths.indypets.util.IndyPetsUtil.*;
 import static com.mojang.brigadier.arguments.BoolArgumentType.bool;
 import static com.mojang.brigadier.arguments.IntegerArgumentType.integer;
-import static net.minecraft.server.command.CommandManager.argument;
-import static net.minecraft.server.command.CommandManager.literal;
+import static net.minecraft.commands.Commands.argument;
+import static net.minecraft.commands.Commands.literal;
 
 public class Commands {
-	private static class WhistleSuggestionProvider implements SuggestionProvider<ServerCommandSource> {
+	private static class WhistleSuggestionProvider implements SuggestionProvider<CommandSourceStack> {
 		public static final WhistleSuggestionProvider INDEPENDENT = new WhistleSuggestionProvider(true);
 		public static final WhistleSuggestionProvider FOLLOWING = new WhistleSuggestionProvider(false);
 
@@ -51,26 +49,26 @@ public class Commands {
 		}
 
 		@Override
-		public CompletableFuture<Suggestions> getSuggestions(CommandContext<ServerCommandSource> context, SuggestionsBuilder builder) throws CommandSyntaxException {
-			ServerWorld world = context.getSource().getWorld();
-			ServerPlayerEntity player = context.getSource().getPlayerOrThrow();
+		public CompletableFuture<Suggestions> getSuggestions(CommandContext<CommandSourceStack> context, SuggestionsBuilder builder) throws CommandSyntaxException {
+			ServerLevel level = context.getSource().getLevel();
+			ServerPlayer player = context.getSource().getPlayerOrException();
 
 			List<Identifier> suggestions = new ArrayList<>();
 
-			Config config = ServerConfig.getDefaultedPlayerConfig(player.getUuid());
+			Config config = ServerConfig.getDefaultedPlayerConfig(player.getUUID());
 
 			// suggest ids of owned, nearby pets that can be affected
-			for (Entity entity : world.getOtherEntities(null,
-					new Box(player.getEntityPos(), player.getEntityPos()).expand(config.whistleRadius),
+			for (Entity entity : level.getEntities((Entity) null,
+					new AABB(player.position(), player.position()).inflate(config.whistleRadius),
 					entity -> canInteract(player, entity) && independent == isIndependent(entity))) {
-				suggestions.add(Registries.ENTITY_TYPE.getId(entity.getType()));
+				suggestions.add(BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType()));
 			}
 
-			return CommandSource.suggestIdentifiers(suggestions, builder);
+			return SharedSuggestionProvider.suggestResource(suggestions, builder);
 		}
 	}
 
-	public static class WhistleCommand implements Command<ServerCommandSource> {
+	public static class WhistleCommand implements Command<CommandSourceStack> {
 		public static final WhistleCommand WHISTLE = new WhistleCommand(false, false);
 		public static final WhistleCommand UNWHISTLE = new WhistleCommand(false, true);
 		public static final WhistleCommand TARGETED_WHISTLE = new WhistleCommand(true, false);
@@ -89,31 +87,31 @@ public class Commands {
 		}
 
 		@Override
-		public int run(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-			Identifier targets = targeted ? IdentifierArgumentType.getIdentifier(context, "targets") : null;
+		public int run(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+			Identifier targets = targeted ? IdentifierArgument.getId(context, "targets") : null;
 
-			ServerPlayerEntity player = context.getSource().getPlayerOrThrow();
-			ServerWorld world = context.getSource().getWorld();
+			ServerPlayer player = context.getSource().getPlayerOrException();
+			ServerLevel world = context.getSource().getLevel();
 
 			run(world, player, targets);
 
 			return 0;
 		}
 
-		public void run(ServerWorld world, ServerPlayerEntity player) {
+		public void run(ServerLevel world, ServerPlayer player) {
 			run(world, player, null);
 		}
 
-		public void run(ServerWorld world, ServerPlayerEntity player, Identifier targets) {
-			Config config = ServerConfig.getDefaultedPlayerConfig(player.getUuid());
+		public void run(ServerLevel world, ServerPlayer player, Identifier targets) {
+			Config config = ServerConfig.getDefaultedPlayerConfig(player.getUUID());
 
-			for (Entity entity : world.getOtherEntities(null,
-					new Box(player.getEntityPos(), player.getEntityPos()).expand(config.whistleRadius),
+			for (Entity entity : world.getEntities((Entity) null,
+					new AABB(player.position(), player.position()).inflate(config.whistleRadius),
 					entity -> {
 						boolean canWhistle = canInteract(player, entity) && unwhistle == !isIndependent(entity);
 
 						if (targeted) {
-							return canWhistle && entity.getType().equals(Registries.ENTITY_TYPE.get(targets));
+							return canWhistle && entity.getType().equals(BuiltInRegistries.ENTITY_TYPE.getValue(targets));
 						} else {
 							return canWhistle;
 						}
@@ -124,7 +122,7 @@ public class Commands {
 		}
 	}
 
-	private static class SetConfigOptionCommand<T> implements Command<ServerCommandSource> {
+	private static class SetConfigOptionCommand<T> implements Command<CommandSourceStack> {
 		public interface ConfigSetter<T> {
 			void set(Config config, T value) throws CommandSyntaxException;
 		}
@@ -137,45 +135,45 @@ public class Commands {
 
 		@SuppressWarnings("unchecked")
 		@Override
-		public int run(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-			ServerPlayerEntity player = context.getSource().getPlayerOrThrow();
+		public int run(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+			ServerPlayer player = context.getSource().getPlayerOrException();
 
 			var nodes = context.getNodes();
 			String argumentName = nodes.getLast().getNode().getName();
 			String option = nodes.get(nodes.size() - 2).getNode().getName();
 
-			Config config = Config.vanilla(player.getUuid());
+			Config config = Config.vanilla(player.getUUID());
 
 			T value = (T) context.getArgument(argumentName, Object.class);
 			setter.set(config, value);
 
-			player.sendMessage(Text.literal("set " + option + " to " + value));
+			player.sendSystemMessage(Component.literal("set " + option + " to " + value));
 
 			return 0;
 		}
 	}
 
 	// note: a EnumArgumentType<HornSetting> would need to be registered in ArgumentTypes, which requires the client knowing about the enum, hence we just use strings
-	private static class HornSettingSuggestionProvider implements SuggestionProvider<ServerCommandSource> {
+	private static class HornSettingSuggestionProvider implements SuggestionProvider<CommandSourceStack> {
 		@Override
-		public CompletableFuture<Suggestions> getSuggestions(CommandContext<ServerCommandSource> context, SuggestionsBuilder builder) throws CommandSyntaxException {
+		public CompletableFuture<Suggestions> getSuggestions(CommandContext<CommandSourceStack> context, SuggestionsBuilder builder) throws CommandSyntaxException {
 			for (var hornSetting : HornSetting.values()) {
-				builder.suggest(hornSetting.asString());
+				builder.suggest(hornSetting.getSerializedName());
 			}
 
 			return builder.buildFuture();
 		}
 	}
 
-	private static class HornTypeSuggestionProvider implements SuggestionProvider<ServerCommandSource> {
+	private static class HornTypeSuggestionProvider implements SuggestionProvider<CommandSourceStack> {
 		@Override
-		public CompletableFuture<Suggestions> getSuggestions(CommandContext<ServerCommandSource> context, SuggestionsBuilder builder) throws CommandSyntaxException {
-			context.getSource().getRegistryManager()
-				.getOrThrow(RegistryKeys.INSTRUMENT)
-				.getOptional(InstrumentTags.GOAT_HORNS)
+		public CompletableFuture<Suggestions> getSuggestions(CommandContext<CommandSourceStack> context, SuggestionsBuilder builder) throws CommandSyntaxException {
+			context.getSource().registryAccess()
+				.lookupOrThrow(Registries.INSTRUMENT)
+				.get(InstrumentTags.GOAT_HORNS)
 				.ifPresent(horns -> {
 					for (var entry : horns) {
-						builder.suggest(entry.getIdAsString());
+						builder.suggest(entry.getRegisteredName());
 					}
 				});
 
@@ -183,36 +181,36 @@ public class Commands {
 		}
 	}
 
-	private static class SetHornSettingCommand implements Command<ServerCommandSource> {
+	private static class SetHornSettingCommand implements Command<CommandSourceStack> {
 		@Override
-		public int run(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-			ServerPlayerEntity player = context.getSource().getPlayerOrThrow();
+		public int run(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+			ServerPlayer player = context.getSource().getPlayerOrException();
 
 			Identifier hornId = context.getArgument("horn_type", Identifier.class);
 			String setting = context.getArgument("setting", String.class);
 			HornSetting hornSetting = HornSetting.valueOf(HornSetting.class, setting.toUpperCase(Locale.ROOT));
 
-			Config config = Config.vanilla(player.getUuid());
+			Config config = Config.vanilla(player.getUUID());
 			config.setHornSetting(hornId, hornSetting);
 
-			player.sendMessage(Text.literal("set horn " + hornId + " to " + hornSetting.asString()));
+			player.sendSystemMessage(Component.literal("set horn " + hornId + " to " + hornSetting.getSerializedName()));
 
 			return 0;
 		}
 	}
 
-	private static class GetHornSettingsCommand implements Command<ServerCommandSource> {
+	private static class GetHornSettingsCommand implements Command<CommandSourceStack> {
 		@Override
-		public int run(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-			ServerPlayerEntity player = context.getSource().getPlayerOrThrow();
+		public int run(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+			ServerPlayer player = context.getSource().getPlayerOrException();
 
-			Config config = Config.vanilla(player.getUuid());
+			Config config = Config.vanilla(player.getUUID());
 
 			if (config.hornConfig.isEmpty()) {
-				player.sendMessage(Text.literal("no horns are set"));
+				player.sendSystemMessage(Component.literal("no horns are set"));
 			} else {
 				for (var entry : config.hornConfig.entrySet()) {
-					player.sendMessage(Text.literal("horn " + entry.getKey() + " is set to " + entry.getValue().asString()));
+					player.sendSystemMessage(Component.literal("horn " + entry.getKey() + " is set to " + entry.getValue().getSerializedName()));
 				}
 			}
 
@@ -220,40 +218,40 @@ public class Commands {
 		}
 	}
 
-	private static class GetConfigCommand implements Command<ServerCommandSource> {
+	private static class GetConfigCommand implements Command<CommandSourceStack> {
 		@Override
-		public int run(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-			ServerPlayerEntity player = context.getSource().getPlayerOrThrow();
+		public int run(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+			ServerPlayer player = context.getSource().getPlayerOrException();
 
-			Config config = Config.vanilla(player.getUuid());
+			Config config = Config.vanilla(player.getUUID());
 
-			player.sendMessage(Text.literal("regularInteract: " + config.regularInteract));
-			player.sendMessage(Text.literal("sneakInteract: " + config.sneakInteract));
-			player.sendMessage(Text.literal("silentMode: " + config.silentMode));
-			player.sendMessage(Text.literal("homeRadius: " + config.homeRadius));
-			player.sendMessage(Text.literal("whistleRadius: " + config.whistleRadius));
+			player.sendSystemMessage(Component.literal("regularInteract: " + config.regularInteract));
+			player.sendSystemMessage(Component.literal("sneakInteract: " + config.sneakInteract));
+			player.sendSystemMessage(Component.literal("silentMode: " + config.silentMode));
+			player.sendSystemMessage(Component.literal("homeRadius: " + config.homeRadius));
+			player.sendSystemMessage(Component.literal("whistleRadius: " + config.whistleRadius));
 
 			return 0;
 		}
 	}
 
-	private static class ResetConfigCommand implements Command<ServerCommandSource> {
+	private static class ResetConfigCommand implements Command<CommandSourceStack> {
 		@Override
-		public int run(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-			ServerPlayerEntity player = context.getSource().getPlayerOrThrow();
+		public int run(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+			ServerPlayer player = context.getSource().getPlayerOrException();
 
-			Config.resetVanilla(player.getUuid());
+			Config.resetVanilla(player.getUUID());
 
-			player.sendMessage(Text.literal("Reset config to server default"));
+			player.sendSystemMessage(Component.literal("Reset config to server default"));
 
 			return 0;
 		}
 	}
 
-	private static class HelpCommand implements Command<ServerCommandSource> {
+	private static class HelpCommand implements Command<CommandSourceStack> {
 		@Override
-		public int run(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-			ServerPlayerEntity player = context.getSource().getPlayerOrThrow();
+		public int run(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+			ServerPlayer player = context.getSource().getPlayerOrException();
 
 			String input = context.getNodes().getLast().getNode().getName();
 
@@ -266,7 +264,7 @@ public class Commands {
 				default -> throw new SimpleCommandExceptionType(new LiteralMessage("no help for " + input)).create();
 			};
 
-			player.sendMessage(Text.literal(input + ": " + message));
+			player.sendSystemMessage(Component.literal(input + ": " + message));
 
 			return 0;
 		}
@@ -277,74 +275,74 @@ public class Commands {
 			dispatcher.register(literal(IndyPets.MOD_ID)
 				.then(literal("whistle")
 					.executes(WhistleCommand.WHISTLE)
-					.then(argument("targets", IdentifierArgumentType.identifier())
+					.then(argument("targets", IdentifierArgument.id())
 						.suggests(WhistleSuggestionProvider.INDEPENDENT)
 						.executes(WhistleCommand.TARGETED_WHISTLE)))
-				.then(CommandManager.literal("unwhistle")
+				.then(net.minecraft.commands.Commands.literal("unwhistle")
 					.executes(WhistleCommand.UNWHISTLE)
-					.then(argument("targets", IdentifierArgumentType.identifier())
+					.then(argument("targets", IdentifierArgument.id())
 						.suggests(WhistleSuggestionProvider.FOLLOWING)
 						.executes(WhistleCommand.TARGETED_UNWHISTLE)))
-				.then(CommandManager.literal("horn")
+				.then(net.minecraft.commands.Commands.literal("horn")
 					.requires(Commands::isVanillaPlayer)
 					.executes(new GetHornSettingsCommand())
-					.then(argument("horn_type", IdentifierArgumentType.identifier())
+					.then(argument("horn_type", IdentifierArgument.id())
 						.suggests(new HornTypeSuggestionProvider())
 						.then(argument("setting", StringArgumentType.string())
 							.suggests(new HornSettingSuggestionProvider())
 							.executes(new SetHornSettingCommand()))))
-				.then(CommandManager.literal("config")
+				.then(net.minecraft.commands.Commands.literal("config")
 					.requires(Commands::isVanillaPlayer)
-					.then(CommandManager.literal("set")
-						.then(CommandManager.literal("silentMode")
+					.then(net.minecraft.commands.Commands.literal("set")
+						.then(net.minecraft.commands.Commands.literal("silentMode")
 							.then(argument("value", bool())
 								.executes(new SetConfigOptionCommand<Boolean>((config, value) -> {
 									config.silentMode = value;
 								}))))
-						.then(CommandManager.literal("regularInteract")
+						.then(net.minecraft.commands.Commands.literal("regularInteract")
 							.then(argument("value", bool())
 								.executes(new SetConfigOptionCommand<Boolean>((config, value) -> {
 									config.regularInteract = value;
 								}))))
-						.then(CommandManager.literal("sneakInteract")
+						.then(net.minecraft.commands.Commands.literal("sneakInteract")
 							.then(argument("value", bool())
 								.executes(new SetConfigOptionCommand<Boolean>((config, value) -> {
 									config.sneakInteract = value;
 								}))))
-						.then(CommandManager.literal("homeRadius")
+						.then(net.minecraft.commands.Commands.literal("homeRadius")
 							.then(argument("0 - 128", integer())
 								.executes(new SetConfigOptionCommand<Integer>((config, value) -> {
 									if (!(0 <= value && value <= 128)) throw new SimpleCommandExceptionType(new LiteralMessage("needs to be between 0 and 128")).create();
 									config.homeRadius = value;
 								}))))
-						.then(CommandManager.literal("whistleRadius")
+						.then(net.minecraft.commands.Commands.literal("whistleRadius")
 							.then(argument("4 - 144", integer())
 								.executes(new SetConfigOptionCommand<Integer>((config, value) -> {
 									if (!(4 <= value && value <= 144)) throw new SimpleCommandExceptionType(new LiteralMessage("needs to be between 4 and 144")).create();
 									config.whistleRadius = value;
 								}))))
 					)
-					.then(CommandManager.literal("help")
-						.then(CommandManager.literal("silentMode")
+					.then(net.minecraft.commands.Commands.literal("help")
+						.then(net.minecraft.commands.Commands.literal("silentMode")
 							.executes(new HelpCommand()))
-						.then(CommandManager.literal("regularInteract")
+						.then(net.minecraft.commands.Commands.literal("regularInteract")
 							.executes(new HelpCommand()))
-						.then(CommandManager.literal("sneakInteract")
+						.then(net.minecraft.commands.Commands.literal("sneakInteract")
 							.executes(new HelpCommand()))
-						.then(CommandManager.literal("homeRadius")
+						.then(net.minecraft.commands.Commands.literal("homeRadius")
 							.executes(new HelpCommand()))
-						.then(CommandManager.literal("whistleRadius")
+						.then(net.minecraft.commands.Commands.literal("whistleRadius")
 							.executes(new HelpCommand()))
 					)
-					.then(CommandManager.literal("get")
+					.then(net.minecraft.commands.Commands.literal("get")
 						.executes(new GetConfigCommand()))
-					.then(CommandManager.literal("reset")
+					.then(net.minecraft.commands.Commands.literal("reset")
 						.executes(new ResetConfigCommand()))));
 
 		});
 	}
 
-	private static boolean isVanillaPlayer(ServerCommandSource source) {
-		return source.getPlayer() != null && !ServerConfig.HAS_MOD_INSTALLED.contains(source.getPlayer().getUuid());
+	private static boolean isVanillaPlayer(CommandSourceStack source) {
+		return source.getPlayer() != null && !ServerConfig.HAS_MOD_INSTALLED.contains(source.getPlayer().getUUID());
 	}
 }

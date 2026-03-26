@@ -1,6 +1,6 @@
 package com.lizin5ths.indypets.util;
 
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
 
 public interface IndependentPet {
 	boolean indypets$isIndependent();

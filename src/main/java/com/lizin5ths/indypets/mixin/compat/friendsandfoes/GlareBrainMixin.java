@@ -1,12 +1,12 @@
 package com.lizin5ths.indypets.mixin.compat.friendsandfoes;
 
 import com.faboslav.friendsandfoes.common.entity.ai.brain.GlareBrain;
-import net.minecraft.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 
 import java.util.function.Predicate;
+import net.minecraft.world.entity.LivingEntity;
 
 import static com.lizin5ths.indypets.util.IndyPetsUtil.isActiveIndependent;
 
@@ -16,7 +16,7 @@ public abstract class GlareBrainMixin {
 		method = "addIdleActivities",
 		at = @At(
 			value = "INVOKE",
-			target = "Lnet/minecraft/entity/ai/brain/task/WalkTowardsLookTargetTask;create(Ljava/util/function/Function;Ljava/util/function/Predicate;IIF)Lnet/minecraft/entity/ai/brain/task/Task;"
+			target = "Lnet/minecraft/world/entity/ai/behavior/StayCloseToTarget;create(Ljava/util/function/Function;Ljava/util/function/Predicate;IIF)Lnet/minecraft/world/entity/ai/behavior/BehaviorControl;"
 		),
 		index = 1,
 		require = 0

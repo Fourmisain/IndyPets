@@ -4,22 +4,22 @@ import com.lizin5ths.indypets.IndyPets;
 import com.lizin5ths.indypets.config.Config;
 import com.lizin5ths.indypets.config.ServerConfig;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.FuzzyTargeting;
-import net.minecraft.entity.ai.NoPenaltyTargeting;
-import net.minecraft.entity.ai.brain.MemoryModuleType;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.entity.mob.PathAwareEntity;
-import net.minecraft.entity.passive.TameableEntity;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.registry.Registries;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.ai.memory.MemoryModuleType;
+import net.minecraft.world.entity.ai.util.DefaultRandomPos;
+import net.minecraft.world.entity.ai.util.LandRandomPos;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
@@ -29,13 +29,13 @@ import java.util.UUID;
 public class IndyPetsUtil {
 	// to add support: update all methods from isTamed() to setHome()
 	public static boolean isSupported(Entity entity) {
-		return entity instanceof TameableEntity || FoxFriendCompat.isIFoxTamed(entity);
+		return entity instanceof TamableAnimal || FoxFriendCompat.isIFoxTamed(entity);
 	}
 
 	// guard with isSupported()
 	public static boolean isTamed(Entity entity) {
-		if (entity instanceof TameableEntity tameable) {
-			return tameable.isTamed();
+		if (entity instanceof TamableAnimal tameable) {
+			return tameable.isTame();
 		}
 
 		if (FoxFriendCompat.isIFoxTamed(entity)) {
@@ -48,9 +48,9 @@ public class IndyPetsUtil {
 	// guard with isSupported()
 	@Nullable
 	public static UUID getOwner(Entity entity) {
-		if (entity instanceof TameableEntity tameable) {
+		if (entity instanceof TamableAnimal tameable) {
 			var owner = tameable.getOwnerReference();
-			return owner != null ? owner.getUuid() : null;
+			return owner != null ? owner.getUUID() : null;
 		}
 
 		if (FoxFriendCompat.isIFoxTamed(entity)) {
@@ -61,9 +61,9 @@ public class IndyPetsUtil {
 	}
 
 	// guard with isSupported()
-	public static boolean isOwner(Entity entity, ServerPlayerEntity player) {
-		if (entity instanceof TameableEntity tameable) {
-			return tameable.isOwner(player);
+	public static boolean isOwner(Entity entity, ServerPlayer player) {
+		if (entity instanceof TamableAnimal tameable) {
+			return tameable.isOwnedBy(player);
 		}
 
 		if (FoxFriendCompat.isIFoxTamed(entity)) {
@@ -75,8 +75,8 @@ public class IndyPetsUtil {
 
 	// guard with isSupported()
 	public static boolean isSitting(Entity entity) {
-		if (entity instanceof TameableEntity tameable) {
-			return tameable.isSitting();
+		if (entity instanceof TamableAnimal tameable) {
+			return tameable.isOrderedToSit();
 		}
 
 		if (FoxFriendCompat.isIFoxTamed(entity)) {
@@ -88,8 +88,8 @@ public class IndyPetsUtil {
 
 	// guard with isSupported()
 	public static void setSitting(Entity entity, boolean sitting) {
-		if (entity instanceof TameableEntity tameable) {
-			tameable.setSitting(sitting);
+		if (entity instanceof TamableAnimal tameable) {
+			tameable.setOrderedToSit(sitting);
 		} else if (FoxFriendCompat.isIFoxTamed(entity)) {
 			FoxFriendCompat.setSitting(entity, sitting);
 		} else {
@@ -131,7 +131,7 @@ public class IndyPetsUtil {
 			return false;
 
 		var config = ServerConfig.getDefaultedPlayerConfig(getOwner(entity));
-		return !config.blocklist.isBlocked(EntityType.getId(entity.getType()));
+		return !config.blocklist.isBlocked(EntityType.getKey(entity.getType()));
 	}
 
 	public static boolean isActiveIndependent(Entity entity) {
@@ -139,25 +139,25 @@ public class IndyPetsUtil {
 	}
 
 	/** Whether the player can change the independence of the entity */
-	public static boolean canInteract(ServerPlayerEntity player, @Nullable Entity entity) {
+	public static boolean canInteract(ServerPlayer player, @Nullable Entity entity) {
 		return isActive(entity) && isOwner(entity, player);
 	}
 
 	// guard by canInteract()
-	public static boolean sneakInteract(Entity entity, ServerPlayerEntity player) {
-		var config = ServerConfig.getDefaultedPlayerConfig(player.getUuid());
+	public static boolean sneakInteract(Entity entity, ServerPlayer player) {
+		var config = ServerConfig.getDefaultedPlayerConfig(player.getUUID());
 		if (!config.sneakInteract)
 			return false;
 
 		if (config.interactItem != null) {
 			// only interact when holding the chosen item
-			var itemId = Registries.ITEM.getId(player.getMainHandStack().getItem());
+			var itemId = BuiltInRegistries.ITEM.getKey(player.getMainHandItem().getItem());
 			if (!itemId.equals(config.interactItem))
 				return false;
 		}
 
 		// don't interact with blocked pets
-		if (config.interactBlocklist.isBlocked(EntityType.getId(entity.getType())))
+		if (config.interactBlocklist.isBlocked(EntityType.getKey(entity.getType())))
 			return false;
 
 		toggleIndependence(entity);
@@ -170,11 +170,11 @@ public class IndyPetsUtil {
 		toggleIndependence(((IndependentPet) entity));
 
 		// immediately finish the Glare's WalkTowardsLookTargetTask
-		var id = Registries.ENTITY_TYPE.getId(entity.getType());
+		var id = BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType());
 		if (FabricLoader.getInstance().isModLoaded("friendsandfoes") && id.getNamespace().equals("friendsandfoes") && id.getPath().equals("glare")) {
 			var brain = ((LivingEntity) entity).getBrain();
-			brain.forget(MemoryModuleType.WALK_TARGET);
-			brain.forget(MemoryModuleType.LOOK_TARGET);
+			brain.eraseMemory(MemoryModuleType.WALK_TARGET);
+			brain.eraseMemory(MemoryModuleType.LOOK_TARGET);
 		}
 	}
 
@@ -195,29 +195,29 @@ public class IndyPetsUtil {
 	}
 
 	// guard with canInteract()
-	public static void showPetStatus(ServerPlayerEntity player, Entity entity, boolean singlePet) {
-		var config = ServerConfig.getDefaultedPlayerConfig(player.getUuid());
+	public static void showPetStatus(ServerPlayer player, Entity entity, boolean singlePet) {
+		var config = ServerConfig.getDefaultedPlayerConfig(player.getUUID());
 
 		if (!config.silentMode) {
 			sendPetStatusMessage(player, entity, singlePet);
 		} else {
 			if (isIndependent(entity)) {
-				player.getEntityWorld().spawnParticles(player, ParticleTypes.ANGRY_VILLAGER, true, true,
-					entity.getX(), entity.getBodyY(0.5), entity.getZ(),
+				player.level().sendParticles(player, ParticleTypes.ANGRY_VILLAGER, true, true,
+					entity.getX(), entity.getY(0.5), entity.getZ(),
 					7, 0.4, 0.4, 0.4, 0.3);
 			} else {
-				player.getEntityWorld().spawnParticles(player, ParticleTypes.HAPPY_VILLAGER, true, true,
-					entity.getX(), entity.getBodyY(0.5), entity.getZ(),
+				player.level().sendParticles(player, ParticleTypes.HAPPY_VILLAGER, true, true,
+					entity.getX(), entity.getY(0.5), entity.getZ(),
 					11, 0.5, 0.5, 0.5, 2);
 			}
 		}
 	}
 
 	// guard with canInteract()
-	public static void sendPetStatusMessage(ServerPlayerEntity player, Entity entity, boolean overlay) {
-		MutableText text;
+	public static void sendPetStatusMessage(ServerPlayer player, Entity entity, boolean overlay) {
+		MutableComponent text;
 
-		if (ServerConfig.HAS_MOD_INSTALLED.contains(player.getUuid())) {
+		if (ServerConfig.HAS_MOD_INSTALLED.contains(player.getUUID())) {
 			// Send a translatable text
 			String key = isIndependent(entity) ? "text.indypets.independent" : "text.indypets.following";
 			if (entity.hasCustomName()) {
@@ -225,12 +225,12 @@ public class IndyPetsUtil {
 			}
 
 			// This is a workaround for not being able to nest TranslatableText (the name especially)
-			text = Text.translatable(key + "_prefix");
+			text = Component.translatable(key + "_prefix");
 			text.append(entity.getName());
-			text.append(Text.translatable(key + "_suffix"));
+			text.append(Component.translatable(key + "_suffix"));
 
 			if (isSitting(entity))
-				text.append(Text.translatable("text.indypets.but_sits"));
+				text.append(Component.translatable("text.indypets.but_sits"));
 		} else {
 			// Default to sending an English message
 			String name = entity.getName().getString();
@@ -248,23 +248,23 @@ public class IndyPetsUtil {
 			if (isSitting(entity))
 				sb.append(" (but sits)");
 
-			text = Text.translatable(sb.toString());
+			text = Component.translatable(sb.toString());
 		}
 
-		player.sendMessage(text, overlay);
+		player.displayClientMessage(text, overlay);
 	}
 
 	// guarded, safe to use
-	public static boolean shouldHeadHome(MobEntity entity) {
+	public static boolean shouldHeadHome(Mob entity) {
 		if (!isActiveIndependent(entity))
 			return false;
 
 		// vanilla homes have priority over IndyPets homes
-		if (entity instanceof TameableEntity tameable && tameable.hasPositionTarget())
+		if (entity instanceof TamableAnimal tameable && tameable.hasHome())
 			return false;
 
 		// distance to home
-		float d = (float) Math.sqrt(entity.getBlockPos().getSquaredDistance(getHomePos(entity)));
+		float d = (float) Math.sqrt(entity.blockPosition().distSqr(getHomePos(entity)));
 
 		Config config = ServerConfig.getDefaultedPlayerConfig(getOwner(entity));
 		float start = config.homeRadius * config.innerHomePercentage;
@@ -281,25 +281,25 @@ public class IndyPetsUtil {
 
 	// guard with shouldHeadHome()
 	@Nullable
-	public static Vec3d findTowardsHome(PathAwareEntity mob) {
+	public static Vec3 findTowardsHome(PathfinderMob mob) {
 		return findTowardsHome(mob, false);
 	}
 
 	// guard with shouldHeadHome()
 	@Nullable
-	public static Vec3d findTowardsHome(PathAwareEntity mob, boolean ignorePenality) {
+	public static Vec3 findTowardsHome(PathfinderMob mob, boolean ignorePenality) {
 		return findTowardsHome(mob, ignorePenality, 15, 7);
 	}
 
 	// guard with shouldHeadHome()
 	@Nullable
-	public static Vec3d findTowardsHome(PathAwareEntity mob, boolean ignorePenality, int horizontalRange, int verticalRange) {
+	public static Vec3 findTowardsHome(PathfinderMob mob, boolean ignorePenality, int horizontalRange, int verticalRange) {
 		BlockPos homePos = getHomePos(mob);
 
 		if (ignorePenality)
-			return NoPenaltyTargeting.findTo(mob, horizontalRange, verticalRange, Vec3d.ofBottomCenter(homePos), Math.PI / 2);
+			return DefaultRandomPos.getPosTowards(mob, horizontalRange, verticalRange, Vec3.atBottomCenterOf(homePos), Math.PI / 2);
 
-		return FuzzyTargeting.findTo(mob, horizontalRange, verticalRange, Vec3d.ofBottomCenter(homePos));
+		return LandRandomPos.getPosTowards(mob, horizontalRange, verticalRange, Vec3.atBottomCenterOf(homePos));
 	}
 
 	// guard with canInteract()

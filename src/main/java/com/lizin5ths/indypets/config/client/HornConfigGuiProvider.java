@@ -7,12 +7,12 @@ import me.shedaniel.autoconfig.gui.registry.api.GuiProvider;
 import me.shedaniel.autoconfig.gui.registry.api.GuiRegistryAccess;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.tag.InstrumentTags;
-import net.minecraft.text.Text;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.tags.InstrumentTags;
 import net.minecraft.util.Util;
 
 import java.lang.reflect.Field;
@@ -33,34 +33,34 @@ public class HornConfigGuiProvider implements GuiProvider {
 
 			entries.add(
 				ConfigEntryBuilder.create()
-					.startTextDescription(Text.translatable(EXPLANATION))
-					.setTooltip(Text.translatable(EXPLANATION + ".@Tooltip"))
+					.startTextDescription(Component.translatable(EXPLANATION))
+					.setTooltip(Component.translatable(EXPLANATION + ".@Tooltip"))
 					.build()
 			);
 
-			ClientWorld world = MinecraftClient.getInstance().world;
+			ClientLevel world = Minecraft.getInstance().level;
 			if (world != null) {
-				world.getRegistryManager().getOrThrow(RegistryKeys.INSTRUMENT)
-					.getOptional(InstrumentTags.GOAT_HORNS)
+				world.registryAccess().lookupOrThrow(Registries.INSTRUMENT)
+					.get(InstrumentTags.GOAT_HORNS)
 					.ifPresent(registryEntries -> registryEntries.stream()
-					.map(entry -> entry.getKey().map(RegistryKey::getValue).orElseThrow()) //
+					.map(entry -> entry.unwrapKey().map(ResourceKey::identifier).orElseThrow()) //
 					.sorted()
 					.forEachOrdered(hornId -> {
-						Text name = Text.translatable(Util.createTranslationKey("instrument", hornId));
+						Component name = Component.translatable(Util.makeDescriptionId("instrument", hornId));
 
 						entries.add(
 							ConfigEntryBuilder.create()
 								.startEnumSelector(name, HornSetting.class, config.getHornSetting(hornId))
 								.setDefaultValue(HornSetting.DISABLED)
 								.setSaveConsumer(setting -> config.setHornSetting(hornId, setting))
-								.setEnumNameProvider(anEnum -> Text.translatable("text.autoconfig.indypets.option.goatHorn." + anEnum.name()))
+								.setEnumNameProvider(anEnum -> Component.translatable("text.autoconfig.indypets.option.goatHorn." + anEnum.name()))
 								.build());
 					}));
 			} else {
 				entries.add(
 					ConfigEntryBuilder.create()
-						.startTextDescription(Text.translatable(NOT_IN_WORLD))
-						.setTooltip(Text.translatable(NOT_IN_WORLD + ".@Tooltip"))
+						.startTextDescription(Component.translatable(NOT_IN_WORLD))
+						.setTooltip(Component.translatable(NOT_IN_WORLD + ".@Tooltip"))
 						.build());
 			}
 

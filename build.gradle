@@ -68,7 +68,7 @@ repositories {
 
 dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+	mappings loom.officialMojangMappings()
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
@@ -85,8 +85,10 @@ dependencies {
 
 	modImplementation "maven.modrinth:fox-friend:jM6B1rUY" // 6.0.3 for 1.21.11
 	modImplementation "maven.modrinth:followers-teleport-too:1.21.9-2.7-fabric+forge+neo"
-	modRuntimeOnly "maven.modrinth:collective:1.21.9-8.9-fabric+forge+neo"
-//	modRuntimeOnly "maven.modrinth:friends-and-foes:fabric-4.0.19+mc1.21.10"
+	modRuntimeOnly "maven.modrinth:collective:1.21.11-8.13-fabric+forge+neo"
+	modCompileOnly "maven.modrinth:friends-and-foes:fabric-4.0.23+mc1.21.11"
+//	modRuntimeOnly "maven.modrinth:yacl:3.8.2+1.21.11-fabric"
+//	modRuntimeOnly "maven.modrinth:resourceful-lib:Q2Njmve7" // 3.11.0
 }
 
 processResources {

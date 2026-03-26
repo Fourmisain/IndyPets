@@ -4,9 +4,8 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
-import net.minecraft.util.Identifier;
-
 import java.io.IOException;
+import net.minecraft.resources.Identifier;
 
 /** Allows Gson to de/serialize Identifiers */
 public class IdentifierTypeAdapter extends TypeAdapter<Identifier> {
@@ -27,7 +26,7 @@ public class IdentifierTypeAdapter extends TypeAdapter<Identifier> {
 			reader.nextNull();
 			return null;
 		} else {
-			return Identifier.of(reader.nextString());
+			return Identifier.parse(reader.nextString());
 		}
 	}
 }

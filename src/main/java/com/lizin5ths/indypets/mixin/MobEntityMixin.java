@@ -5,17 +5,17 @@ import com.lizin5ths.indypets.config.ServerConfig;
 import com.lizin5ths.indypets.util.IndependentPet;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.storage.ReadView;
-import net.minecraft.storage.WriteView;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -25,12 +25,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import static com.lizin5ths.indypets.util.IndyPetsUtil.*;
 
-@Mixin(MobEntity.class)
+@Mixin(Mob.class)
 public abstract class MobEntityMixin extends LivingEntity implements IndependentPet {
 	@Unique boolean indypets$isIndependent = false;
 	@Unique BlockPos indypets$homePos;
 
-	protected MobEntityMixin(EntityType<? extends LivingEntity> entityType, World world) {
+	protected MobEntityMixin(EntityType<? extends LivingEntity> entityType, Level world) {
 		super(entityType, world);
 	}
 
@@ -39,23 +39,23 @@ public abstract class MobEntityMixin extends LivingEntity implements Independent
 		method = "interact",
 		at = @At(
 			value = "INVOKE",
-			target = "Lnet/minecraft/entity/mob/MobEntity;interactMob(Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/util/Hand;)Lnet/minecraft/util/ActionResult;"
+			target = "Lnet/minecraft/world/entity/Mob;mobInteract(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResult;"
 		),
 		cancellable = true
 	)
-	public final void indypets$tryChangeFollowing(PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResult> cir,
+	public final void indypets$tryChangeFollowing(Player player, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir,
 			@Share("isInteracting") LocalBooleanRef isInteracting, @Share("wasSitting") LocalBooleanRef wasSitting) {
-		if (getEntityWorld().isClient() || !(player instanceof ServerPlayerEntity serverPlayer))
+		if (level().isClientSide() || !(player instanceof ServerPlayer serverPlayer))
 			return;
 
-		if (hand == Hand.MAIN_HAND && canInteract(serverPlayer, this)) {
-			if (player.isSneaking()) {
+		if (hand == InteractionHand.MAIN_HAND && canInteract(serverPlayer, this)) {
+			if (player.isShiftKeyDown()) {
 				if (sneakInteract(this, serverPlayer)) {
 					// Note: This blocks interactMob() so it might conflict with other mods using sneak-interact
-					cir.setReturnValue(ActionResult.SUCCESS);
+					cir.setReturnValue(InteractionResult.SUCCESS);
 				}
 			} else {
-				var config = ServerConfig.getDefaultedPlayerConfig(player.getUuid());
+				var config = ServerConfig.getDefaultedPlayerConfig(player.getUUID());
 				if (config.regularInteract) {
 					// continue in method below
 					isInteracting.set(true);
@@ -70,13 +70,13 @@ public abstract class MobEntityMixin extends LivingEntity implements Independent
 		method = "interact",
 		at = @At(
 			value = "INVOKE",
-			target = "Lnet/minecraft/entity/mob/MobEntity;interactMob(Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/util/Hand;)Lnet/minecraft/util/ActionResult;",
+			target = "Lnet/minecraft/world/entity/Mob;mobInteract(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResult;",
 			shift = At.Shift.AFTER
 		)
 	)
-	public final void indypets$tryChangeFollowingAfter(PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResult> cir,
+	public final void indypets$tryChangeFollowingAfter(Player player, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir,
 			@Share("isInteracting") LocalBooleanRef isInteracting, @Share("wasSitting") LocalBooleanRef wasSitting) {
-		if (getEntityWorld().isClient() || !(player instanceof ServerPlayerEntity serverPlayer))
+		if (level().isClientSide() || !(player instanceof ServerPlayer serverPlayer))
 			return;
 
 		if (isInteracting.get()) {
@@ -89,25 +89,25 @@ public abstract class MobEntityMixin extends LivingEntity implements Independent
 		}
 	}
 
-	@Inject(method = "writeCustomData", at = @At("HEAD"))
-	private void indypets$writeFollowData(WriteView view, CallbackInfo ci) {
+	@Inject(method = "addAdditionalSaveData", at = @At("HEAD"))
+	private void indypets$writeFollowData(ValueOutput view, CallbackInfo ci) {
 		if (!isSupported(this))
 			return;
 
 		view.putBoolean("AllowedToFollow", !indypets$isIndependent);
 		if (indypets$homePos != null) {
-			view.put("IndyPets$HomePos", BlockPos.CODEC, indypets$homePos);
+			view.store("IndyPets$HomePos", BlockPos.CODEC, indypets$homePos);
 		}
 	}
 
-	@Inject(method = "readCustomData", at = @At("TAIL"))
-	private void indypets$readFollowData(ReadView view, CallbackInfo ci) {
+	@Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
+	private void indypets$readFollowData(ValueInput view, CallbackInfo ci) {
 		if (!isSupported(this))
 			return;
 
-		indypets$isIndependent = !view.getBoolean("AllowedToFollow", true);
+		indypets$isIndependent = !view.getBooleanOr("AllowedToFollow", true);
 		indypets$homePos = view.read("IndyPets$HomePos", BlockPos.CODEC)
-			.orElseGet(this::getBlockPos); // fallback
+			.orElseGet(this::blockPosition); // fallback
 	}
 
 	@Unique @Override
@@ -127,7 +127,7 @@ public abstract class MobEntityMixin extends LivingEntity implements Independent
 
 	@Unique @Override
 	public void indypets$setHome() {
-		indypets$homePos = getBlockPos();
+		indypets$homePos = blockPosition();
 		IndyPets.LOGGER.debug("set home of {}", this);
 	}
 }

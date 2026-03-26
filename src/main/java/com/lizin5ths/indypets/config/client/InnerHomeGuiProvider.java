@@ -5,8 +5,7 @@ import me.shedaniel.autoconfig.gui.registry.api.GuiRegistryAccess;
 import me.shedaniel.autoconfig.util.Utils;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
-import net.minecraft.text.Text;
-
+import net.minecraft.network.chat.Component;
 import java.lang.reflect.Field;
 import java.util.Collections;
 import java.util.List;
@@ -22,10 +21,10 @@ public class InnerHomeGuiProvider implements GuiProvider {
 
 		return Collections.singletonList(
 			ConfigEntryBuilder.create()
-				.startIntSlider(Text.translatable("text.autoconfig.indypets.option.innerHomePercentage"), currentValue, 0, 100)
-				.setTooltip(Text.translatable("text.autoconfig.indypets.option.innerHomePercentage.@Tooltip"))
+				.startIntSlider(Component.translatable("text.autoconfig.indypets.option.innerHomePercentage"), currentValue, 0, 100)
+				.setTooltip(Component.translatable("text.autoconfig.indypets.option.innerHomePercentage.@Tooltip"))
 				.setDefaultValue(defaultValue)
-				.setTextGetter(value -> Text.of(value + "%"))
+				.setTextGetter(value -> Component.nullToEmpty(value + "%"))
 				.setSaveConsumer(newValue -> Utils.setUnsafely(field, config, newValue / 100f))
 				.build()
 		);

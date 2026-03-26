@@ -5,11 +5,11 @@ import com.lizin5ths.indypets.IndyPetsClient;
 import com.lizin5ths.indypets.config.Config;
 import com.lizin5ths.indypets.mixin.access.KeyBindingAccessor;
 import com.lizin5ths.indypets.network.Networking;
+import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.util.InputUtil;
-import net.minecraft.util.Hand;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.world.InteractionHand;
 import org.lwjgl.glfw.GLFW;
 
 import static com.lizin5ths.indypets.IndyPetsClient.UNWHISTLE;
@@ -17,14 +17,14 @@ import static com.lizin5ths.indypets.IndyPetsClient.WHISTLE;
 import static com.lizin5ths.indypets.util.IndyPetsUtil.isSupported;
 
 public class Keybindings {
-	public static InputUtil.Key getBoundKey(KeyBinding keyBinding) {
-		return ((KeyBindingAccessor) keyBinding).getBoundKey();
+	public static InputConstants.Key getBoundKey(KeyMapping keyBinding) {
+		return ((KeyBindingAccessor) keyBinding).getKey();
 	}
 
-	public static final KeyBinding.Category CATEGORY = KeyBinding.Category.create(IndyPets.id("indypets"));
-	public static final KeyBinding INTERACT_KEY  = new KeyBinding("key.indypets.interact",  GLFW.GLFW_KEY_H, CATEGORY);
-	public static final KeyBinding WHISTLE_KEY   = new KeyBinding("key.indypets.whistle",   GLFW.GLFW_KEY_J, CATEGORY);
-	public static final KeyBinding UNWHISTLE_KEY = new KeyBinding("key.indypets.unwhistle", GLFW.GLFW_KEY_J, CATEGORY);
+	public static final KeyMapping.Category CATEGORY = KeyMapping.Category.register(IndyPets.id("indypets"));
+	public static final KeyMapping INTERACT_KEY  = new KeyMapping("key.indypets.interact",  GLFW.GLFW_KEY_H, CATEGORY);
+	public static final KeyMapping WHISTLE_KEY   = new KeyMapping("key.indypets.whistle",   GLFW.GLFW_KEY_J, CATEGORY);
+	public static final KeyMapping UNWHISTLE_KEY = new KeyMapping("key.indypets.unwhistle", GLFW.GLFW_KEY_J, CATEGORY);
 
 	private static boolean whistleToggle = false;
 
@@ -37,10 +37,10 @@ public class Keybindings {
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
 			if (client.player == null) return;
 
-			while (INTERACT_KEY.wasPressed()) {
-				if (isSupported(client.targetedEntity)) {
-					Networking.sendPetInteract(client.targetedEntity); // note: is checked server-side
-					client.player.swingHand(Hand.MAIN_HAND); // give some visual feedback
+			while (INTERACT_KEY.consumeClick()) {
+				if (isSupported(client.crosshairPickEntity)) {
+					Networking.sendPetInteract(client.crosshairPickEntity); // note: is checked server-side
+					client.player.swing(InteractionHand.MAIN_HAND); // give some visual feedback
 				}
 			}
 
@@ -48,10 +48,10 @@ public class Keybindings {
 			int whistleCount = 0;
 			int unwhistleCount = 0;
 
-			while (WHISTLE_KEY.wasPressed()) {
+			while (WHISTLE_KEY.consumeClick()) {
 				whistleCount++;
 			}
-			while (UNWHISTLE_KEY.wasPressed()) {
+			while (UNWHISTLE_KEY.consumeClick()) {
 				unwhistleCount++;
 			}
 
@@ -73,10 +73,10 @@ public class Keybindings {
 			}
 
 			if (shouldWhistle) {
-				client.getNetworkHandler().sendChatCommand("indypets whistle");
+				client.getConnection().sendCommand("indypets whistle");
 				IndyPetsClient.playLocalPlayerSound(client.player, WHISTLE, Config.local().positionedWhistleSound);
 			} else {
-				client.getNetworkHandler().sendChatCommand("indypets unwhistle");
+				client.getConnection().sendCommand("indypets unwhistle");
 				IndyPetsClient.playLocalPlayerSound(client.player, UNWHISTLE, Config.local().positionedWhistleSound);
 			}
 		});

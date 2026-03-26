@@ -4,15 +4,15 @@ import com.lizin5ths.indypets.client.Keybindings;
 import com.lizin5ths.indypets.config.Config;
 import com.lizin5ths.indypets.network.Networking;
 import net.fabricmc.api.ClientModInitializer;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.sound.PositionedSoundInstance;
-import net.minecraft.client.sound.SoundInstance;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.client.resources.sounds.SoundInstance;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.player.Player;
 
 public class IndyPetsClient implements ClientModInitializer {
 	public static final SoundEvent WHISTLE = registerSoundEvent("whistle");
@@ -21,19 +21,19 @@ public class IndyPetsClient implements ClientModInitializer {
 	private static SoundEvent registerSoundEvent(String path) {
 		Identifier whistleId = IndyPets.id(path);
 		// note: we technically don't need to register the event
-		return Registry.register(Registries.SOUND_EVENT, whistleId, SoundEvent.of(whistleId));
+		return Registry.register(BuiltInRegistries.SOUND_EVENT, whistleId, SoundEvent.createVariableRangeEvent(whistleId));
 	}
 
-	public static void playLocalPlayerSound(PlayerEntity player, SoundEvent soundEvent, boolean positioned) {
+	public static void playLocalPlayerSound(Player player, SoundEvent soundEvent, boolean positioned) {
 		if (positioned) {
-			player.getEntityWorld().playSoundClient(player.getX(), player.getY(), player.getZ(), soundEvent, player.getSoundCategory(), 1.0F, 1.0F, true);
+			player.level().playLocalSound(player.getX(), player.getY(), player.getZ(), soundEvent, player.getSoundSource(), 1.0F, 1.0F, true);
 		} else {
 			// non-positioned sound (just like music, but with players category)
-			SoundInstance sound = new PositionedSoundInstance(soundEvent.id(), SoundCategory.PLAYERS,
-				1.0F, 1.0F, SoundInstance.createRandom(), false, 0,
-				SoundInstance.AttenuationType.NONE, 0.0, 0.0, 0.0, true);
+			SoundInstance sound = new SimpleSoundInstance(soundEvent.location(), SoundSource.PLAYERS,
+				1.0F, 1.0F, SoundInstance.createUnseededRandom(), false, 0,
+				SoundInstance.Attenuation.NONE, 0.0, 0.0, 0.0, true);
 
-			MinecraftClient.getInstance().getSoundManager().play(sound);
+			Minecraft.getInstance().getSoundManager().play(sound);
 		}
 	}
 

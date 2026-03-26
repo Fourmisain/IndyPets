@@ -11,10 +11,9 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerConfigurationNetworking;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.entity.Entity;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
-
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 import java.util.UUID;
 
 import static com.lizin5ths.indypets.util.IndyPetsUtil.*;
@@ -54,7 +53,7 @@ public class Networking {
 
 		PayloadTypeRegistry.playC2S().register(PlayerConfigPayload.ID, PlayerConfigPayload.CODEC);
 		ServerPlayNetworking.registerGlobalReceiver(PlayerConfigPayload.ID, (payload, context) -> {
-			UUID playerUuid = context.player().getUuid();
+			UUID playerUuid = context.player().getUUID();
 			MinecraftServer server = context.server();
 
 			if (server != null) {
@@ -67,12 +66,12 @@ public class Networking {
 
 		PayloadTypeRegistry.playC2S().register(PetInteractPayload.ID, PetInteractPayload.CODEC);
 		ServerPlayNetworking.registerGlobalReceiver(PetInteractPayload.ID, (payload, context) -> {
-			ServerPlayerEntity player = context.player();
+			ServerPlayer player = context.player();
 			MinecraftServer server = context.server();
 
 			if (server != null) {
 				server.execute(() -> {
-					Entity entity = player.getEntityWorld().getEntityById(payload.entityId());
+					Entity entity = player.level().getEntity(payload.entityId());
 
 					if (canInteract(player, entity)) {
 						toggleIndependence(entity);
