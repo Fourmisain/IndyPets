@@ -1,3 +1,9 @@
+## 1.5.2
+
+- port to 26.1
+
+Fox Friend and Friends&Foes compatibility has been temporary removed and needs to be re-added once they are out for 26.1
+
 ## 1.5.1
 
 - update Fox Friend compatibility for 6.0.3 (not backwards compatible; update Fox Friend!)
