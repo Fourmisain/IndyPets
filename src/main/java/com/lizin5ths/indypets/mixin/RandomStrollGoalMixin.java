@@ -1,6 +1,6 @@
 package com.lizin5ths.indypets.mixin;
 
-import com.lizin5ths.indypets.mixin.access.WanderAroundGoalAccessor;
+import com.lizin5ths.indypets.mixin.access.RandomStrollGoalAccessor;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
 import net.minecraft.world.phys.Vec3;
@@ -14,19 +14,19 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import static com.lizin5ths.indypets.util.IndyPetsUtil.*;
 
 @Mixin(RandomStrollGoal.class)
-public abstract class WanderAroundGoalMixin {
+public abstract class RandomStrollGoalMixin {
 	@Shadow @Final
 	protected PathfinderMob mob;
 
 	@Inject(method = "canUse", at = @At("HEAD"))
 	public void indypets$countTamedPetsAsPersistent(CallbackInfoReturnable<Boolean> cir) {
-		// WanderAroundGoal will only start if the mob's despawn timer isn't too high or if the mob is persistent
+		// RandomStrollGoal will only start if the mob's despawn timer isn't too high or if the mob is persistent
 		// Tamed cats are persistent but wolves are not (despite them not despawning), hence they will stop
 		// wandering around after some time and only start moving again once their despawn timer resets (by a player getting near them)
 
 		// This will override the timer check for all tamed mobs, making them wander around even without player presence
 		if (isSupported(mob) && isTamed(mob)) {
-			((WanderAroundGoalAccessor) this).setCheckNoActionTime(false);
+			((RandomStrollGoalAccessor) this).setCheckNoActionTime(false);
 		}
 	}
 

@@ -1,8 +1,9 @@
 package com.lizin5ths.indypets.config;
 
+import net.minecraft.resources.Identifier;
+
 import java.util.LinkedHashSet;
 import java.util.Set;
-import net.minecraft.resources.Identifier;
 
 public class Blocklist {
 	public final Set<Identifier> idBlocklist = new LinkedHashSet<>(); // specific pets

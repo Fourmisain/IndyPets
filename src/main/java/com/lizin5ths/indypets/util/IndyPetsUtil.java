@@ -10,12 +10,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.util.DefaultRandomPos;
 import net.minecraft.world.entity.ai.util.LandRandomPos;
@@ -27,9 +22,13 @@ import java.util.UUID;
 // note: most methods are unguarded and should only be run after a isSupported(), isActive()/isActiveIndependent(), or canInteract() check
 // canInteract() implies isActive() implies isSupported().
 public class IndyPetsUtil {
+
+	// TODO re-add Fox Friend compat once it is out
+	// TODO re-add Friends&Foes compat once it is out
+
 	// to add support: update all methods from isTamed() to setHome()
 	public static boolean isSupported(Entity entity) {
-		return entity instanceof TamableAnimal || FoxFriendCompat.isIFoxTamed(entity);
+		return entity instanceof TamableAnimal /* || FoxFriendCompat.isIFoxTamed(entity) */;
 	}
 
 	// guard with isSupported()
@@ -38,9 +37,9 @@ public class IndyPetsUtil {
 			return tameable.isTame();
 		}
 
-		if (FoxFriendCompat.isIFoxTamed(entity)) {
-			return FoxFriendCompat.isTamed(entity);
-		}
+//		if (FoxFriendCompat.isIFoxTamed(entity)) {
+//			return FoxFriendCompat.isTamed(entity);
+//		}
 
 		throw new AssertionError("entity %s does not implement isTamed".formatted(entity));
 	}
@@ -53,9 +52,9 @@ public class IndyPetsUtil {
 			return owner != null ? owner.getUUID() : null;
 		}
 
-		if (FoxFriendCompat.isIFoxTamed(entity)) {
-			return FoxFriendCompat.getOwner(entity);
-		}
+//		if (FoxFriendCompat.isIFoxTamed(entity)) {
+//			return FoxFriendCompat.getOwner(entity);
+//		}
 
 		throw new AssertionError("entity %s does not implement getOwner".formatted(entity));
 	}
@@ -66,9 +65,9 @@ public class IndyPetsUtil {
 			return tameable.isOwnedBy(player);
 		}
 
-		if (FoxFriendCompat.isIFoxTamed(entity)) {
-			return FoxFriendCompat.isOwner(entity, player);
-		}
+//		if (FoxFriendCompat.isIFoxTamed(entity)) {
+//			return FoxFriendCompat.isOwner(entity, player);
+//		}
 
 		throw new AssertionError("entity %s does not implement isOwner".formatted(entity));
 	}
@@ -79,9 +78,9 @@ public class IndyPetsUtil {
 			return tameable.isOrderedToSit();
 		}
 
-		if (FoxFriendCompat.isIFoxTamed(entity)) {
-			return FoxFriendCompat.isSitting(entity);
-		}
+//		if (FoxFriendCompat.isIFoxTamed(entity)) {
+//			return FoxFriendCompat.isSitting(entity);
+//		}
 
 		throw new AssertionError("entity %s does not implement isSitting".formatted(entity));
 	}
@@ -90,8 +89,8 @@ public class IndyPetsUtil {
 	public static void setSitting(Entity entity, boolean sitting) {
 		if (entity instanceof TamableAnimal tameable) {
 			tameable.setOrderedToSit(sitting);
-		} else if (FoxFriendCompat.isIFoxTamed(entity)) {
-			FoxFriendCompat.setSitting(entity, sitting);
+//		} else if (FoxFriendCompat.isIFoxTamed(entity)) {
+//			FoxFriendCompat.setSitting(entity, sitting);
 		} else {
 			throw new AssertionError("entity %s does not implement setSitting".formatted(entity));
 		}
@@ -251,7 +250,7 @@ public class IndyPetsUtil {
 			text = Component.translatable(sb.toString());
 		}
 
-		player.displayClientMessage(text, overlay);
+		player.sendSystemMessage(text, overlay);
 	}
 
 	// guarded, safe to use

@@ -16,6 +16,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -26,12 +27,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import static com.lizin5ths.indypets.util.IndyPetsUtil.*;
 
 @Mixin(Mob.class)
-public abstract class MobEntityMixin extends LivingEntity implements IndependentPet {
+public abstract class MobMixin extends LivingEntity implements IndependentPet {
 	@Unique boolean indypets$isIndependent = false;
 	@Unique BlockPos indypets$homePos;
 
-	protected MobEntityMixin(EntityType<? extends LivingEntity> entityType, Level world) {
-		super(entityType, world);
+	protected MobMixin(EntityType<? extends LivingEntity> entityType, Level level) {
+		super(entityType, level);
 	}
 
 	@SuppressWarnings("ConstantConditions")
@@ -43,7 +44,7 @@ public abstract class MobEntityMixin extends LivingEntity implements Independent
 		),
 		cancellable = true
 	)
-	public final void indypets$tryChangeFollowing(Player player, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir,
+	public final void indypets$tryChangeFollowing(Player player, InteractionHand hand, Vec3 location, CallbackInfoReturnable<InteractionResult> cir,
 			@Share("isInteracting") LocalBooleanRef isInteracting, @Share("wasSitting") LocalBooleanRef wasSitting) {
 		if (level().isClientSide() || !(player instanceof ServerPlayer serverPlayer))
 			return;
@@ -74,7 +75,7 @@ public abstract class MobEntityMixin extends LivingEntity implements Independent
 			shift = At.Shift.AFTER
 		)
 	)
-	public final void indypets$tryChangeFollowingAfter(Player player, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir,
+	public final void indypets$tryChangeFollowingAfter(Player player, InteractionHand hand, Vec3 location, CallbackInfoReturnable<InteractionResult> cir,
 			@Share("isInteracting") LocalBooleanRef isInteracting, @Share("wasSitting") LocalBooleanRef wasSitting) {
 		if (level().isClientSide() || !(player instanceof ServerPlayer serverPlayer))
 			return;

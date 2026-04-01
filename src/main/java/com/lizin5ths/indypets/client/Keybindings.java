@@ -3,11 +3,11 @@ package com.lizin5ths.indypets.client;
 import com.lizin5ths.indypets.IndyPets;
 import com.lizin5ths.indypets.IndyPetsClient;
 import com.lizin5ths.indypets.config.Config;
-import com.lizin5ths.indypets.mixin.access.KeyBindingAccessor;
+import com.lizin5ths.indypets.mixin.access.KeyMappingAccessor;
 import com.lizin5ths.indypets.network.Networking;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.world.InteractionHand;
 import org.lwjgl.glfw.GLFW;
@@ -18,7 +18,7 @@ import static com.lizin5ths.indypets.util.IndyPetsUtil.isSupported;
 
 public class Keybindings {
 	public static InputConstants.Key getBoundKey(KeyMapping keyBinding) {
-		return ((KeyBindingAccessor) keyBinding).getKey();
+		return ((KeyMappingAccessor) keyBinding).getKey();
 	}
 
 	public static final KeyMapping.Category CATEGORY = KeyMapping.Category.register(IndyPets.id("indypets"));
@@ -30,9 +30,9 @@ public class Keybindings {
 
 	@SuppressWarnings("DataFlowIssue")
 	public static void init() {
-		KeyBindingHelper.registerKeyBinding(INTERACT_KEY);
-		KeyBindingHelper.registerKeyBinding(WHISTLE_KEY);
-		KeyBindingHelper.registerKeyBinding(UNWHISTLE_KEY);
+		KeyMappingHelper.registerKeyMapping(INTERACT_KEY);
+		KeyMappingHelper.registerKeyMapping(WHISTLE_KEY);
+		KeyMappingHelper.registerKeyMapping(UNWHISTLE_KEY);
 
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
 			if (client.player == null) return;

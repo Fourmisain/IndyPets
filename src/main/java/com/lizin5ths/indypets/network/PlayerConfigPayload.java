@@ -8,7 +8,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
 public record PlayerConfigPayload(Config config) implements CustomPacketPayload {
-	public static final Type<PlayerConfigPayload> ID = new CustomPacketPayload.Type<>(IndyPets.id("player_config"));
+	public static final Type<PlayerConfigPayload> TYPE = new CustomPacketPayload.Type<>(IndyPets.id("player_config"));
 
 	public static final StreamCodec<FriendlyByteBuf, PlayerConfigPayload> CODEC = StreamCodec.ofMember(
 		(value, buf) -> {
@@ -28,6 +28,6 @@ public record PlayerConfigPayload(Config config) implements CustomPacketPayload 
 
 	@Override
 	public Type<? extends CustomPacketPayload> type() {
-		return ID;
+		return TYPE;
 	}
 }

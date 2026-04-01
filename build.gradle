@@ -2,7 +2,7 @@ import java.nio.file.*
 import java.nio.file.attribute.BasicFileAttributes
 
 plugins {
-	id 'fabric-loom' version "${loom_version}"
+	id 'net.fabricmc.fabric-loom' version "${loom_version}"
 	id 'maven-publish'
 	id 'com.matthewprenger.cursegradle' version '1.4.0'
 	id 'com.modrinth.minotaur' version '2.+'
@@ -68,27 +68,28 @@ repositories {
 
 dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	mappings loom.officialMojangMappings()
-	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	implementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
-	modApi("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}") {
+	api("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}") {
 		exclude(group: "net.fabricmc.fabric-api")
 	}
 
-	modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}") {
+	implementation("com.terraformersmc:modmenu:${project.modmenu_version}") {
 		exclude(group: "net.fabricmc.fabric-api")
 	}
 
 	include(implementation(annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-fabric:${project.mixin_squared_version}")))
 
-	modImplementation "maven.modrinth:fox-friend:jM6B1rUY" // 6.0.3 for 1.21.11
-	modImplementation "maven.modrinth:followers-teleport-too:1.21.9-2.7-fabric+forge+neo"
-	modRuntimeOnly "maven.modrinth:collective:1.21.11-8.13-fabric+forge+neo"
-	modCompileOnly "maven.modrinth:friends-and-foes:fabric-4.0.23+mc1.21.11"
-//	modRuntimeOnly "maven.modrinth:yacl:3.8.2+1.21.11-fabric"
-//	modRuntimeOnly "maven.modrinth:resourceful-lib:Q2Njmve7" // 3.11.0
+//	implementation "maven.modrinth:fox-friend:jM6B1rUY" // 6.0.3 for 1.21.11
+
+	implementation "maven.modrinth:followers-teleport-too:26.1.0-2.8-fabric+forge+neo"
+	runtimeOnly "maven.modrinth:collective:26.1.0-8.16-fabric+forge+neo"
+
+//	compileOnly "maven.modrinth:friends-and-foes:fabric-4.0.23+mc1.21.11"
+//	runtimeOnly "maven.modrinth:yacl:3.8.2+1.21.11-fabric"
+//	runtimeOnly "maven.modrinth:resourceful-lib:Q2Njmve7" // 3.11.0
 }
 
 processResources {
@@ -130,7 +131,7 @@ publishing {
 tasks.register('deleteHeaders') {
 	doLast {
 		// delete "header files" from jar
-		var jar = remapJar.archiveFile.get().asFile.toPath()
+		var jar = jar.archiveFile.get().asFile.toPath()
 		if (Files.exists(jar)) {
 			var jarFileUri = new URI('jar:file', jar.toUri().getSchemeSpecificPart(), jar.toUri().getFragment())
 
@@ -174,7 +175,7 @@ modrinth {
 	versionName = project.mod_version
 	versionNumber = project.version
 	versionType = 'release'
-	uploadFile = remapJar
+	uploadFile = jar
 	changelog = changesMd
 	gameVersions = gameVersionList
 	loaders = ['fabric']
@@ -203,7 +204,7 @@ curseforge {
 		relations {
 			toList(project.curseforge_dependencies).each { requiredDependency(it) }
 		}
-		mainArtifact(remapJar.archiveFile.get().asFile) {
+		mainArtifact(jar.archiveFile.get().asFile) {
 			displayName = "IndyPets ${project.mod_version} [${versionRange(gameVersionList)}]"
 		}
 		afterEvaluate {
@@ -222,7 +223,7 @@ minepkg {
 		if (token == null) throw new GradleException("MINEPKG_TOKEN not defined")
 		return token
 	}
-	artifact = remapJar
+	artifact = jar
 	platform = 'fabric'
 	name = project.minepkg_id
 	version = project.mod_version + "+" + project.minecraft_version

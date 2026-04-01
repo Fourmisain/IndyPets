@@ -9,6 +9,7 @@ import com.lizin5ths.indypets.config.client.InnerHomeGuiProvider;
 import com.lizin5ths.indypets.config.client.ItemGuiProvider;
 import com.lizin5ths.indypets.network.Networking;
 import me.shedaniel.autoconfig.AutoConfig;
+import me.shedaniel.autoconfig.AutoConfigClient;
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.ConfigHolder;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
@@ -134,7 +135,7 @@ public class Config implements ConfigData {
 
 	@Environment(EnvType.CLIENT)
 	public static void clientInit() {
-		var guiRegistry = AutoConfig.getGuiRegistry(Config.class);
+		var guiRegistry = AutoConfigClient.getGuiRegistry(Config.class);
 		guiRegistry.registerPredicateProvider(new BlocklistGuiProvider(), field -> field.getType().equals(Blocklist.class));
 		guiRegistry.registerPredicateProvider(new ItemGuiProvider(), field -> field.getName().equals("interactItem"));
 		guiRegistry.registerPredicateProvider(new InnerHomeGuiProvider(), field -> field.getName().equals("innerHomePercentage"));

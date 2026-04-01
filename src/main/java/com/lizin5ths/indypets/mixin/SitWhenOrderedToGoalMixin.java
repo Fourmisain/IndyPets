@@ -1,5 +1,7 @@
 package com.lizin5ths.indypets.mixin;
 
+import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.ai.goal.SitWhenOrderedToGoal;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -8,11 +10,8 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
 import static com.lizin5ths.indypets.util.IndyPetsUtil.isActiveIndependent;
 
-import net.minecraft.world.entity.TamableAnimal;
-import net.minecraft.world.entity.ai.goal.SitWhenOrderedToGoal;
-
 @Mixin(SitWhenOrderedToGoal.class)
-public abstract class SitGoalMixin {
+public abstract class SitWhenOrderedToGoalMixin {
 	@Shadow @Final
 	private TamableAnimal mob;
 

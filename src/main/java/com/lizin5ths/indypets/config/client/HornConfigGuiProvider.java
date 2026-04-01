@@ -8,7 +8,6 @@ import me.shedaniel.autoconfig.gui.registry.api.GuiRegistryAccess;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
@@ -38,9 +37,9 @@ public class HornConfigGuiProvider implements GuiProvider {
 					.build()
 			);
 
-			ClientLevel world = Minecraft.getInstance().level;
-			if (world != null) {
-				world.registryAccess().lookupOrThrow(Registries.INSTRUMENT)
+			var level = Minecraft.getInstance().level;
+			if (level != null) {
+				level.registryAccess().lookupOrThrow(Registries.INSTRUMENT)
 					.get(InstrumentTags.GOAT_HORNS)
 					.ifPresent(registryEntries -> registryEntries.stream()
 					.map(entry -> entry.unwrapKey().map(ResourceKey::identifier).orElseThrow()) //

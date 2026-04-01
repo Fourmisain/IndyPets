@@ -5,31 +5,25 @@
   "compatibilityLevel": "JAVA_${java_version}",
   "plugin": "com.lizin5ths.indypets.MixinPlugin",
   "mixins": [
-    "EscapeDangerGoalMixin",
-    "FlyGoalMixin",
     "FollowMobGoalMixin",
     "FollowOwnerGoalMixin",
-    "GoatHornItemMixin",
+    "InstrumentItemMixin",
     "MinecraftServerMixin",
-    "MobEntityMixin",
-    "ParrotEntityFlyOntoTreeGoalMixin",
-    "ServerPlayerEntityMixin",
-    "SitGoalMixin",
-    "TameableEntityMixin",
-    "WanderAroundFarGoalMixin",
-    "WanderAroundGoalMixin",
-    "access.ServerConfigurationNetworkHandlerAccessor",
-    "access.WanderAroundGoalAccessor",
-    "compat.followersteleporttoo.TeleportEventMixin",
-    "compat.friendsandfoes.GlareBrainMixin",
-    "compat.friendsandfoes.GlareStrollTaskMixin",
-    "compat.friendsandfoes.GlareTeleportToOwnerTaskMixin",
-    "compat.suikefoxfriend.FoxMixinMixin",
-    "compat.suikefoxfriend.FoxFollowOwnerGoalMixin",
-    "compat.suikefoxfriend.PersistentEntitySectionManagerMixinMixin"
+    "MobMixin",
+    "PanicGoalMixin",
+    "ParrotWanderGoalMixin",
+    "RandomStrollGoalMixin",
+    "ServerPlayerMixin",
+    "SitWhenOrderedToGoalMixin",
+    "TamableAnimalMixin",
+    "WaterAvoidingRandomFlyingGoalMixin",
+    "WaterAvoidingRandomStrollGoalMixin",
+    "access.RandomStrollGoalAccessor",
+    "access.ServerConfigurationPacketListenerImplAccessor",
+    "compat.followersteleporttoo.TeleportEventMixin"
   ],
   "client": [
-    "access.KeyBindingAccessor"
+    "access.KeyMappingAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

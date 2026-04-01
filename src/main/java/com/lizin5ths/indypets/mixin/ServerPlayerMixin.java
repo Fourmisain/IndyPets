@@ -2,6 +2,10 @@ package com.lizin5ths.indypets.mixin;
 
 import com.lizin5ths.indypets.config.ServerConfig;
 import com.mojang.authlib.GameProfile;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -9,17 +13,13 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.function.Consumer;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
 
 import static com.lizin5ths.indypets.util.IndyPetsUtil.*;
 
 @Mixin(ServerPlayer.class)
-public abstract class ServerPlayerEntityMixin extends Player {
-	public ServerPlayerEntityMixin(Level world, GameProfile profile) {
-		super(world, profile);
+public abstract class ServerPlayerMixin extends Player {
+	public ServerPlayerMixin(Level level, GameProfile profile) {
+		super(level, profile);
 	}
 
 	@Inject(method = "disconnect", at = @At("TAIL"))

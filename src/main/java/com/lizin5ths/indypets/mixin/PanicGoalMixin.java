@@ -12,7 +12,7 @@ import static com.lizin5ths.indypets.util.IndyPetsUtil.isIndependent;
 import static com.lizin5ths.indypets.util.IndyPetsUtil.isSupported;
 
 @Mixin(PanicGoal.class)
-public abstract class EscapeDangerGoalMixin {
+public abstract class PanicGoalMixin {
 	@Shadow @Final
 	protected PathfinderMob mob;
 

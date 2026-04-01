@@ -13,8 +13,8 @@ import static com.lizin5ths.indypets.util.IndyPetsUtil.getHomePos;
 import static com.lizin5ths.indypets.util.IndyPetsUtil.shouldHeadHome;
 
 @Mixin(WaterAvoidingRandomFlyingGoal.class)
-public abstract class FlyGoalMixin extends WaterAvoidingRandomStrollGoal {
-	public FlyGoalMixin(PathfinderMob pathAwareEntity, double d) {
+public abstract class WaterAvoidingRandomFlyingGoalMixin extends WaterAvoidingRandomStrollGoal {
+	public WaterAvoidingRandomFlyingGoalMixin(PathfinderMob pathAwareEntity, double d) {
 		super(pathAwareEntity, d);
 	}
 

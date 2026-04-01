@@ -2,6 +2,7 @@ package com.lizin5ths.indypets.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
@@ -25,18 +26,18 @@ import java.util.List;
 import static com.lizin5ths.indypets.util.IndyPetsUtil.*;
 
 @Mixin(Parrot.ParrotWanderGoal.class)
-public abstract class ParrotEntityFlyOntoTreeGoalMixin extends WaterAvoidingRandomFlyingGoal {
-	public ParrotEntityFlyOntoTreeGoalMixin(PathfinderMob pathAwareEntity, double d) {
+public abstract class ParrotWanderGoalMixin extends WaterAvoidingRandomFlyingGoal {
+	public ParrotWanderGoalMixin(PathfinderMob pathAwareEntity, double d) {
 		super(pathAwareEntity, d);
 	}
 
 	@Unique
 	private static final int indypets$POSITION_COUNT = 7 * 13 * 7;
 	@Unique
-	private static final List<BlockPos.MutableBlockPos> indypets$positions = new ArrayList<>(indypets$POSITION_COUNT);
+	private static final List<MutableBlockPos> indypets$positions = new ArrayList<>(indypets$POSITION_COUNT);
 	static {
 		for (int i = 0; i < indypets$POSITION_COUNT; i++) {
-			indypets$positions.add(new BlockPos.MutableBlockPos());
+			indypets$positions.add(new MutableBlockPos());
 		}
 	}
 
@@ -81,9 +82,9 @@ public abstract class ParrotEntityFlyOntoTreeGoalMixin extends WaterAvoidingRand
 	@Unique @Nullable
 	private Vec3 indypets$findTreeClosestToHome() {
 		BlockPos homePos = getHomePos(mob);
-		var temp = new BlockPos.MutableBlockPos();
+		var temp = new MutableBlockPos();
 
-		var closest = new BlockPos.MutableBlockPos();
+		var closest = new MutableBlockPos();
 		double minDist = Double.POSITIVE_INFINITY;
 
 		for (BlockPos pos : BlockPos.betweenClosed(

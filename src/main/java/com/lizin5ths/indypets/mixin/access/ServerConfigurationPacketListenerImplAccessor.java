@@ -6,7 +6,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(ServerConfigurationPacketListenerImpl.class)
-public interface ServerConfigurationNetworkHandlerAccessor {
-	@Accessor("gameProfile")
+public interface ServerConfigurationPacketListenerImplAccessor {
+	@Accessor
 	GameProfile getGameProfile();
 }

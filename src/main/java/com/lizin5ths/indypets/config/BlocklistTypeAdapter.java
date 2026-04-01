@@ -3,10 +3,11 @@ package com.lizin5ths.indypets.config;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
+import net.minecraft.resources.Identifier;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import net.minecraft.resources.Identifier;
 
 /** Allows Gson to de/serialize Blocklists */
 public class BlocklistTypeAdapter extends TypeAdapter<Blocklist> {

@@ -6,7 +6,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
 public record PetInteractPayload(int entityId) implements CustomPacketPayload {
-	public static final Type<PetInteractPayload> ID = new CustomPacketPayload.Type<>(IndyPets.id("interact"));
+	public static final Type<PetInteractPayload> TYPE = new CustomPacketPayload.Type<>(IndyPets.id("interact"));
 
 	public static final StreamCodec<FriendlyByteBuf, PetInteractPayload> CODEC = StreamCodec.ofMember(
 		(value, buf) -> buf.writeVarInt(value.entityId()),
@@ -14,6 +14,6 @@ public record PetInteractPayload(int entityId) implements CustomPacketPayload {
 
 	@Override
 	public Type<? extends CustomPacketPayload> type() {
-		return ID;
+		return TYPE;
 	}
 }

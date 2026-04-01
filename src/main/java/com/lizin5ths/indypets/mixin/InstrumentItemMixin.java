@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 
 @Mixin(InstrumentItem.class)
-public abstract class GoatHornItemMixin {
+public abstract class InstrumentItemMixin {
 	@ModifyArg(
 		method = "use",
 		at = @At(
@@ -24,19 +24,19 @@ public abstract class GoatHornItemMixin {
 		),
 		index = 2
 	)
-	public Instrument indypets$togglePets(Instrument instrument, @Local(argsOnly = true) Level world, @Local(argsOnly = true) Player user) {
-		if (world instanceof ServerLevel serverWorld && user instanceof ServerPlayer serverPlayer) {
+	public Instrument indypets$togglePets(Instrument instrument, @Local(argsOnly = true) Level level, @Local(argsOnly = true) Player user) {
+		if (level instanceof ServerLevel serverLevel && user instanceof ServerPlayer serverPlayer) {
 			var config = ServerConfig.getDefaultedPlayerConfig(user.getUUID());
-			var hornId = serverWorld.registryAccess().lookupOrThrow(Registries.INSTRUMENT).getKey(instrument);
+			var hornId = serverLevel.registryAccess().lookupOrThrow(Registries.INSTRUMENT).getKey(instrument);
 
 			switch (config.getHornSetting(hornId)) {
-				case WHISTLE   -> WhistleCommand.untargeted(false).run(serverWorld, serverPlayer);
-				case UNWHISTLE -> WhistleCommand.untargeted(true).run(serverWorld, serverPlayer);
+				case WHISTLE   -> WhistleCommand.untargeted(false).run(serverLevel, serverPlayer);
+				case UNWHISTLE -> WhistleCommand.untargeted(true).run(serverLevel, serverPlayer);
 				case TOGGLE -> {
-					WhistleCommand.untargeted(config.hornState).run(serverWorld, serverPlayer);
+					WhistleCommand.untargeted(config.hornState).run(serverLevel, serverPlayer);
 					config.hornState = !config.hornState;
 				}
-				case WHISTLE_OR_SNEAK_UNWHISTLE -> WhistleCommand.untargeted(serverPlayer.isShiftKeyDown()).run(serverWorld, serverPlayer);
+				case WHISTLE_OR_SNEAK_UNWHISTLE -> WhistleCommand.untargeted(serverPlayer.isShiftKeyDown()).run(serverLevel, serverPlayer);
 			}
 		}
 
