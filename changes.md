@@ -1,7 +1,7 @@
 ## 1.5.3
 
-- add back Friends&Foes compatibility
-- work around Cloth Config crash when opening config menu when no world is loaded
+- [26.1+] add back Friends&Foes compatibility
+- [26.1+] work around Cloth Config crash when opening config menu when no world is loaded
 
 ## 1.5.2
 
