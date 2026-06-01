@@ -20,7 +20,10 @@
     "WaterAvoidingRandomStrollGoalMixin",
     "access.RandomStrollGoalAccessor",
     "access.ServerConfigurationPacketListenerImplAccessor",
-    "compat.followersteleporttoo.TeleportEventMixin"
+    "compat.followersteleporttoo.TeleportEventMixin",
+    "compat.friendsandfoes.GlareBrainMixin",
+    "compat.friendsandfoes.GlareStrollTaskMixin",
+    "compat.friendsandfoes.GlareTeleportToOwnerTaskMixin"
   ],
   "client": [
     "access.KeyMappingAccessor"
