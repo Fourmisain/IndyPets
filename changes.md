@@ -1,3 +1,9 @@
+## 1.5.4
+
+A port to 26.2 was needed afterall!
+
+- [26.2] fix no `NoSuchMethodError` when parrots try to wander
+
 ## 1.5.3
 
 - [26.1+] add back Friends&Foes compatibility
