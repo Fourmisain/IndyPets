@@ -4,10 +4,28 @@ pluginManagement {
 			name = 'Fabric'
 			url = 'https://maven.fabricmc.net/'
 		}
-		maven {
-			name = "Fourmisain's Maven"
-			url = "https://gitlab.com/api/v4/projects/37712942/packages/maven"
-		}
 		gradlePluginPortal()
+		exclusiveContent {
+			forRepository {
+				maven {
+					name = "Fourmisain's Maven"
+					url = 'https://gitlab.com/api/v4/projects/37712942/packages/maven'
+				}
+			}
+			filter {
+				includeGroup 'io.github.fourmisain'
+				includeGroup 'minepkg-publish'
+			}
+		}
+		exclusiveContent {
+			forRepository {
+				maven {
+					url = 'https://maven.maxhenkel.de/repository/public'
+				}
+			}
+			filter {
+				includeGroupAndSubgroups 'de.maxhenkel'
+			}
+		}
 	}
 }
