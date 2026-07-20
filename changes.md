@@ -2,7 +2,7 @@
 
 A port to 26.2 was needed afterall!
 
-- [26.2] fix no `NoSuchMethodError` when parrots try to wander
+- [26.2] fix `NoSuchMethodError` when parrots try to wander
 
 ## 1.5.3
 
