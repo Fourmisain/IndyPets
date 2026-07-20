@@ -87,7 +87,7 @@ dependencies {
 	implementation "maven.modrinth:followers-teleport-too:26.1.0-2.8-fabric+forge+neo"
 	runtimeOnly "maven.modrinth:collective:26.1.0-8.16-fabric+forge+neo"
 
-	compileOnly "maven.modrinth:friends-and-foes:fabric-4.0.26+mc26.1.2"
+	compileOnly "maven.modrinth:friends-and-foes:fabric-4.0.26+mc26.2"
 //	runtimeOnly "maven.modrinth:yacl:3.8.2+1.21.11-fabric"
 //	runtimeOnly "maven.modrinth:resourceful-lib:Q2Njmve7" // 3.11.0
 }
