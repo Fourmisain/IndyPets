@@ -53,7 +53,6 @@ public class Config implements ConfigData {
 		config.silentMode = original.silentMode;
 		config.homeRadius = original.homeRadius;
 		config.whistleRadius = original.whistleRadius;
-		config.hornState = original.hornState;
 		config.hornConfig = new HashMap<>(original.hornConfig);
 		// the rest is referenced from the original config
 		copyUnusedFromOriginal(config, original);
@@ -107,9 +106,6 @@ public class Config implements ConfigData {
 	@ConfigEntry.Category("horns")
 	public Map<Identifier, HornSetting> hornConfig = new HashMap<>();
 
-	@ConfigEntry.Gui.Excluded
-	public boolean hornState = false;
-
 	// client-only
 
 	@LocalOnly
@@ -139,7 +135,7 @@ public class Config implements ConfigData {
 
 		for (var config : local().vanillaPlayerConfigs.values()) {
 			copyUnusedFromOriginal(config, local());
-		}
+	}
 	}
 
 	public static void save() {
