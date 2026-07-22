@@ -26,47 +26,42 @@ public class HornConfigGuiProvider implements GuiProvider {
 	@SuppressWarnings({"rawtypes"})
 	@Override
 	public List<AbstractConfigListEntry> get(String i13n, Field field, Object _config, Object defaults, GuiRegistryAccess registry) {
-		try {
-			var config = (Config) _config;
-			List<AbstractConfigListEntry> entries = new ArrayList<>();
+		var config = (Config) _config;
+		List<AbstractConfigListEntry> entries = new ArrayList<>();
 
+		entries.add(
+			ConfigEntryBuilder.create()
+				.startTextDescription(Component.translatable(EXPLANATION))
+				.setTooltip(Component.translatable(EXPLANATION + ".@Tooltip"))
+				.build()
+		);
+
+		var level = Minecraft.getInstance().level;
+		if (level != null) {
+			level.registryAccess().lookupOrThrow(Registries.INSTRUMENT)
+				.get(InstrumentTags.GOAT_HORNS)
+				.ifPresent(registryEntries -> registryEntries.stream()
+				.map(entry -> entry.unwrapKey().map(ResourceKey::identifier).orElseThrow()) //
+				.sorted()
+				.forEachOrdered(hornId -> {
+					Component name = Component.translatable(Util.makeDescriptionId("instrument", hornId));
+
+					entries.add(
+						ConfigEntryBuilder.create()
+							.startEnumSelector(name, HornSetting.class, config.getHornSetting(hornId))
+							.setDefaultValue(HornSetting.DISABLED)
+							.setSaveConsumer(setting -> config.setHornSetting(hornId, setting))
+							.setEnumNameProvider(anEnum -> Component.translatable("text.autoconfig.indypets.option.goatHorn." + anEnum.name()))
+							.build());
+				}));
+		} else {
 			entries.add(
 				ConfigEntryBuilder.create()
-					.startTextDescription(Component.translatable(EXPLANATION))
-					.setTooltip(Component.translatable(EXPLANATION + ".@Tooltip"))
-					.build()
-			);
-
-			var level = Minecraft.getInstance().level;
-			if (level != null) {
-				level.registryAccess().lookupOrThrow(Registries.INSTRUMENT)
-					.get(InstrumentTags.GOAT_HORNS)
-					.ifPresent(registryEntries -> registryEntries.stream()
-					.map(entry -> entry.unwrapKey().map(ResourceKey::identifier).orElseThrow()) //
-					.sorted()
-					.forEachOrdered(hornId -> {
-						Component name = Component.translatable(Util.makeDescriptionId("instrument", hornId));
-
-						entries.add(
-							ConfigEntryBuilder.create()
-								.startEnumSelector(name, HornSetting.class, config.getHornSetting(hornId))
-								.setDefaultValue(HornSetting.DISABLED)
-								.setSaveConsumer(setting -> config.setHornSetting(hornId, setting))
-								.setEnumNameProvider(anEnum -> Component.translatable("text.autoconfig.indypets.option.goatHorn." + anEnum.name()))
-								.build());
-					}));
-			} else {
-				entries.add(
-					ConfigEntryBuilder.create()
-						.startTextDescription(Component.translatable(NOT_IN_WORLD))
-						.setTooltip(Component.translatable(NOT_IN_WORLD + ".@Tooltip"))
-						.build());
-			}
-
-			return entries;
-		} catch (ClassCastException e) {
-			IndyPets.LOGGER.error(e);
-			return Collections.emptyList();
+					.startTextDescription(Component.translatable(NOT_IN_WORLD))
+					.setTooltip(Component.translatable(NOT_IN_WORLD + ".@Tooltip"))
+					.build());
 		}
+
+		return entries;
 	}
 }
