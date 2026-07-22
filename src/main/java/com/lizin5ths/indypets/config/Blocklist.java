@@ -12,6 +12,10 @@ public class Blocklist {
 	public static Blocklist getDefault() {
 		var blocklist = new Blocklist();
 
+		// nautiluses don't have a follow state (though they can wander, so this may be revisited)
+		blocklist.idBlocklist.add(Identifier.withDefaultNamespace("nautilus"));
+		blocklist.idBlocklist.add(Identifier.withDefaultNamespace("zombie_nautilus"));
+
 		// capybaras change between sitting/standing by sneak-interacting with a stick
 //		blocklist.idBlocklist.add(Identifier.of("capybara", "capybara"));
 
