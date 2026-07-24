@@ -41,45 +41,34 @@ public class Networking {
 		PayloadTypeRegistry.configurationC2S().register(PlayerConfigPayload.ID, PlayerConfigPayload.CODEC);
 		ServerConfigurationNetworking.registerGlobalReceiver(PlayerConfigPayload.ID, (payload, context) -> {
 			UUID playerUuid = ((ServerConfigurationNetworkHandlerAccessor) context.networkHandler()).getGameProfile().id();
-			MinecraftServer server = context.server();
 
-			if (server != null) {
-				server.execute(() -> {
-					ServerConfig.HAS_MOD_INSTALLED.add(playerUuid);
-					if (payload != null)
-						ServerConfig.RECEIVED_PLAYER_CONFIGS.put(playerUuid, payload.config());
-				});
-			}
+			context.server().execute(() -> {
+				ServerConfig.HAS_MOD_INSTALLED.add(playerUuid);
+				ServerConfig.RECEIVED_PLAYER_CONFIGS.put(playerUuid, payload.config());
+			});
 		});
 
 		PayloadTypeRegistry.playC2S().register(PlayerConfigPayload.ID, PlayerConfigPayload.CODEC);
 		ServerPlayNetworking.registerGlobalReceiver(PlayerConfigPayload.ID, (payload, context) -> {
 			UUID playerUuid = context.player().getUuid();
-			MinecraftServer server = context.server();
 
-			if (server != null) {
-				server.execute(() -> {
-					if (payload != null)
-						ServerConfig.RECEIVED_PLAYER_CONFIGS.put(playerUuid, payload.config());
-				});
-			}
+			context.server().execute(() -> {
+				ServerConfig.RECEIVED_PLAYER_CONFIGS.put(playerUuid, payload.config());
+			});
 		});
 
 		PayloadTypeRegistry.playC2S().register(PetInteractPayload.ID, PetInteractPayload.CODEC);
 		ServerPlayNetworking.registerGlobalReceiver(PetInteractPayload.ID, (payload, context) -> {
 			ServerPlayerEntity player = context.player();
-			MinecraftServer server = context.server();
 
-			if (server != null) {
-				server.execute(() -> {
-					Entity entity = player.getEntityWorld().getEntityById(payload.entityId());
+			context.server().execute(() -> {
+				Entity entity = player.getEntityWorld().getEntityById(payload.entityId());
 
-					if (canInteract(player, entity)) {
-						toggleIndependence(entity);
-						showPetStatus(player, entity, true);
-					}
-				});
-			}
+				if (canInteract(player, entity)) {
+					toggleIndependence(entity);
+					showPetStatus(player, entity, true);
+				}
+			});
 		});
 	}
 

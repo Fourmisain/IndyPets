@@ -52,15 +52,15 @@ public class Commands {
 
 		@Override
 		public CompletableFuture<Suggestions> getSuggestions(CommandContext<ServerCommandSource> context, SuggestionsBuilder builder) throws CommandSyntaxException {
-			ServerWorld world = context.getSource().getWorld();
-			ServerPlayerEntity player = context.getSource().getPlayerOrThrow();
+			var world = context.getSource().getWorld();
+			var player = context.getSource().getPlayerOrThrow();
 
-			List<Identifier> suggestions = new ArrayList<>();
+			var suggestions = new ArrayList<Identifier>();
 
-			Config config = ServerConfig.getDefaultedPlayerConfig(player.getUuid());
+			var config = ServerConfig.getDefaultedPlayerConfig(player.getUuid());
 
 			// suggest ids of owned, nearby pets that can be affected
-			for (Entity entity : world.getOtherEntities(null,
+			for (var entity : world.getOtherEntities(null,
 					new Box(player.getEntityPos(), player.getEntityPos()).expand(config.whistleRadius),
 					entity -> canInteract(player, entity) && independent == isIndependent(entity))) {
 				suggestions.add(Registries.ENTITY_TYPE.getId(entity.getType()));
@@ -92,8 +92,8 @@ public class Commands {
 		public int run(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
 			Identifier targets = targeted ? IdentifierArgumentType.getIdentifier(context, "targets") : null;
 
-			ServerPlayerEntity player = context.getSource().getPlayerOrThrow();
-			ServerWorld world = context.getSource().getWorld();
+			var player = context.getSource().getPlayerOrThrow();
+			var world = context.getSource().getWorld();
 
 			run(world, player, targets);
 
@@ -105,9 +105,9 @@ public class Commands {
 		}
 
 		public void run(ServerWorld world, ServerPlayerEntity player, Identifier targets) {
-			Config config = ServerConfig.getDefaultedPlayerConfig(player.getUuid());
+			var config = ServerConfig.getDefaultedPlayerConfig(player.getUuid());
 
-			for (Entity entity : world.getOtherEntities(null,
+			for (var entity : world.getOtherEntities(null,
 					new Box(player.getEntityPos(), player.getEntityPos()).expand(config.whistleRadius),
 					entity -> {
 						boolean canWhistle = canInteract(player, entity) && unwhistle == !isIndependent(entity);
@@ -144,7 +144,7 @@ public class Commands {
 			String argumentName = nodes.getLast().getNode().getName();
 			String option = nodes.get(nodes.size() - 2).getNode().getName();
 
-			Config config = Config.vanilla(player.getUuid());
+			var config = Config.vanilla(player.getUuid());
 
 			T value = (T) context.getArgument(argumentName, Object.class);
 			setter.set(config, value);
@@ -192,7 +192,7 @@ public class Commands {
 			String setting = context.getArgument("setting", String.class);
 			HornSetting hornSetting = HornSetting.valueOf(HornSetting.class, setting.toUpperCase(Locale.ROOT));
 
-			Config config = Config.vanilla(player.getUuid());
+			var config = Config.vanilla(player.getUuid());
 			config.setHornSetting(hornId, hornSetting);
 
 			player.sendMessage(Text.literal("set horn " + hornId + " to " + hornSetting.asString()));
@@ -206,7 +206,7 @@ public class Commands {
 		public int run(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
 			ServerPlayerEntity player = context.getSource().getPlayerOrThrow();
 
-			Config config = Config.vanilla(player.getUuid());
+			var config = Config.vanilla(player.getUuid());
 
 			if (config.hornConfig.isEmpty()) {
 				player.sendMessage(Text.literal("no horns are set"));

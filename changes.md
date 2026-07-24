@@ -1,3 +1,35 @@
+## 1.5.5
+
+- add `minecraft:nautilus` and `minecraft:zombie_nautilus` to the blocklist by default  
+  (unlike horses, nautiluses are considered tameable by the game even though they can't follow or sit.)
+  you may need to reset your blocklist for this to apply!
+- vanilla player configs take default values for unconfigurable settings from the server config too  
+  (this effectively means the server can control `blocklist`, `interactBlocklist` and `interactItem` for all vanilla players)
+- remove `hornState` from the config and attach it directly to the player  
+  (fixes Goat Horn toggling being inconsistent on multiplayer servers with vanilla clients)
+- fix config file blocklist ids without namespace not being accepted (a left out namespace now defaults to `minecraft:` as intended)
+
+## 1.5.4
+
+A port to 26.2 was needed afterall!
+
+- [26.2] fix `NoSuchMethodError` when parrots try to wander
+
+## 1.5.3
+
+- [26.1+] add back Friends&Foes compatibility
+- [26.1+] work around Cloth Config crash when opening config menu when no world is loaded
+
+## 1.5.2
+
+- port to 26.1
+
+Fox Friend and Friends&Foes compatibility has been temporary removed and needs to be re-added once they are out for 26.1
+
+## 1.5.1
+
+- update Fox Friend compatibility for 6.0.3 (not backwards compatible; update Fox Friend!)
+
 ## 1.5.0
 
 This is a large refactor of the mod to support sui-ke's Fox Friend and potentially other mods adding custom follow mechanics in the future.
