@@ -10,7 +10,6 @@ import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.util.Hand;
-import org.apache.logging.log4j.LogManager;
 import org.lwjgl.glfw.GLFW;
 
 import static com.lizin5ths.indypets.IndyPetsClient.UNWHISTLE;
@@ -71,8 +70,6 @@ public class Keybindings {
 
 			if (whistleCount + unwhistleCount == 0)
 				return;
-
-			LogManager.getLogger("debug").debug("{} vs {}", whistleCount, unwhistleCount);
 
 			boolean shouldWhistle; // else unwhistle
 
