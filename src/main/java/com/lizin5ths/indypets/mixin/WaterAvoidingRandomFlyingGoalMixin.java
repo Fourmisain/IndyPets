@@ -23,7 +23,7 @@ public abstract class WaterAvoidingRandomFlyingGoalMixin extends WaterAvoidingRa
 		if (shouldHeadHome(mob)) {
 			BlockPos homePos = getHomePos(mob);
 
-			return homePos.getCenter().subtract(mob.position());
+			return Vec3.atCenterOf(homePos).subtract(mob.position());
 		}
 
 		return original;
