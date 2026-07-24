@@ -54,7 +54,6 @@ public class Config implements ConfigData {
 		config.silentMode = other.silentMode;
 		config.homeRadius = other.homeRadius;
 		config.whistleRadius = other.whistleRadius;
-		config.hornState = other.hornState;
 		config.hornConfig = new HashMap<>(other.hornConfig);
 		return config;
 	}
@@ -98,9 +97,6 @@ public class Config implements ConfigData {
 
 	@ConfigEntry.Category("horns")
 	public Map<Identifier, HornSetting> hornConfig = new HashMap<>();
-
-	@ConfigEntry.Gui.Excluded
-	public boolean hornState = false;
 
 	// client-only
 

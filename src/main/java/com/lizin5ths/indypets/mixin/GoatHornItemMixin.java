@@ -4,6 +4,7 @@ import com.lizin5ths.indypets.command.Commands.WhistleCommand;
 import com.lizin5ths.indypets.config.Config;
 import com.lizin5ths.indypets.config.HornSetting;
 import com.lizin5ths.indypets.config.ServerConfig;
+import com.lizin5ths.indypets.util.WhistleState;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.GoatHornItem;
@@ -38,8 +39,9 @@ public abstract class GoatHornItemMixin {
 				case WHISTLE   -> WhistleCommand.untargeted(false).run(serverWorld, serverPlayer);
 				case UNWHISTLE -> WhistleCommand.untargeted(true).run(serverWorld, serverPlayer);
 				case TOGGLE -> {
-					WhistleCommand.untargeted(config.hornState).run(serverWorld, serverPlayer);
-					config.hornState = !config.hornState;
+					boolean hornState = ((WhistleState) user).indypets$setHornState();
+					WhistleCommand.untargeted(hornState).run(serverWorld, serverPlayer);
+					((WhistleState) user).indypets$setHornState(!hornState);
 				}
 				case WHISTLE_OR_SNEAK_UNWHISTLE -> WhistleCommand.untargeted(serverPlayer.isSneaking()).run(serverWorld, serverPlayer);
 			}
