@@ -1,3 +1,14 @@
+## 1.5.5
+
+- add `minecraft:nautilus` and `minecraft:zombie_nautilus` to the blocklist by default  
+  (unlike horses, nautiluses are considered tameable by the game even though they can't follow or sit.)
+  you may need to reset your blocklist for this to apply!
+- vanilla player configs take default values for unconfigurable settings from the server config too  
+  (this effectively means the server can control `blocklist`, `interactBlocklist` and `interactItem` for all vanilla players)
+- remove `hornState` from the config and attach it directly to the player  
+  (fixes Goat Horn toggling being inconsistent on multiplayer servers with vanilla clients)
+- fix config file blocklist ids without namespace not being accepted (a left out namespace now defaults to `minecraft:` as intended)
+
 ## 1.5.4
 
 A port to 26.2 was needed afterall!
