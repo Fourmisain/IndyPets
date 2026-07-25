@@ -28,9 +28,9 @@ public class ItemGuiProvider implements GuiProvider {
 		if (id.isEmpty())
 			return NULL; // translate to null later
 
-		Identifier identifier = Identifier.tryParse(id);
+		var identifier = Identifier.tryParse(id);
 
-		if (!Registries.ITEM.containsId(identifier))
+		if (identifier == null || !Registries.ITEM.containsId(identifier))
 			return null; // show as error
 
 		return identifier;
@@ -65,11 +65,9 @@ public class ItemGuiProvider implements GuiProvider {
 					DropdownMenuBuilder.CellCreatorBuilder.ofItemIdentifier())
 				.setDefaultValue(NULL)
 				.setSelections(
-					Stream.concat(
-							Registries.ITEM.stream()
-								.sorted(Comparator.comparing(Item::toString))
-								.map(Registries.ITEM::getId),
-							Stream.of(NULL))
+					Registries.ITEM.stream()
+						.sorted(Comparator.comparing(Item::toString))
+						.map(Registries.ITEM::getId)
 						.collect(Collectors.toCollection(LinkedHashSet::new)))
 				.setSaveConsumer(newValue -> set(field, config, newValue))
 				.build()
