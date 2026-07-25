@@ -15,9 +15,11 @@ public class IndyPets implements ModInitializer {
 	public static final String MOD_ID = "indypets";
 	public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
 
-	public static AttachmentType<Boolean> HORN_STATE = AttachmentRegistry.<Boolean>create(id("horn_state"), builder -> {
-		builder.persistent(Codec.BOOL).copyOnDeath().initializer(() -> true);
-	});
+	public static AttachmentType<Boolean> HORN_STATE = AttachmentRegistry.<Boolean>builder()
+		.persistent(Codec.BOOL)
+		.copyOnDeath()
+		.initializer(() -> true)
+		.buildAndRegister(id("horn_state"));
 
 	public static Identifier id(String path) {
 		return Identifier.of(MOD_ID, path);
