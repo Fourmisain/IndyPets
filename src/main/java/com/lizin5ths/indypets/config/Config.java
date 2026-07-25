@@ -45,15 +45,24 @@ public class Config implements ConfigData {
 		return LOCAL_CONFIG.get();
 	}
 
-	public static Config vanillaCopyOf(Config other) {
+	private static Config vanillaCopyOf(Config original) {
 		Config config = new Config();
-		// currently only supports these values. needs to be in sync with VanillaPlayerConfigsTypeAdapter
-		config.regularInteract = other.regularInteract;
-		config.sneakInteract = other.sneakInteract;
-		config.silentMode = other.silentMode;
-		config.homeRadius = other.homeRadius;
-		config.whistleRadius = other.whistleRadius;
+		// vanilla configs currently only supports these values. needs to be in sync with VanillaPlayerConfigsTypeAdapter
+		config.regularInteract = original.regularInteract;
+		config.sneakInteract = original.sneakInteract;
+		config.silentMode = original.silentMode;
+		config.homeRadius = original.homeRadius;
+		config.whistleRadius = original.whistleRadius;
+		// the rest is referenced from the original config
+		copyUnusedFromOriginal(config, original);
 		return config;
+	}
+
+	private static void copyUnusedFromOriginal(Config config, Config original) {
+		config.innerHomePercentage =  original.innerHomePercentage;
+		config.blocklist = original.blocklist;
+		config.interactBlocklist = original.interactBlocklist;
+		config.interactItem = original.interactItem;
 	}
 
 	public static Config vanilla(UUID playerUuid) {
@@ -107,6 +116,10 @@ public class Config implements ConfigData {
 
 	public static void init() {
 		LOCAL_CONFIG = AutoConfig.register(Config.class, (definition, configClass) -> new GsonConfigSerializer<>(definition, configClass, GSON_PRETTY));
+
+		for (var config : local().vanillaPlayerConfigs.values()) {
+			copyUnusedFromOriginal(config, local());
+		}
 	}
 
 	public static void save() {
