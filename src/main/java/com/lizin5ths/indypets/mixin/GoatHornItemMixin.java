@@ -17,6 +17,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 
+import static com.lizin5ths.indypets.IndyPets.HORN_STATE;
+
 @Mixin(GoatHornItem.class)
 public abstract class GoatHornItemMixin {
 	@ModifyArg(
@@ -38,8 +40,9 @@ public abstract class GoatHornItemMixin {
 				case WHISTLE   -> WhistleCommand.untargeted(false).run(serverWorld, serverPlayer);
 				case UNWHISTLE -> WhistleCommand.untargeted(true).run(serverWorld, serverPlayer);
 				case TOGGLE -> {
-					WhistleCommand.untargeted(config.hornState).run(serverWorld, serverPlayer);
-					config.hornState = !config.hornState;
+					boolean hornState = serverPlayer.getAttachedOrCreate(HORN_STATE);
+					WhistleCommand.untargeted(hornState).run(serverWorld, serverPlayer);
+					serverPlayer.setAttached(HORN_STATE, !hornState);
 				}
 				case WHISTLE_OR_SNEAK_UNWHISTLE -> WhistleCommand.untargeted(serverPlayer.isSneaking()).run(serverWorld, serverPlayer);
 			}
