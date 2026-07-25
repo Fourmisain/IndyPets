@@ -19,7 +19,6 @@ import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class ItemGuiProvider implements GuiProvider {
 	// Cloth Config understands null as an error, thus we use a "null object"
@@ -29,9 +28,9 @@ public class ItemGuiProvider implements GuiProvider {
 		if (id.isEmpty())
 			return NULL; // translate to null later
 
-		Identifier identifier = Identifier.tryParse(id);
+		var identifier = Identifier.tryParse(id);
 
-		if (!Registry.ITEM.containsId(identifier))
+		if (identifier == null || !Registry.ITEM.containsId(identifier))
 			return null; // show as error
 
 		return identifier;
@@ -66,11 +65,9 @@ public class ItemGuiProvider implements GuiProvider {
 					DropdownMenuBuilder.CellCreatorBuilder.ofItemIdentifier())
 				.setDefaultValue(NULL)
 				.setSelections(
-					Stream.concat(
-							Registry.ITEM.stream()
-								.sorted(Comparator.comparing(Item::toString))
-								.map(Registry.ITEM::getId),
-							Stream.of(NULL))
+					Registry.ITEM.stream()
+						.sorted(Comparator.comparing(Item::toString))
+						.map(Registry.ITEM::getId)
 						.collect(Collectors.toCollection(LinkedHashSet::new)))
 				.setSaveConsumer(newValue -> set(field, config, newValue))
 				.build()

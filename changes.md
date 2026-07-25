@@ -1,3 +1,11 @@
+## 1.4.13
+
+backported from 1.5.5:
+
+- vanilla player configs take default values for unconfigurable settings from the server config too  
+  (this effectively means the server can control `blocklist`, `interactBlocklist` and `interactItem` for all vanilla players)
+- fix config file blocklist ids without namespace not being accepted (a left out namespace now defaults to `minecraft:` as intended)
+
 ## 1.4.12
 
 - compatibility with Followers Teleport Too: independent pets won't teleport with the player
