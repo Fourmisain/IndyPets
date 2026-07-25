@@ -18,7 +18,7 @@ public class BlocklistTypeAdapter extends TypeAdapter<Blocklist> {
 
 		return new String[] {
 			i >= 1 ? id.substring(0, i) : "minecraft",
-			i >= 0 ? id.substring(i + 1) : ""
+			i >= 0 ? id.substring(i + 1) : id
 		};
 	}
 

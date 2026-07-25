@@ -1,6 +1,5 @@
 package com.lizin5ths.indypets.config.client;
 
-import com.lizin5ths.indypets.IndyPets;
 import com.lizin5ths.indypets.config.Config;
 import com.lizin5ths.indypets.config.HornSetting;
 import me.shedaniel.autoconfig.gui.registry.api.GuiProvider;
@@ -13,7 +12,6 @@ import net.minecraft.util.Util;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class HornConfigGuiProvider implements GuiProvider {
@@ -22,7 +20,6 @@ public class HornConfigGuiProvider implements GuiProvider {
 	@SuppressWarnings({"rawtypes"})
 	@Override
 	public List<AbstractConfigListEntry> get(String i13n, Field field, Object _config, Object defaults, GuiRegistryAccess registry) {
-		try {
 			Config config = (Config) _config;
 			List<AbstractConfigListEntry> entries = new ArrayList<>();
 
@@ -49,9 +46,5 @@ public class HornConfigGuiProvider implements GuiProvider {
 				});
 
 			return entries;
-		} catch (ClassCastException e) {
-			IndyPets.LOGGER.error(e);
-			return Collections.emptyList();
 		}
-	}
 }
