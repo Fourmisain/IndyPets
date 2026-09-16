@@ -10,7 +10,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.world.InteractionHand;
-import org.lwjgl.glfw.GLFW;
+import net.minecraft.world.item.component.SwingAnimation;
 
 import static com.lizin5ths.indypets.IndyPetsClient.UNWHISTLE;
 import static com.lizin5ths.indypets.IndyPetsClient.WHISTLE;
@@ -22,9 +22,9 @@ public class Keybindings {
 	}
 
 	public static final KeyMapping.Category CATEGORY = KeyMapping.Category.register(IndyPets.id("indypets"));
-	public static final KeyMapping INTERACT_KEY  = new KeyMapping("key.indypets.interact",  GLFW.GLFW_KEY_H, CATEGORY);
-	public static final KeyMapping WHISTLE_KEY   = new KeyMapping("key.indypets.whistle",   GLFW.GLFW_KEY_J, CATEGORY);
-	public static final KeyMapping UNWHISTLE_KEY = new KeyMapping("key.indypets.unwhistle", GLFW.GLFW_KEY_J, CATEGORY);
+	public static final KeyMapping INTERACT_KEY  = new KeyMapping("key.indypets.interact",  InputConstants.KEY_H, CATEGORY);
+	public static final KeyMapping WHISTLE_KEY   = new KeyMapping("key.indypets.whistle",   InputConstants.KEY_J, CATEGORY);
+	public static final KeyMapping UNWHISTLE_KEY = new KeyMapping("key.indypets.unwhistle", InputConstants.KEY_J, CATEGORY);
 
 	private static boolean whistleToggle = false;
 
@@ -40,7 +40,7 @@ public class Keybindings {
 			while (INTERACT_KEY.consumeClick()) {
 				if (isSupported(client.crosshairPickEntity)) {
 					Networking.sendPetInteract(client.crosshairPickEntity); // note: is checked server-side
-					client.player.swing(InteractionHand.MAIN_HAND); // give some visual feedback
+					client.player.swing(InteractionHand.MAIN_HAND, SwingAnimation.DEFAULT, false); // give some visual feedback
 				}
 			}
 
