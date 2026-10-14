@@ -5,6 +5,7 @@ import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.Version;
 import net.fabricmc.loader.api.VersionParsingException;
 import net.fabricmc.loader.api.metadata.version.VersionPredicate;
+import org.apache.logging.log4j.LogManager;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
@@ -29,19 +30,28 @@ public class MixinPlugin implements IMixinConfigPlugin {
 
 			return pred.test(version);
 		} catch (VersionParsingException e) {
-			IndyPets.LOGGER.error("version matching failed!", e);
+			LogManager.getLogger("indypets").error("version matching failed!", e);
 			return false;
 		}
 	}
 
 	@Override
 	public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
+		// com.lizin5ths.indypets.mixin
 		String[] split = mixinClassName.split("\\.");
-		boolean compat = split[split.length - 3].equals("compat");
-		String  modId  = split[split.length - 2];
 
-		if (compat) {
+		if (split[4].equals("compat")) {
+			// compat.modId.mixinName
+			String modId = split[5];
+			String mixinName = split[split.length - 1];
+
 			if (modId.equals("friendsandfoes")) return testVersion(modId, ">=3.0.0");
+
+			if (modId.equals("followersteleporttoo")) {
+				if (mixinName.equals("TeleportEventMixin")) return testVersion(modId, "<3");
+				if (mixinName.equals("TeleportEventV3Mixin")) return testVersion(modId, ">=3");
+			}
+
 			return test(modId);
 		}
 
