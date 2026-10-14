@@ -1,3 +1,11 @@
+## 1.5.7
+
+- update Followers Teleport Too compatibility, thanks to DarthJahus!
+
+## 1.5.6
+
+- port to 26.3
+
 ## 1.5.5
 
 - add `minecraft:nautilus` and `minecraft:zombie_nautilus` to the blocklist by default  
