@@ -50,6 +50,11 @@ public abstract class MobMixin extends LivingEntity implements IndependentPet {
 			return;
 
 		if (hand == InteractionHand.MAIN_HAND && canInteract(serverPlayer, this)) {
+			// Holding pet food: only vanilla feed/heal/sit/stand, do not cycle independence status
+			if (isPetFoodInteraction(this, player.getItemInHand(hand))) {
+				return;
+			}
+
 			if (player.isShiftKeyDown()) {
 				if (sneakInteract(this, serverPlayer)) {
 					// Note: This blocks interactMob() so it might conflict with other mods using sneak-interact
