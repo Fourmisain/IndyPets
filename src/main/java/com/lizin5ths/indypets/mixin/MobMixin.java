@@ -12,6 +12,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.ValueInput;
@@ -50,11 +51,6 @@ public abstract class MobMixin extends LivingEntity implements IndependentPet {
 			return;
 
 		if (hand == InteractionHand.MAIN_HAND && canInteract(serverPlayer, this)) {
-			// Holding pet food: only vanilla feed/heal/sit/stand, do not cycle independence status
-			if (isPetFoodInteraction(this, player.getItemInHand(hand))) {
-				return;
-			}
-
 			if (player.isShiftKeyDown()) {
 				if (sneakInteract(this, serverPlayer)) {
 					// Note: This blocks interactMob() so it might conflict with other mods using sneak-interact
@@ -62,7 +58,9 @@ public abstract class MobMixin extends LivingEntity implements IndependentPet {
 				}
 			} else {
 				var config = ServerConfig.getDefaultedPlayerConfig(player.getUUID());
-				if (config.regularInteract) {
+				// Skip when holding pet food so feeding does not cycle independence
+				boolean isHoldingFood = (Object) this instanceof Animal animal && animal.isFood(player.getItemInHand(hand));
+				if (config.regularInteract && !isHoldingFood) {
 					// continue in method below
 					isInteracting.set(true);
 					wasSitting.set(isSitting(this));

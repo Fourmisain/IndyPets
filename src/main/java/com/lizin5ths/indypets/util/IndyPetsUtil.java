@@ -14,8 +14,6 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.util.DefaultRandomPos;
 import net.minecraft.world.entity.ai.util.LandRandomPos;
-import net.minecraft.world.entity.animal.Animal;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
@@ -144,21 +142,6 @@ public class IndyPetsUtil {
 		return isActive(entity) && isOwner(entity, player);
 	}
 
-	/**
-	 * True when the held stack is pet food / healing bait for this entity
-	 * (e.g. meat / rotten flesh for wolves, fish for cats).
-	 * Used so feeding does not cycle follow / independent.
-	 */
-	public static boolean isPetFoodInteraction(Entity entity, ItemStack stack) {
-		if (stack.isEmpty())
-			return false;
-
-		if (entity instanceof Animal animal && animal.isFood(stack))
-			return true;
-
-		return false;
-	}
-
 	// guard by canInteract()
 	public static boolean sneakInteract(Entity entity, ServerPlayer player) {
 		var config = ServerConfig.getDefaultedPlayerConfig(player.getUUID());
@@ -174,10 +157,6 @@ public class IndyPetsUtil {
 
 		// don't interact with blocked pets
 		if (config.interactBlocklist.isBlocked(EntityType.getKey(entity.getType())))
-			return false;
-
-		// Feeding / healing must not toggle independence
-		if (isPetFoodInteraction(entity, player.getMainHandItem()))
 			return false;
 
 		toggleIndependence(entity);
