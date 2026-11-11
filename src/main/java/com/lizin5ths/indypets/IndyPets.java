@@ -15,6 +15,7 @@ public class IndyPets implements ModInitializer {
 	public static final String MOD_ID = "indypets";
 	public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
 
+	// note: statically loading this from MixinPlugin causes an error
 	public static AttachmentType<Boolean> HORN_STATE = AttachmentRegistry.<Boolean>builder()
 		.persistent(Codec.BOOL)
 		.copyOnDeath()

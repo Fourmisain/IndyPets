@@ -5,6 +5,7 @@ import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.Version;
 import net.fabricmc.loader.api.VersionParsingException;
 import net.fabricmc.loader.api.metadata.version.VersionPredicate;
+import org.apache.logging.log4j.LogManager;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
@@ -29,7 +30,7 @@ public class MixinPlugin implements IMixinConfigPlugin {
 
 			return pred.test(version);
 		} catch (VersionParsingException e) {
-			IndyPets.LOGGER.error("version matching failed!", e);
+			LogManager.getLogger("indypets").error("version matching failed!", e);
 			return false;
 		}
 	}
