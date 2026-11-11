@@ -1,3 +1,11 @@
+## 1.4.15
+
+backported from 1.5.8:
+
+- don't make right click interact change a pet's independence when holding food  
+  this is to make e.g. feeding a pack of wolves a little less annoying (less of a chance to accidentally change independence)  
+  thanks to DarthJahus for the idea and PR!
+
 ## 1.4.14
 
 backported from 1.5.7:
