@@ -8,6 +8,7 @@ import com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.storage.ReadView;
@@ -56,7 +57,9 @@ public abstract class MobEntityMixin extends LivingEntity implements Independent
 				}
 			} else {
 				var config = ServerConfig.getDefaultedPlayerConfig(player.getUuid());
-				if (config.regularInteract) {
+				// Skip when holding pet food so feeding does not cycle independence
+				boolean isHoldingFood = (Object) this instanceof AnimalEntity animal && animal.isBreedingItem(player.getStackInHand(hand));
+				if (config.regularInteract && !isHoldingFood) {
 					// continue in method below
 					isInteracting.set(true);
 					wasSitting.set(isSitting(this));
