@@ -18,7 +18,6 @@ import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class ItemGuiProvider implements GuiProvider {
 	// Cloth Config understands null as an error, thus we use a "null object"
