@@ -10,7 +10,7 @@ backported from 1.5.8:
 
 backported from 1.5.7:
 
-- update Followers Teleport Too compatibility, thanks to DarthJahus!
+- [1.20.1, 1.21.1] update Followers Teleport Too compatibility, thanks to DarthJahus!
 
 ## 1.4.13
 
